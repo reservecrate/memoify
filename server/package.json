@@ -1,0 +1,49 @@
+{
+  "name": "memoify",
+  "version": "1.0.0",
+  "description": "A minimalist notes app for your basic daily needs.",
+  "keywords": [
+    "memo",
+    "stack",
+    "minimalist",
+    "notes"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "build:ui": "shx rm -rf dist && cd ../client/ && npm run build && shx cp -r dist ../server",
+    "deploy": "fly deploy",
+    "lint": "eslint .",
+    "build:dev": "shx rm -rf dist && cd ../frontend/ && npm run build && shx cp -r dist ../backend && nodemon index.js"
+  },
+  "author": "reservecrate",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.0",
+    "lodash": "^4.17.21",
+    "mongoose": "^7.0.3",
+    "mongoose-unique-validator": "^4.0.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.38.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.22",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
