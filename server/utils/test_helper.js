@@ -11,4 +11,4 @@ const getAllMemos = async () => {
   return memos.map(memo => memo.toJSON());
 };
 
-module.exports = { getAllUsers, getAllMemos };
+module.exports = { getAllUsers,  getAllMemos };

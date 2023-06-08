@@ -173,46 +173,136 @@ describe('creating a user with invalid data', () => {
 });
 
 describe('creating a user with missing data', () => {
-  // next up on the list
-  test.only('fails with 400 if the username is missing', async () => {
+  test('fails with 400 if the username is missing', async () => {
     const usersBefore = await getAllUsers();
 
-    const newUser = {
-      name: 'Joel',
-      password: 'niemals'
+    const userToCreate = {
+      name: 'Jonah',
+      password: 'pythonista'
     };
 
     await api
       .post('/api/users')
-      .send(newUser)
+      .send(userToCreate)
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
     const usersAfter = await getAllUsers();
     expect(usersAfter).toHaveLength(usersBefore.length);
-
-    const usernames = usersAfter.map(user => user.username);
-    expect(usernames).not.toContain(newUser.username);
   });
   test('fails with 400 if the password is missing', async () => {
     const usersBefore = await getAllUsers();
 
-    const newUser = {
-      username: 'breezehash',
-      name: 'Joel'
+    const userToCreate = {
+      username: 'theelx',
+      name: 'Jonah'
     };
 
     await api
       .post('/api/users')
-      .send(newUser)
+      .send(userToCreate)
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
     const usersAfter = await getAllUsers();
     expect(usersAfter).toHaveLength(usersBefore.length);
+  });
+});
 
-    const usernames = usersAfter.map(user => user.username);
-    expect(usernames).not.toContain(newUser.username);
+describe('updating the users', () => {
+  test('returns 200 and successfully updates the username if given a valid token', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { id } = await User.findOne({ username: login.username });
+    const { body: userToUpdate } = await api.get(`/api/users/${id}`);
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    const updatedUserData = { ...userToUpdate, username: 'reservecase' };
+    const { body: updatedUser } = await api
+      .put(`/api/users/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ updatedUserData, toUpdate: 'username' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).toHaveLength(usersBefore.length);
+    expect(usersAfter).toContainEqual(updatedUser);
+  });
+  test('returns 400 if the new username is shorter than 3 characters', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { id } = await User.findOne({ username: login.username });
+    const { body: userToUpdate } = await api.get(`/api/users/${id}`);
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    const updatedUserData = { ...userToUpdate, username: 're' };
+    const { body: updatedUser } = await api
+      .put(`/api/users/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ updatedUserData, toUpdate: 'username' })
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).not.toContainEqual(updatedUser);
+    expect(usersAfter).toEqual(usersBefore);
+  });
+  test('returns 200 and successfully updates the password if given a valid token', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { id } = await User.findOne({ username: login.username });
+    const { body: userToUpdate } = await api.get(`/api/users/${id}`);
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    const updatedUserData = { ...userToUpdate, password: 'geenword' };
+    const { body: updatedUser } = await api
+      .put(`/api/users/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ updatedUserData, toUpdate: 'password' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).toHaveLength(usersBefore.length);
+    expect(usersAfter).toContainEqual(updatedUser);
+  });
+  test('returns 400 if the new password is shorter than 5 characters', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { id } = await User.findOne({ username: login.username });
+    const { body: userToUpdate } = await api.get(`/api/users/${id}`);
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    const updatedUserData = { ...userToUpdate, password: 'geen' };
+    await api
+      .put(`/api/users/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ updatedUserData, toUpdate: 'password' })
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).toEqual(usersBefore);
+  });
+  test('returns 400 if the update flag (toUpdate) is invalid/missing', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { id } = await User.findOne({ username: login.username });
+    const { body: userToUpdate } = await api.get(`/api/users/${id}`);
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    const updatedUserData = { ...userToUpdate, username: 'reservecase' };
+    const { body: updatedUser } = await api
+      .put(`/api/users/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ updatedUserData })
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).not.toContainEqual(updatedUser);
+    expect(usersAfter).toEqual(usersBefore);
   });
 });
 

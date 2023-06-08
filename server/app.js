@@ -5,10 +5,10 @@ const app = express();
 const cors = require('cors');
 // const memosRouter = require('./controllers/memos');
 const usersRouter = require('./controllers/users');
-// const loginRouter = require('./controllers/login');
+const loginRouter = require('./controllers/login');
 const morgan = require('morgan');
 const {
-  // userExtractor,
+  userExtractor,
   unknownEndpoint,
   errorHandler
 } = require('./utils/middleware');
@@ -34,8 +34,8 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // app.use('/api/blogs', userExtractor, memosRouter);
-app.use('/api/users', usersRouter);
-// app.use('/api/login', loginRouter);
+app.use('/api/users', userExtractor, usersRouter);
+app.use('/api/login', loginRouter);
 
 app.use(unknownEndpoint);
 app.use(errorHandler);

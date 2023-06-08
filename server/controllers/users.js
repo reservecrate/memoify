@@ -32,7 +32,53 @@ usersRouter.post('/', async (req, res) => {
   res.status(201).json(savedUser);
 });
 
-// usersRouter.put('/:id', async (req, res) => {});
+usersRouter.put('/:id', async (req, res) => {
+  const userToUpdate = await User.findById(req.params.id);
+  if (!userToUpdate) return res.status(404).json('invalid/nonexistent user id');
+
+  const { user } = req;
+  if (user.id !== userToUpdate.id)
+    return res.status(401).json({
+      error: 'wrong/invalid token (not authorised)'
+    });
+
+  const { updatedUserData } = req.body;
+  const { toUpdate } = req.body;
+  if (toUpdate === 'username') {
+    if (updatedUserData.username.length < 3)
+      return res
+        .status(400)
+        .json({ error: 'new username must be at least 3 characters long' });
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      updatedUserData,
+      {
+        new: true
+      }
+    );
+    return res.status(200).json(updatedUser);
+  } else if (toUpdate === 'password') {
+    if (updatedUserData.password.length < 5)
+      return res
+        .status(400)
+        .json({ error: 'new password must be at least 5 characters long' });
+
+    const saltRounds = 10;
+    const { password } = updatedUserData;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { ...updatedUserData, passwordHash },
+      { new: true }
+    );
+    return res.status(200).json(updatedUser);
+  }
+  res.status(400).json({
+    error:
+      "invalid update flag (toUpdate must either be set to 'username' or 'password'"
+  });
+});
 
 // usersRouter.delete('/:id', async (req, res) => {});
 
