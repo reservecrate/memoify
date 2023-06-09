@@ -4,7 +4,11 @@ const bcrypt = require('bcrypt');
 const app = require('../app');
 const api = supertest(app);
 const User = require('../models/user');
-const { getAllUsers } = require('../utils/test_helper');
+const {
+  getAllUsers,
+  getByUsername,
+  getUserById
+} = require('../utils/api_helper');
 
 beforeEach(async () => {
   await User.deleteMany({});
@@ -50,15 +54,14 @@ describe('fetching the users', () => {
     expect(body).toHaveLength(users.length);
   });
   test('returns 200 + the right user when fetching a single user', async () => {
-    const users = await getAllUsers();
-    const userToFetch1 = users[1];
+    const userToFetch1 = await getByUsername('reservecrate');
     const { body: fetchedUser1 } = await api
       .get(`/api/users/${userToFetch1.id}`)
       .expect(200)
       .expect('Content-Type', /application\/json/);
     expect(fetchedUser1.username).toBe('reservecrate');
 
-    const userToFetch2 = users[3];
+    const userToFetch2 = await getByUsername('wirelessspice');
     const { body: fetchedUser2 } = await api
       .get(`/api/users/${userToFetch2.id}`)
       .expect(200)
@@ -210,11 +213,11 @@ describe('creating a user with missing data', () => {
 });
 
 describe('updating the users', () => {
-  test('returns 200 and successfully updates the username if given a valid token', async () => {
+  test.only('returns 200 and successfully updates the username if given a valid token', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
-    const { id } = await User.findOne({ username: login.username });
-    const { body: userToUpdate } = await api.get(`/api/users/${id}`);
+    const userToUpdate = await getByUsername(login.username);
+    const { id } = userToUpdate;
     const { token } = (await api.post('/api/login').send({ ...login })).body;
 
     const updatedUserData = { ...userToUpdate, username: 'reservecase' };
@@ -232,7 +235,7 @@ describe('updating the users', () => {
   test('returns 400 if the new username is shorter than 3 characters', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
-    const { id } = await User.findOne({ username: login.username });
+    const { id } = await getByUsername(login.username);
     const { body: userToUpdate } = await api.get(`/api/users/${id}`);
     const { token } = (await api.post('/api/login').send({ ...login })).body;
 
@@ -251,7 +254,7 @@ describe('updating the users', () => {
   test('returns 200 and successfully updates the password if given a valid token', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
-    const { id } = await User.findOne({ username: login.username });
+    const { id } = await getByUsername(login.username);
     const { body: userToUpdate } = await api.get(`/api/users/${id}`);
     const { token } = (await api.post('/api/login').send({ ...login })).body;
 
@@ -270,7 +273,7 @@ describe('updating the users', () => {
   test('returns 400 if the new password is shorter than 5 characters', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
-    const { id } = await User.findOne({ username: login.username });
+    const { id } = await getByUsername(login.username);
     const { body: userToUpdate } = await api.get(`/api/users/${id}`);
     const { token } = (await api.post('/api/login').send({ ...login })).body;
 
@@ -288,7 +291,7 @@ describe('updating the users', () => {
   test('returns 400 if the update flag (toUpdate) is invalid/missing', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
-    const { id } = await User.findOne({ username: login.username });
+    const { id } = await getByUsername(login.username);
     const { body: userToUpdate } = await api.get(`/api/users/${id}`);
     const { token } = (await api.post('/api/login').send({ ...login })).body;
 
@@ -304,6 +307,11 @@ describe('updating the users', () => {
     expect(usersAfter).not.toContainEqual(updatedUser);
     expect(usersAfter).toEqual(usersBefore);
   });
+});
+
+describe('deleting the users', () => {
+  //next up on the list
+  test('returns 200 and successfully deletes the user if given a valid token', async () => {});
 });
 
 afterAll(async () => {
