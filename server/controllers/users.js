@@ -80,6 +80,6 @@ usersRouter.put('/:id', async (req, res) => {
   });
 });
 
-// usersRouter.delete('/:id', async (req, res) => {});
+usersRouter.delete('/:id', async (req, res) => {});
 
 module.exports = usersRouter;
