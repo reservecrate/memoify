@@ -48,11 +48,15 @@ usersRouter.put('/:id', async (req, res) => {
   const { updatedUserData } = req.body;
   const { toUpdate } = req.body;
   if (toUpdate === 'username') {
+    if (updatedUserData.password)
+      return res
+        .status(400)
+        .json({ error: 'cannot update username + password simultaneously' });
+
     if (updatedUserData.username.length < 3)
       return res
         .status(400)
         .json({ error: 'new username must be at least 3 characters long' });
-
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       updatedUserData,
@@ -62,6 +66,11 @@ usersRouter.put('/:id', async (req, res) => {
     );
     return res.status(200).json(updatedUser);
   } else if (toUpdate === 'password') {
+    if (updatedUserData.username !== user.username)
+      return res
+        .status(400)
+        .json({ error: 'cannot update password + username simultaneously' });
+
     if (updatedUserData.password.length < 5)
       return res
         .status(400)

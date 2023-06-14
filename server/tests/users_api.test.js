@@ -312,6 +312,54 @@ describe('updating users', () => {
       expect(usersAfter).toEqual(usersBefore);
     });
   });
+  describe('updating username + password', () => {
+    test("fails with SC 400 if the user attempts to edit the username + password simultaneously (using the 'username' flag)", async () => {
+      const usersBefore = await getAllUsers();
+      const login = { username: 'reservecrate', password: 'kennwort' };
+      const userToUpdate = await getByUsername(login.username);
+      const { id } = userToUpdate;
+      const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+      const updatedUserData = {
+        ...userToUpdate,
+        username: 'reservecase',
+        password: 'geenword'
+      };
+
+      await api
+        .put(`/api/users/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ updatedUserData, toUpdate: 'username' })
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+
+      const usersAfter = await getAllUsers();
+      expect(usersAfter).toEqual(usersBefore);
+    });
+    test("fails with SC 400 when the user attempts to edit the username + password simultaneously (using the 'password' flag)", async () => {
+      const usersBefore = await getAllUsers();
+      const login = { username: 'reservecrate', password: 'kennwort' };
+      const userToUpdate = await getByUsername(login.username);
+      const { id } = userToUpdate;
+      const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+      const updatedUserData = {
+        ...userToUpdate,
+        username: 'reservecase',
+        password: 'geenword'
+      };
+
+      await api
+        .put(`/api/users/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ updatedUserData, toUpdate: 'password' })
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+
+      const usersAfter = await getAllUsers();
+      expect(usersAfter).toEqual(usersBefore);
+    });
+  });
   test('fails with SC 400 if the update flag (toUpdate) is invalid/missing', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };

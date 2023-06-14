@@ -113,7 +113,7 @@ describe('fetching the memos', () => {
 });
 
 describe('creating memos', () => {
-  describe('creating memos with valid data', () => {
+  describe('creating a memo with valid data', () => {
     test('returns SC 201 + created user when given valid data', async () => {
       const memosBefore = await getAllMemos();
       const login = { username: 'reservecrate', password: 'kennwort' };
@@ -161,7 +161,12 @@ describe('creating memos', () => {
       expect(memosAfter).toContainEqual(createdMemo);
     });
   });
+  describe('creating a memo with invalid data', () => {});
 });
+
+describe('updating memos',()=>{
+  describe()
+})
 
 afterAll(async () => {
   await mongoose.connection.close();
