@@ -22,15 +22,15 @@ memosRouter.post('/', async (req, res) => {
 
   const { user } = req;
   if (!user) return res.status(401).json({ error: 'missing/invalid token' });
-  const savedMemo = await (
+  const createdMemo = await (
     await new Memo({ ...req.body, user: user.id }).populate('user', {
       username: 1,
       name: 1
     })
   ).save();
-  user.memos = [...user.memos, savedMemo.id];
+  user.memos = [...user.memos, createdMemo.id];
   await user.save();
-  res.status(201).json(savedMemo);
+  res.status(201).json(createdMemo);
 });
 
 module.exports = memosRouter;

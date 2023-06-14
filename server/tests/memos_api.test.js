@@ -72,7 +72,7 @@ beforeEach(async () => {
 
 describe('fetching the memos', () => {
   describe('fetching all memos', () => {
-    test('returns 200 + all the memos in the correct order', async () => {
+    test('returns SC 200 + all memos in the correct order', async () => {
       const { body: memosList } = await api
         .get('/api/memos')
         .expect(200)
@@ -84,7 +84,7 @@ describe('fetching the memos', () => {
     });
   });
   describe('fetching a single memo', () => {
-    test('returns 200 + the right memo when given a valid id', async () => {
+    test('returns SC 200 + correct memo when given a valid id', async () => {
       const memos = await getAllMemos();
 
       const memoToFetch1 = await getMemoById(memos[0].id);
@@ -103,7 +103,7 @@ describe('fetching the memos', () => {
         .expect('Content-Type', /application\/json/);
       expect(fetchedMemo2).toEqual(memoToFetch2);
     });
-    test('returns 404 when given nonexistent id', async () => {
+    test('returns SC 404 when given nonexistent id', async () => {
       await api
         .get('/api/memos/nonexistent')
         .expect(404)
@@ -114,7 +114,7 @@ describe('fetching the memos', () => {
 
 describe('creating memos', () => {
   describe('creating memos with valid data', () => {
-    test('succeeds with 201 when given valid data', async () => {
+    test('returns SC 201 + created user when given valid data', async () => {
       const memosBefore = await getAllMemos();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const { token } = (await api.post('/api/login').send({ ...login })).body;
@@ -140,7 +140,7 @@ describe('creating memos', () => {
       expect(memosAfter).toHaveLength(memosBefore.length + 1);
       expect(memosAfter).toContainEqual(createdMemo);
     });
-    test('succeeds with 201 + assigns a default title, content and creation date when not given any data', async () => {
+    test('returns SC 201 + created user and assigns a default title, content and creation date when not given any data', async () => {
       const memosBefore = await getAllMemos();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const { token } = (await api.post('/api/login').send({ ...login })).body;
