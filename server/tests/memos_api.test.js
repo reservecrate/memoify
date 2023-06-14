@@ -164,9 +164,34 @@ describe('creating memos', () => {
   describe('creating a memo with invalid data', () => {});
 });
 
-describe('updating memos',()=>{
-  test.only()
-})
+describe('updating memos', () => {
+  test.only('returns SC 200 + updated memo when updating the title with a valid token', async () => {
+    const memosBefore = await getAllMemos();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    const memoToUpdate = memosBefore[0];
+    const { id } = memoToUpdate;
+    const updatedMemoData = { ...memoToUpdate, title: 'eine Notiz 1' };
+
+    const { body: updatedMemo } = await api
+      .put(`/api/memos/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(updatedMemoData)
+      //   //send({updatedMemoData}) ?????
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+      .catch(err => log(err));
+
+    expect(updatedMemo.title).toBe(updatedMemoData.title);
+
+    const memosAfter = await getAllMemos();
+    expect(memosAfter).toHaveLength(memosBefore.length);
+    expect(memosAfter).toContainEqual(updatedMemo);
+  });
+  test('invalid token, any modification to the memo', async () => {});
+  test('missing token, any modification', async () => {});
+});
 
 afterAll(async () => {
   await mongoose.connection.close();

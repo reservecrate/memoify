@@ -290,7 +290,7 @@ describe('updating users', () => {
       const usersAfter = await getAllUsers();
       expect(usersAfter).toEqual(usersBefore);
     });
-    test('fails with SC 400 if the new username is shorter than 3 characters', async () => {
+    test('fails with SC 400 if the new username is shorter than 3 characters (token is valid)', async () => {
       const usersBefore = await getAllUsers();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const userToUpdate = await getByUsername(login.username);
@@ -366,7 +366,7 @@ describe('updating users', () => {
       const usersAfter = await getAllUsers();
       expect(usersAfter).toEqual(usersBefore);
     });
-    test('fails with SC 400 if the new password is shorter than 5 characters', async () => {
+    test('fails with SC 400 if the new password is shorter than 5 characters (token is valid)', async () => {
       const usersBefore = await getAllUsers();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const userToUpdate = await getByUsername(login.username);

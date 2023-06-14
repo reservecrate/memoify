@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const usersRouter = require('express').Router();
 const User = require('../models/user');
+const { getUserById } = require('../utils/api_helper');
 
 usersRouter.get('/', async (req, res) => {
   const users = await User.find({}).populate('memos', { title: 1, content: 1 });
@@ -36,7 +37,8 @@ usersRouter.post('/', async (req, res) => {
 });
 
 usersRouter.put('/:id', async (req, res) => {
-  const userToUpdate = await User.findById(req.params.id);
+  const userId = req.params.id;
+  const userToUpdate = await getUserById(req.params.id);
   if (!userToUpdate) return res.status(404).json('invalid/nonexistent user id');
 
   const { user } = req;
