@@ -13,7 +13,6 @@ usersRouter.get('/:id', async (req, res) => {
     title: 1,
     content: 1
   });
-  //try using the getUserById helper function
   res.status(200).json(user);
 });
 
@@ -32,8 +31,8 @@ usersRouter.post('/', async (req, res) => {
       .json({ error: 'password must be at least 5 characters long' });
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
-  const savedUser = await new User({ username, name, passwordHash }).save();
-  res.status(201).json(savedUser);
+  const createdUser = await new User({ username, name, passwordHash }).save();
+  res.status(201).json(createdUser);
 });
 
 usersRouter.put('/:id', async (req, res) => {

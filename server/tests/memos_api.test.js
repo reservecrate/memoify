@@ -114,7 +114,7 @@ describe('fetching the memos', () => {
 
 describe('creating memos', () => {
   describe('creating memos with valid data', () => {
-    test.only('succeeds with 201 when given valid data', async () => {
+    test('succeeds with 201 when given valid data', async () => {
       const memosBefore = await getAllMemos();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const { token } = (await api.post('/api/login').send({ ...login })).body;
@@ -130,16 +130,15 @@ describe('creating memos', () => {
         .set('Authorization', `Bearer ${token}`)
         .send(memoToCreate)
         .expect(201)
-        .expect('Content-Type', /application\/json/)
-        .catch(err => console.error(err));
-
-      const memosAfter = await getAllMemos();
-      expect(memosAfter).toHaveLength(memosBefore.length + 1);
-      expect(memosAfter).toContainEqual(createdMemo);
+        .expect('Content-Type', /application\/json/);
 
       expect(createdMemo.title).toBe(memoToCreate.title);
       expect(createdMemo.content).toBe(memoToCreate.content);
       expect(createdMemo.dateCreated).toBe(memoToCreate.dateCreated);
+
+      const memosAfter = await getAllMemos();
+      expect(memosAfter).toHaveLength(memosBefore.length + 1);
+      expect(memosAfter).toContainEqual(createdMemo);
     });
     test('succeeds with 201 + assigns a default title, content and creation date when not given any data', async () => {
       const memosBefore = await getAllMemos();
@@ -153,6 +152,9 @@ describe('creating memos', () => {
         .send(memoToCreate)
         .expect(201)
         .expect('Content-Type', /application\/json/);
+
+      expect(createdMemo.title).toBe('untitled memo');
+      expect(createdMemo.content).toBe('');
 
       const memosAfter = await getAllMemos();
       expect(memosAfter).toHaveLength(memosBefore.length + 1);

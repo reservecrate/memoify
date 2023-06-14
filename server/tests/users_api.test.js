@@ -49,7 +49,7 @@ beforeEach(async () => {
 
 describe('fetching the users', () => {
   describe('fetching all users', () => {
-    test('returns 200 + all the users as JSON', async () => {
+    test('returns SC 200 + all the users as JSON', async () => {
       const { body: usersList } = await api
         .get('/api/users')
         .expect(200)
@@ -59,7 +59,7 @@ describe('fetching the users', () => {
     });
   });
   describe('fetching a single user', () => {
-    test('returns 200 + the right user when given a valid id', async () => {
+    test('returns SC 200 + the right user when given a valid id', async () => {
       const userToFetch1 = await getByUsername('reservecrate');
       const { body: fetchedUser1 } = await api
         .get(`/api/users/${userToFetch1.id}`)
@@ -74,7 +74,7 @@ describe('fetching the users', () => {
         .expect('Content-Type', /application\/json/);
       expect(fetchedUser2).toEqual(userToFetch2);
     });
-    test('returns 404 when given nonexistent id', async () => {
+    test('fails with SC 404 when given nonexistent id', async () => {
       await api
         .get('/api/users/nonexistent')
         .expect(404)
@@ -85,7 +85,7 @@ describe('fetching the users', () => {
 
 describe('creating users', () => {
   describe('creating a user with valid data', () => {
-    test('succeeds with 201 when given a valid username + password', async () => {
+    test('returns SC 201 + created user when given a valid username + password', async () => {
       const usersBefore = await getAllUsers();
 
       const userToCreate = {
@@ -100,12 +100,15 @@ describe('creating users', () => {
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
+      expect(createdUser.username).toBe(userToCreate.username);
+      expect(createdUser.name).toBe(userToCreate.name);
+
       const usersAfter = await getAllUsers();
       expect(usersAfter).toHaveLength(usersBefore.length + 1);
       expect(usersAfter).toContainEqual(createdUser);
     });
 
-    test('if name not given, assigns a default one (Incognito); succeeds with 201', async () => {
+    test('if name not given, assigns a default one (Incognito); returns SC 201 + created user', async () => {
       const usersBefore = await getAllUsers();
 
       const userToCreate = {
@@ -119,6 +122,9 @@ describe('creating users', () => {
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
+      expect(createdUser.username).toBe(userToCreate.username);
+      expect(createdUser.name).toBe('Incognito');
+
       const usersAfter = await getAllUsers();
       expect(usersAfter).toHaveLength(usersBefore.length + 1);
       expect(usersAfter).toContainEqual(createdUser);
@@ -126,7 +132,7 @@ describe('creating users', () => {
   });
 
   describe('creating a user with invalid data', () => {
-    test('fails with 400 if the username is shorter than 3 characters', async () => {
+    test('fails with SC 400 if the username is shorter than 3 characters', async () => {
       const usersBefore = await getAllUsers();
 
       const userToCreate = {
@@ -146,7 +152,7 @@ describe('creating users', () => {
       expect(usersAfter).toHaveLength(usersBefore.length);
       expect(usernames).not.toContain(userToCreate.username);
     });
-    test('fails with 400 if the password is shorter than 5 characters', async () => {
+    test('fails with SC 400 if the password is shorter than 5 characters', async () => {
       const usersBefore = await getAllUsers();
 
       const userToCreate = {
@@ -166,7 +172,7 @@ describe('creating users', () => {
       expect(usersAfter).toHaveLength(usersBefore.length);
       expect(usernames).not.toContain(userToCreate.username);
     });
-    test('fails with 400 if the username is already taken', async () => {
+    test('fails with SC 400 if the username is already taken', async () => {
       const usersBefore = await getAllUsers();
 
       const userToCreate = {
@@ -187,7 +193,7 @@ describe('creating users', () => {
   });
 
   describe('creating a user with missing data', () => {
-    test('fails with 400 if the username is missing', async () => {
+    test('fails with SC 400 if the username is missing', async () => {
       const usersBefore = await getAllUsers();
 
       const userToCreate = {
@@ -204,7 +210,7 @@ describe('creating users', () => {
       const usersAfter = await getAllUsers();
       expect(usersAfter).toHaveLength(usersBefore.length);
     });
-    test('fails with 400 if the password is missing', async () => {
+    test('fails with SC 400 if the password is missing', async () => {
       const usersBefore = await getAllUsers();
 
       const userToCreate = {
@@ -226,7 +232,7 @@ describe('creating users', () => {
 
 describe('updating users', () => {
   describe('updating the username', () => {
-    test('returns 200 + the updated user if given a valid token', async () => {
+    test('returns SC 200 + updated user when given a valid token', async () => {
       const usersBefore = await getAllUsers();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const userToUpdate = await getByUsername(login.username);
@@ -241,11 +247,13 @@ describe('updating users', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
+      expect(updatedUser.username).toBe(updatedUserData.username);
+
       const usersAfter = await getAllUsers();
       expect(usersAfter).toHaveLength(usersBefore.length);
       expect(usersAfter).toContainEqual(updatedUser);
     });
-    test('returns 400 if the new username is shorter than 3 characters', async () => {
+    test('fails with SC 400 if the new username is shorter than 3 characters', async () => {
       const usersBefore = await getAllUsers();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const userToUpdate = await getByUsername(login.username);
@@ -266,7 +274,7 @@ describe('updating users', () => {
     });
   });
   describe('updating the password', () => {
-    test('returns 200 and successfully updates the password if given a valid token', async () => {
+    test('returns SC 200 + updated user when given a valid token', async () => {
       const usersBefore = await getAllUsers();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const userToUpdate = await getByUsername(login.username);
@@ -285,7 +293,7 @@ describe('updating users', () => {
       expect(usersAfter).toHaveLength(usersBefore.length);
       expect(usersAfter).toContainEqual(updatedUser);
     });
-    test('returns 400 if the new password is shorter than 5 characters', async () => {
+    test('fails with SC 400 if the new password is shorter than 5 characters', async () => {
       const usersBefore = await getAllUsers();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const userToUpdate = await getByUsername(login.username);
@@ -304,7 +312,7 @@ describe('updating users', () => {
       expect(usersAfter).toEqual(usersBefore);
     });
   });
-  test('returns 400 if the update flag (toUpdate) is invalid/missing', async () => {
+  test('fails with SC 400 if the update flag (toUpdate) is invalid/missing', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const userToUpdate = await getByUsername(login.username);
@@ -326,7 +334,7 @@ describe('updating users', () => {
 });
 
 describe('deleting users', () => {
-  test('returns 200 + the deleted user if the token is valid', async () => {
+  test('returns SC 200 + deleted user when the token is valid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const userToDelete = await getByUsername(login.username);
@@ -344,7 +352,7 @@ describe('deleting users', () => {
     expect(usersAfter).toHaveLength(usersBefore.length - 1);
     expect(usersAfter).not.toContainEqual(deletedUser);
   });
-  test('returns 401 if the token is invalid', async () => {
+  test('returns SC 401 when the token is invalid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const wrongLogin = { username: 'breezehash', password: 'niemals' };
@@ -364,7 +372,7 @@ describe('deleting users', () => {
     expect(usersAfter).toHaveLength(usersBefore.length);
     expect(usersAfter).toContainEqual(userToDelete);
   });
-  test('returns 401 if the token is missing', async () => {
+  test('returns SC 401 when the token is missing', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const userToDelete = await getByUsername(login.username);
