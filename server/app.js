@@ -3,7 +3,7 @@ const express = require('express');
 require('express-async-errors');
 const app = express();
 const cors = require('cors');
-// const memosRouter = require('./controllers/memos');
+const memosRouter = require('./controllers/memos');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const morgan = require('morgan');
@@ -33,7 +33,7 @@ app.use(express.static('build'));
 app.use(express.json());
 app.use(morgan('dev'));
 
-// app.use('/api/blogs', userExtractor, memosRouter);
+app.use('/api/memos', userExtractor, memosRouter);
 app.use('/api/users', userExtractor, usersRouter);
 app.use('/api/login', loginRouter);
 

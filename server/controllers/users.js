@@ -3,13 +3,17 @@ const usersRouter = require('express').Router();
 const User = require('../models/user');
 
 usersRouter.get('/', async (req, res) => {
-  const users = await User.find({});
+  const users = await User.find({}).populate('memos', { title: 1, content: 1 });
   res.status(200).json(users);
 });
 
 usersRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const user = await User.findById(id);
+  const user = await User.findById(id).populate('memos', {
+    title: 1,
+    content: 1
+  });
+  //try using the getUserById helper function
   res.status(200).json(user);
 });
 
@@ -80,6 +84,13 @@ usersRouter.put('/:id', async (req, res) => {
   });
 });
 
-usersRouter.delete('/:id', async (req, res) => {});
+usersRouter.delete('/:id', async (req, res) => {
+  const { user } = req;
+  if (!user) return res.status(401).json({ error: 'token not given' });
+  else if (user.id !== req.params.id)
+    return res.status(401).json({ error: 'invalid user id' });
+  const deletedUser = await User.findByIdAndDelete(user.id);
+  res.status(200).json(deletedUser);
+});
 
 module.exports = usersRouter;

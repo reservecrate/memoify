@@ -49,30 +49,36 @@ beforeEach(async () => {
 
 describe('fetching the users', () => {
   describe('fetching all users', () => {
-    test('returns 200 + the users list as JSON', async () => {
-      const { body } = await api.get('/api/users').expect(200);
+    test('returns 200 + all the users as JSON', async () => {
+      const { body: usersList } = await api
+        .get('/api/users')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
       const users = await getAllUsers();
-      expect(body).toHaveLength(users.length);
+      expect(usersList).toEqual(users);
     });
   });
   describe('fetching a single user', () => {
-    test('returns 200 + the right user when fetching a single user', async () => {
+    test('returns 200 + the right user when given a valid id', async () => {
       const userToFetch1 = await getByUsername('reservecrate');
       const { body: fetchedUser1 } = await api
         .get(`/api/users/${userToFetch1.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      expect(fetchedUser1.username).toBe('reservecrate');
+      expect(fetchedUser1).toEqual(userToFetch1);
 
       const userToFetch2 = await getByUsername('wirelessspice');
       const { body: fetchedUser2 } = await api
         .get(`/api/users/${userToFetch2.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      expect(fetchedUser2.name).toBe('Gabor');
+      expect(fetchedUser2).toEqual(userToFetch2);
     });
     test('returns 404 when given nonexistent id', async () => {
-      await api.get('/api/users/nonexistent').expect(404);
+      await api
+        .get('/api/users/nonexistent')
+        .expect(404)
+        .expect('Content-Type', /application\/json/);
     });
   });
 });
@@ -319,23 +325,59 @@ describe('updating users', () => {
   });
 });
 
-describe('deleting users (idempotent)', () => {
-  //next up on the list
-  test.only('returns 204 and successfully deletes the user if given a valid token', async () => {
+describe('deleting users', () => {
+  test('returns 200 + the deleted user if the token is valid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const userToDelete = await getByUsername(login.username);
     const { id } = userToDelete;
     const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-    await api
+    const { body: deletedUser } = await api
       .delete(`/api/users/${id}`)
       .set('Authorization', `Bearer ${token}`)
-      .expect(204);
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
 
     const usersAfter = await getAllUsers();
+    expect(deletedUser).toEqual(userToDelete);
     expect(usersAfter).toHaveLength(usersBefore.length - 1);
-    expect(usersAfter).not.toContainEqual(userToDelete);
+    expect(usersAfter).not.toContainEqual(deletedUser);
+  });
+  test('returns 401 if the token is invalid', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const wrongLogin = { username: 'breezehash', password: 'niemals' };
+    const userToDelete = await getByUsername(login.username);
+    const { id } = userToDelete;
+    const { token: wrongToken } = (
+      await api.post('/api/login').send({ ...wrongLogin })
+    ).body;
+
+    await api
+      .delete(`/api/users/${id}`)
+      .set('Authorization', `Bearer ${wrongToken}`)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).toHaveLength(usersBefore.length);
+    expect(usersAfter).toContainEqual(userToDelete);
+  });
+  test('returns 401 if the token is missing', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const userToDelete = await getByUsername(login.username);
+    const { id } = userToDelete;
+
+    await api
+      .delete(`/api/users/${id}`)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).toEqual(usersBefore);
+    expect(usersAfter).toContainEqual(userToDelete);
   });
 });
 

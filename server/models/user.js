@@ -25,9 +25,10 @@ userSchema.plugin(uniqueValidator);
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
+    // returnedObject.memos = returnedObject.memos.map(memo => memo.toString());
     delete returnedObject._id;
     delete returnedObject.__v;
-    // the passwordHash should not be revealed
+    // passwordHash should be hidden
     delete returnedObject.passwordHash;
   }
 });

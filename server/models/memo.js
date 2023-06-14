@@ -6,6 +6,8 @@ const memoSchema = new mongoose.Schema({
     required: true
   },
   content: String,
+  dateCreated: { type: Number, required: true }, //Number for now, to simplify things
+  lastEdited: String,
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
