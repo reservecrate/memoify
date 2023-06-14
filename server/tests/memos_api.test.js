@@ -165,7 +165,7 @@ describe('creating memos', () => {
 });
 
 describe('updating memos',()=>{
-  describe()
+  test.only()
 })
 
 afterAll(async () => {

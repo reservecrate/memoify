@@ -40,6 +40,7 @@ usersRouter.put('/:id', async (req, res) => {
   if (!userToUpdate) return res.status(404).json('invalid/nonexistent user id');
 
   const { user } = req;
+  if (!user) return res.status(401).json({ error: 'token not given' });
   if (user.id !== userToUpdate.id)
     return res.status(401).json({
       error: 'wrong/invalid token (not authorised)'
