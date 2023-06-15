@@ -3,16 +3,13 @@ const Memo = require('../models/memo');
 const { getMemoById } = require('../utils/api_helper');
 
 memosRouter.get('/', async (req, res) => {
-  const memos = await Memo.find({}).populate('user', { username: 1, name: 1 });
+  const memos = await Memo.find({});
   res.status(200).json(memos);
 });
 
 memosRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const memo = await Memo.findById(id).populate('user', {
-    username: 1,
-    name: 1
-  });
+  const memo = await Memo.findById(id);
   res.status(200).json(memo);
 });
 
@@ -23,12 +20,7 @@ memosRouter.post('/', async (req, res) => {
 
   const { user } = req;
   if (!user) return res.status(401).json({ error: 'missing/invalid token' });
-  const createdMemo = await (
-    await new Memo({ ...req.body, user: user.id }).populate('user', {
-      username: 1,
-      name: 1
-    })
-  ).save();
+  const createdMemo = await new Memo({ ...req.body, user: user._id }).save();
   user.memos = [...user.memos, createdMemo.id];
   await user.save();
   res.status(201).json(createdMemo);

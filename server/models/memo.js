@@ -1,26 +1,44 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const memoSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
+const memoSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true
+    },
+    content: String,
+    dateCreated: { type: Number, required: true }, //Number for now, to simplify things
+    lastEdited: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
   },
-  content: String,
-  dateCreated: { type: Number, required: true }, //Number for now, to simplify things
-  lastEdited: String,
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+  {
+    methods: {
+      prettify() {
+        const prettifiedMemo = {
+          id: this._id.toString(),
+          title: this.title,
+          content: this.content,
+          dateCreated: this.dateCreated,
+          user: this.user.toString()
+        };
+        return prettifiedMemo;
+      }
+    }
   }
-});
+);
 
-memoSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  }
-});
+// memoSchema.set('toJSON', {
+//   transform: (document, returnedObject) => {
+//     returnedObject.id = returnedObject._id.toString();
+//     returnedObject.user = returnedObject.user.toString();
+//     delete returnedObject._id;
+//     delete returnedObject.__v;
+//   }
+// });
 
 const Memo = mongoose.model('Memo', memoSchema);
 

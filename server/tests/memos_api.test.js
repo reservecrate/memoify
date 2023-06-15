@@ -5,7 +5,12 @@ const app = require('../app');
 const api = supertest(app);
 const Memo = require('../models/memo');
 const User = require('../models/user');
-const { getAllMemos, getMemoById } = require('../utils/api_helper');
+const {
+  getAllMemos,
+  getMemoById,
+  memosPrettifier,
+  memoPrettifier
+} = require('../utils/api_helper');
 
 beforeEach(async () => {
   await Memo.deleteMany({});
@@ -28,58 +33,73 @@ beforeEach(async () => {
       .send({ username: 'breezehash', password: 'niemals' })
   ).body;
 
+  let i = 0;
+  const memo1 = {
+    title: `test memo ${i + 1}`,
+    content: `placeholder ${i + 1}`,
+    dateCreated: Date.now()
+  };
   await api
     .post('/api/memos')
     .set('Authorization', `Bearer ${token1}`)
-    .send({
-      title: 'test note 1',
-      content: 'placeholder 1',
-      dateCreated: Date.now()
-    })
+    .send(memo1)
     .expect(201)
     .expect('Content-Type', /application\/json/);
+  i += 1;
+
+  const memo2 = {
+    title: `test memo ${i + 1}`,
+    content: `placeholder ${i + 1}`,
+    dateCreated: Date.now()
+  };
   await api
     .post('/api/memos')
     .set('Authorization', `Bearer ${token1}`)
-    .send({
-      title: 'test note 2',
-      content: 'placeholder 2',
-      dateCreated: Date.now()
-    })
+    .send(memo2)
     .expect(201)
     .expect('Content-Type', /application\/json/);
+  i += 1;
+
+  const memo3 = {
+    title: `test memo ${i + 1}`,
+    content: `placeholder ${i + 1}`,
+    dateCreated: Date.now()
+  };
   await api
     .post('/api/memos')
     .set('Authorization', `Bearer ${token2}`)
-    .send({
-      title: 'test note 3',
-      content: 'placeholder 3',
-      dateCreated: Date.now()
-    })
+    .send(memo3)
     .expect(201)
     .expect('Content-Type', /application\/json/);
+  i += 1;
+
+  const memo4 = {
+    title: `test memo ${i + 1}`,
+    content: `placeholder ${i + 1}`,
+    dateCreated: Date.now()
+  };
   await api
     .post('/api/memos')
     .set('Authorization', `Bearer ${token2}`)
-    .send({
-      title: 'test note 4',
-      content: 'placeholder 4',
-      dateCreated: Date.now()
-    })
+    .send(memo4)
     .expect(201)
     .expect('Content-Type', /application\/json/);
+  i += 1;
 }, 50000);
 
-describe('fetching the memos', () => {
+describe.only('fetching the memos', () => {
   describe('fetching all memos', () => {
     test('returns SC 200 + all memos in the correct order', async () => {
-      const { body: memosList } = await api
+      const allMemos = await getAllMemos();
+
+      //let memos and then change the value???
+      const { body: memos } = await api
         .get('/api/memos')
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      const memos = await getAllMemos();
-      expect(memosList).toEqual(memos);
-      expect(memos[0].title).toBe('test note 1');
+
+      expect(memosPrettifier(memos)).toEqual(allMemos);
+      expect(memos[0].title).toBe('test memo 1');
       expect(memos[2].content).toBe('placeholder 3');
     });
   });
@@ -93,7 +113,7 @@ describe('fetching the memos', () => {
         .get(`/api/memos/${id1}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      expect(fetchedMemo1).toEqual(memoToFetch1);
+      expect(memoPrettifier(fetchedMemo1)).toEqual(memoToFetch1);
 
       const memoToFetch2 = await getMemoById(memos[2].id);
       const { id: id2 } = memoToFetch2;
@@ -101,7 +121,7 @@ describe('fetching the memos', () => {
         .get(`/api/memos/${id2}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      expect(fetchedMemo2).toEqual(memoToFetch2);
+      expect(memoPrettifier(fetchedMemo2)).toEqual(memoToFetch2);
     });
     test('returns SC 404 when given nonexistent id', async () => {
       await api
@@ -165,7 +185,7 @@ describe('creating memos', () => {
 });
 
 describe('updating memos', () => {
-  test.only('returns SC 200 + updated memo when updating the title with a valid token', async () => {
+  test('returns SC 200 + updated memo when updating the title with a valid token', async () => {
     const memosBefore = await getAllMemos();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const { token } = (await api.post('/api/login').send({ ...login })).body;
