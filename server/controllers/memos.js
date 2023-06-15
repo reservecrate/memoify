@@ -34,21 +34,16 @@ memosRouter.put('/:id', async (req, res) => {
 
   const { user } = req;
   if (!user) return res.status(401).json({ error: 'token not given' });
-  if (memoToUpdate.user.id !== user.id)
+  if (memoToUpdate.user !== user.id)
     return res.status(401).json({
       error: 'wrong/invalid token (not authorised)'
     });
 
   const updatedMemoData = req.body;
-  updatedMemoData.user = updatedMemoData.user.id;
   const updatedMemo = await Memo.findByIdAndUpdate(memoId, updatedMemoData, {
     new: true
-  }).populate('user', {
-    username: 1,
-    name: 1
   });
   res.status(200).json(updatedMemo);
-  //res.status(200).json({updatedMemo}) ?????;
 });
 
 module.exports = memosRouter;

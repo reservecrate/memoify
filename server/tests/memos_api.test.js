@@ -189,7 +189,7 @@ describe('creating memos', () => {
 });
 
 describe('updating memos', () => {
-  test.only('returns SC 200 + updated memo when updating the title with a valid token', async () => {
+  test('returns SC 200 + updated memo when updating the title with a valid token', async () => {
     const memosBefore = await getAllMemos();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const { token } = (await api.post('/api/login').send({ ...login })).body;
@@ -202,19 +202,19 @@ describe('updating memos', () => {
       .put(`/api/memos/${id}`)
       .set('Authorization', `Bearer ${token}`)
       .send(updatedMemoData)
-      //   //send({updatedMemoData}) ?????
       .expect(200)
       .expect('Content-Type', /application\/json/)
       .catch(err => log(err));
+    const prettifiedUpdatedMemo = memoPrettifier(updatedMemo);
 
     expect(updatedMemo.title).toBe(updatedMemoData.title);
 
     const memosAfter = await getAllMemos();
     expect(memosAfter).toHaveLength(memosBefore.length);
-    expect(memosAfter).toContainEqual(updatedMemo);
+    expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
   });
-  test('invalid token, any modification to the memo', async () => {});
-  test('missing token, any modification', async () => {});
+  // test('invalid token, any modification to the memo', async () => {});
+  // test('missing token, any modification', async () => {});
 });
 
 afterAll(async () => {
