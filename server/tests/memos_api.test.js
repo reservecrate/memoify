@@ -217,6 +217,8 @@ describe('updating memos', () => {
   // test('missing token, any modification', async () => {});
 });
 
+// describe('deleting memos',()=>{})
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

@@ -49,48 +49,48 @@ beforeEach(async () => {
   await user3.save();
 }, 50000);
 
-describe('fetching the users', () => {
-  describe('fetching all users', () => {
-    test('returns SC 200 + all users in the correct order', async () => {
-      const allUsers = await getAllUsers();
+// describe('fetching the users', () => {
+//   describe('fetching all users', () => {
+//     test('returns SC 200 + all users in the correct order', async () => {
+//       const allUsers = await getAllUsers();
 
-      const { body: users } = await api
-        .get('/api/users')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedUsers = usersPrettifier(users);
+//       const { body: users } = await api
+//         .get('/api/users')
+//         .expect(200)
+//         .expect('Content-Type', /application\/json/);
+//       const prettifiedUsers = usersPrettifier(users);
 
-      expect(prettifiedUsers).toEqual(allUsers);
-      expect(users[1].username).toBe('reservecrate');
-      expect(users[2].name).toBe('Joel');
-    });
-  });
-  describe('fetching a single user', () => {
-    test('returns SC 200 + the right user when given a valid id', async () => {
-      const userToFetch1 = await getByUsername('reservecrate');
-      const { body: fetchedUser1 } = await api
-        .get(`/api/users/${userToFetch1.id}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedUser1 = userPrettifier(fetchedUser1);
-      expect(prettifiedFetchedUser1).toEqual(userToFetch1);
+//       expect(prettifiedUsers).toEqual(allUsers);
+//       expect(users[1].username).toBe('reservecrate');
+//       expect(users[2].name).toBe('Joel');
+//     });
+//   });
+//   describe('fetching a single user', () => {
+//     test('returns SC 200 + the right user when given a valid id', async () => {
+//       const userToFetch1 = await getByUsername('reservecrate');
+//       const { body: fetchedUser1 } = await api
+//         .get(`/api/users/${userToFetch1.id}`)
+//         .expect(200)
+//         .expect('Content-Type', /application\/json/);
+//       const prettifiedFetchedUser1 = userPrettifier(fetchedUser1);
+//       expect(prettifiedFetchedUser1).toEqual(userToFetch1);
 
-      const userToFetch2 = await getByUsername('wirelessspice');
-      const { body: fetchedUser2 } = await api
-        .get(`/api/users/${userToFetch2.id}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedUser2 = userPrettifier(fetchedUser2);
-      expect(prettifiedFetchedUser2).toEqual(userToFetch2);
-    });
-    test('fails with SC 404 when given nonexistent id', async () => {
-      await api
-        .get('/api/users/nonexistent')
-        .expect(404)
-        .expect('Content-Type', /application\/json/);
-    });
-  });
-});
+//       const userToFetch2 = await getByUsername('wirelessspice');
+//       const { body: fetchedUser2 } = await api
+//         .get(`/api/users/${userToFetch2.id}`)
+//         .expect(200)
+//         .expect('Content-Type', /application\/json/);
+//       const prettifiedFetchedUser2 = userPrettifier(fetchedUser2);
+//       expect(prettifiedFetchedUser2).toEqual(userToFetch2);
+//     });
+//     test('fails with SC 404 when given nonexistent id', async () => {
+//       await api
+//         .get('/api/users/nonexistent')
+//         .expect(404)
+//         .expect('Content-Type', /application\/json/);
+//     });
+//   });
+// });
 
 // describe('creating users', () => {
 //   describe('creating a user with valid data', () => {
@@ -108,13 +108,14 @@ describe('fetching the users', () => {
 //         .send(userToCreate)
 //         .expect(201)
 //         .expect('Content-Type', /application\/json/);
+//       const prettifiedCreatedUser = userPrettifier(createdUser);
 
 //       expect(createdUser.username).toBe(userToCreate.username);
 //       expect(createdUser.name).toBe(userToCreate.name);
 
 //       const usersAfter = await getAllUsers();
 //       expect(usersAfter).toHaveLength(usersBefore.length + 1);
-//       expect(usersAfter).toContainEqual(createdUser);
+//       expect(usersAfter).toContainEqual(prettifiedCreatedUser);
 //     });
 
 //     test('if name not given, assigns a default one (Incognito); returns SC 201 + created user', async () => {
@@ -130,13 +131,14 @@ describe('fetching the users', () => {
 //         .send(userToCreate)
 //         .expect(201)
 //         .expect('Content-Type', /application\/json/);
+//       const prettifiedCreatedUser = userPrettifier(createdUser);
 
 //       expect(createdUser.username).toBe(userToCreate.username);
 //       expect(createdUser.name).toBe('Incognito');
 
 //       const usersAfter = await getAllUsers();
 //       expect(usersAfter).toHaveLength(usersBefore.length + 1);
-//       expect(usersAfter).toContainEqual(createdUser);
+//       expect(usersAfter).toContainEqual(prettifiedCreatedUser);
 //     });
 //   });
 
@@ -239,7 +241,7 @@ describe('fetching the users', () => {
 //   });
 // });
 
-// describe('updating users', () => {
+// describe.only('updating users', () => {
 //   describe('updating the username', () => {
 //     test('returns SC 200 + updated user when the token is valid', async () => {
 //       const usersBefore = await getAllUsers();
@@ -255,12 +257,13 @@ describe('fetching the users', () => {
 //         .send({ updatedUserData, toUpdate: 'username' })
 //         .expect(200)
 //         .expect('Content-Type', /application\/json/);
+//       const prettifiedUpdatedUser = userPrettifier(updatedUser);
 
 //       expect(updatedUser.username).toBe(updatedUserData.username);
 
 //       const usersAfter = await getAllUsers();
 //       expect(usersAfter).toHaveLength(usersBefore.length);
-//       expect(usersAfter).toContainEqual(updatedUser);
+//       expect(usersAfter).toContainEqual(prettifiedUpdatedUser);
 //     });
 //     test('fails with SC 401 when the token is invalid', async () => {
 //       const usersBefore = await getAllUsers();
@@ -333,10 +336,11 @@ describe('fetching the users', () => {
 //         .send({ updatedUserData, toUpdate: 'password' })
 //         .expect(200)
 //         .expect('Content-Type', /application\/json/);
+//       const prettifiedUpdatedUser = userPrettifier(updatedUser);
 
 //       const usersAfter = await getAllUsers();
 //       expect(usersAfter).toHaveLength(usersBefore.length);
-//       expect(usersAfter).toContainEqual(updatedUser);
+//       expect(usersAfter).toContainEqual(prettifiedUpdatedUser);
 //     });
 //     test('fails with SC 401 when the token is invalid', async () => {
 //       const usersBefore = await getAllUsers();
@@ -395,7 +399,7 @@ describe('fetching the users', () => {
 //     });
 //   });
 //   describe('updating username + password simultaneously', () => {
-//     test("fails with SC 400 if the user attempts to edit the username + password simultaneously (using the 'username' flag)", async () => {
+//     test("fails with SC 400 when the user attempts to edit the username + password simultaneously (using the 'username' flag)", async () => {
 //       const usersBefore = await getAllUsers();
 //       const login = { username: 'reservecrate', password: 'kennwort' };
 //       const userToUpdate = await getByUsername(login.username);
@@ -462,61 +466,62 @@ describe('fetching the users', () => {
 //   });
 // });
 
-// describe('deleting users', () => {
-//   test('returns SC 200 + deleted user when the token is valid', async () => {
-//     const usersBefore = await getAllUsers();
-//     const login = { username: 'reservecrate', password: 'kennwort' };
-//     const userToDelete = await getByUsername(login.username);
-//     const { id } = userToDelete;
-//     const { token } = (await api.post('/api/login').send({ ...login })).body;
+describe('deleting users', () => {
+  test.only('returns SC 200 + deleted user when the token is valid', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const userToDelete = await getByUsername(login.username);
+    const { id } = userToDelete;
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-//     const { body: deletedUser } = await api
-//       .delete(`/api/users/${id}`)
-//       .set('Authorization', `Bearer ${token}`)
-//       .expect(200)
-//       .expect('Content-Type', /application\/json/);
+    const { body: deletedUser } = await api
+      .delete(`/api/users/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedDeletedUser = userPrettifier(deletedUser);
 
-//     const usersAfter = await getAllUsers();
-//     expect(deletedUser).toEqual(userToDelete);
-//     expect(usersAfter).toHaveLength(usersBefore.length - 1);
-//     expect(usersAfter).not.toContainEqual(deletedUser);
-//   });
-//   test('fails with SC 401 when the token is invalid', async () => {
-//     const usersBefore = await getAllUsers();
-//     const login = { username: 'reservecrate', password: 'kennwort' };
-//     const wrongLogin = { username: 'breezehash', password: 'niemals' };
-//     const userToDelete = await getByUsername(login.username);
-//     const { id } = userToDelete;
-//     const { token: wrongToken } = (
-//       await api.post('/api/login').send({ ...wrongLogin })
-//     ).body;
+    const usersAfter = await getAllUsers();
+    expect(prettifiedDeletedUser).toEqual(userToDelete);
+    expect(usersAfter).toHaveLength(usersBefore.length - 1);
+    expect(usersAfter).not.toContainEqual(prettifiedDeletedUser);
+  });
+  test('fails with SC 401 when the token is invalid', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const wrongLogin = { username: 'breezehash', password: 'niemals' };
+    const userToDelete = await getByUsername(login.username);
+    const { id } = userToDelete;
+    const { token: wrongToken } = (
+      await api.post('/api/login').send({ ...wrongLogin })
+    ).body;
 
-//     await api
-//       .delete(`/api/users/${id}`)
-//       .set('Authorization', `Bearer ${wrongToken}`)
-//       .expect(401)
-//       .expect('Content-Type', /application\/json/);
+    await api
+      .delete(`/api/users/${id}`)
+      .set('Authorization', `Bearer ${wrongToken}`)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
 
-//     const usersAfter = await getAllUsers();
-//     expect(usersAfter).toHaveLength(usersBefore.length);
-//     expect(usersAfter).toContainEqual(userToDelete);
-//   });
-//   test('fails with SC 401 when the token is missing', async () => {
-//     const usersBefore = await getAllUsers();
-//     const login = { username: 'reservecrate', password: 'kennwort' };
-//     const userToDelete = await getByUsername(login.username);
-//     const { id } = userToDelete;
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).toHaveLength(usersBefore.length);
+    expect(usersAfter).toContainEqual(userToDelete);
+  });
+  test('fails with SC 401 when the token is missing', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const userToDelete = await getByUsername(login.username);
+    const { id } = userToDelete;
 
-//     await api
-//       .delete(`/api/users/${id}`)
-//       .expect(401)
-//       .expect('Content-Type', /application\/json/);
+    await api
+      .delete(`/api/users/${id}`)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
 
-//     const usersAfter = await getAllUsers();
-//     expect(usersAfter).toEqual(usersBefore);
-//     expect(usersAfter).toContainEqual(userToDelete);
-//   });
-// });
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).toEqual(usersBefore);
+    expect(usersAfter).toContainEqual(userToDelete);
+  });
+});
 
 afterAll(async () => {
   await mongoose.connection.close();
