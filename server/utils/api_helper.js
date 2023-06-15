@@ -20,7 +20,7 @@ const getUserById = async id => {
 };
 
 // user prettifiers
-const usersPrettifier = users => {
+const prettifyUsers = users => {
   const prettifiedUsers = users.map(user => {
     const prettifiedUser = {
       id: user._id.toString(),
@@ -33,7 +33,7 @@ const usersPrettifier = users => {
   return prettifiedUsers;
 };
 
-const userPrettifier = user => {
+const prettifyUser = user => {
   const prettifiedUser = {
     id: user._id.toString(),
     username: user.username,
@@ -56,8 +56,8 @@ const getMemoById = async id => {
   return memo.prettify();
 };
 
-// memo prettifiers; rename to prettifyMemos, perhaps? tomorrow
-const memosPrettifier = memos => {
+// memo prettifiers; rename to prettifyMemos, perhaps? tomorrow. no, today, sleep can wait!!!!
+const prettifyMemos = memos => {
   const prettifiedMemos = memos.map(memo => {
     const prettifiedMemo = {
       id: memo._id.toString(),
@@ -71,7 +71,7 @@ const memosPrettifier = memos => {
   return prettifiedMemos;
 };
 
-const memoPrettifier = memo => {
+const prettifyMemo = memo => {
   const prettifiedMemo = {
     id: memo._id.toString(),
     title: memo.title,
@@ -87,10 +87,10 @@ module.exports = {
   getAllUsers,
   getByUsername,
   getUserById,
-  usersPrettifier,
-  userPrettifier,
+  prettifyUsers,
+  prettifyUser,
   getAllMemos,
   getMemoById,
-  memosPrettifier,
-  memoPrettifier
+  prettifyMemos,
+  prettifyMemo
 };

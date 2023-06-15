@@ -8,8 +8,8 @@ const User = require('../models/user');
 const {
   getAllMemos,
   getMemoById,
-  memosPrettifier,
-  memoPrettifier
+  prettifyMemos,
+  prettifyMemo
 } = require('../utils/api_helper');
 
 beforeEach(async () => {
@@ -96,7 +96,7 @@ describe('fetching the memos', () => {
         .get('/api/memos')
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      const prettifiedMemos = memosPrettifier(memos);
+      const prettifiedMemos = prettifyMemos(memos);
 
       expect(prettifiedMemos).toEqual(allMemos);
       expect(memos[0].title).toBe('test memo 1');
@@ -113,7 +113,7 @@ describe('fetching the memos', () => {
         .get(`/api/memos/${id1}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedMemo1 = memoPrettifier(fetchedMemo1);
+      const prettifiedFetchedMemo1 = prettifyMemo(fetchedMemo1);
       expect(prettifiedFetchedMemo1).toEqual(memoToFetch1);
 
       const memoToFetch2 = await getMemoById(memos[2].id);
@@ -122,7 +122,7 @@ describe('fetching the memos', () => {
         .get(`/api/memos/${id2}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedMemo2 = memoPrettifier(fetchedMemo2);
+      const prettifiedFetchedMemo2 = prettifyMemo(fetchedMemo2);
       expect(prettifiedFetchedMemo2).toEqual(memoToFetch2);
     });
     test('returns SC 404 when given nonexistent id', async () => {
@@ -153,7 +153,7 @@ describe('creating memos', () => {
         .send(memoToCreate)
         .expect(201)
         .expect('Content-Type', /application\/json/);
-      const prettifiedCreatedMemo = memoPrettifier(createdMemo);
+      const prettifiedCreatedMemo = prettifyMemo(createdMemo);
 
       expect(createdMemo.title).toBe(memoToCreate.title);
       expect(createdMemo.content).toBe(memoToCreate.content);
@@ -175,7 +175,7 @@ describe('creating memos', () => {
         .send(memoToCreate)
         .expect(201)
         .expect('Content-Type', /application\/json/);
-      const prettifiedCreatedMemo = memoPrettifier(createdMemo);
+      const prettifiedCreatedMemo = prettifyMemo(createdMemo);
 
       expect(createdMemo.title).toBe('untitled memo');
       expect(createdMemo.content).toBe('');
@@ -205,7 +205,7 @@ describe('updating memos', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
       .catch(err => log(err));
-    const prettifiedUpdatedMemo = memoPrettifier(updatedMemo);
+    const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
 
     expect(updatedMemo.title).toBe(updatedMemoData.title);
 

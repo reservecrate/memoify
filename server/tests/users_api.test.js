@@ -8,8 +8,8 @@ const {
   getAllUsers,
   getByUsername,
   // getUserById
-  usersPrettifier,
-  userPrettifier
+  prettifyUsers,
+  prettifyUser
 } = require('../utils/api_helper');
 
 beforeEach(async () => {
@@ -58,7 +58,7 @@ describe('fetching the users', () => {
         .get('/api/users')
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      const prettifiedUsers = usersPrettifier(users);
+      const prettifiedUsers = prettifyUsers(users);
 
       expect(prettifiedUsers).toEqual(allUsers);
       expect(users[1].username).toBe('reservecrate');
@@ -72,7 +72,7 @@ describe('fetching the users', () => {
         .get(`/api/users/${userToFetch1.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedUser1 = userPrettifier(fetchedUser1);
+      const prettifiedFetchedUser1 = prettifyUser(fetchedUser1);
       expect(prettifiedFetchedUser1).toEqual(userToFetch1);
 
       const userToFetch2 = await getByUsername('wirelessspice');
@@ -80,7 +80,7 @@ describe('fetching the users', () => {
         .get(`/api/users/${userToFetch2.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedUser2 = userPrettifier(fetchedUser2);
+      const prettifiedFetchedUser2 = prettifyUser(fetchedUser2);
       expect(prettifiedFetchedUser2).toEqual(userToFetch2);
     });
     test('fails with SC 404 when given nonexistent id', async () => {
@@ -108,7 +108,7 @@ describe('creating users', () => {
         .send(userToCreate)
         .expect(201)
         .expect('Content-Type', /application\/json/);
-      const prettifiedCreatedUser = userPrettifier(createdUser);
+      const prettifiedCreatedUser = prettifyUser(createdUser);
 
       expect(createdUser.username).toBe(userToCreate.username);
       expect(createdUser.name).toBe(userToCreate.name);
@@ -131,7 +131,7 @@ describe('creating users', () => {
         .send(userToCreate)
         .expect(201)
         .expect('Content-Type', /application\/json/);
-      const prettifiedCreatedUser = userPrettifier(createdUser);
+      const prettifiedCreatedUser = prettifyUser(createdUser);
 
       expect(createdUser.username).toBe(userToCreate.username);
       expect(createdUser.name).toBe('Incognito');
@@ -257,7 +257,7 @@ describe('updating users', () => {
         .send({ updatedUserData, toUpdate: 'username' })
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      const prettifiedUpdatedUser = userPrettifier(updatedUser);
+      const prettifiedUpdatedUser = prettifyUser(updatedUser);
 
       expect(updatedUser.username).toBe(updatedUserData.username);
 
@@ -336,7 +336,7 @@ describe('updating users', () => {
         .send({ updatedUserData, toUpdate: 'password' })
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      const prettifiedUpdatedUser = userPrettifier(updatedUser);
+      const prettifiedUpdatedUser = prettifyUser(updatedUser);
 
       const usersAfter = await getAllUsers();
       expect(usersAfter).toHaveLength(usersBefore.length);
@@ -479,7 +479,7 @@ describe('deleting users', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /application\/json/);
-    const prettifiedDeletedUser = userPrettifier(deletedUser);
+    const prettifiedDeletedUser = prettifyUser(deletedUser);
 
     const usersAfter = await getAllUsers();
     expect(prettifiedDeletedUser).toEqual(userToDelete);
