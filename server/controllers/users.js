@@ -4,16 +4,13 @@ const User = require('../models/user');
 const { getUserById } = require('../utils/api_helper');
 
 usersRouter.get('/', async (req, res) => {
-  const users = await User.find({}).populate('memos', { title: 1, content: 1 });
+  const users = await User.find({});
   res.status(200).json(users);
 });
 
 usersRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const user = await User.findById(id).populate('memos', {
-    title: 1,
-    content: 1
-  });
+  const user = await User.findById(id);
   res.status(200).json(user);
 });
 
@@ -38,7 +35,7 @@ usersRouter.post('/', async (req, res) => {
 
 usersRouter.put('/:id', async (req, res) => {
   const userId = req.params.id;
-  const userToUpdate = await getUserById(req.params.id);
+  const userToUpdate = await getUserById(userId);
   if (!userToUpdate) return res.status(404).json('invalid/nonexistent user id');
 
   const { user } = req;
@@ -60,13 +57,9 @@ usersRouter.put('/:id', async (req, res) => {
       return res
         .status(400)
         .json({ error: 'new username must be at least 3 characters long' });
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      updatedUserData,
-      {
-        new: true
-      }
-    );
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, {
+      new: true
+    });
     return res.status(200).json(updatedUser);
   } else if (toUpdate === 'password') {
     if (updatedUserData.username !== user.username)
