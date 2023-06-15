@@ -87,18 +87,18 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-describe.only('fetching the memos', () => {
+describe('fetching the memos', () => {
   describe('fetching all memos', () => {
     test('returns SC 200 + all memos in the correct order', async () => {
       const allMemos = await getAllMemos();
 
-      //let memos and then change the value???
       const { body: memos } = await api
         .get('/api/memos')
         .expect(200)
         .expect('Content-Type', /application\/json/);
+      const prettifiedMemos = memosPrettifier(memos);
 
-      expect(memosPrettifier(memos)).toEqual(allMemos);
+      expect(prettifiedMemos).toEqual(allMemos);
       expect(memos[0].title).toBe('test memo 1');
       expect(memos[2].content).toBe('placeholder 3');
     });
@@ -113,7 +113,8 @@ describe.only('fetching the memos', () => {
         .get(`/api/memos/${id1}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      expect(memoPrettifier(fetchedMemo1)).toEqual(memoToFetch1);
+      const prettifiedFetchedMemo1 = memoPrettifier(fetchedMemo1);
+      expect(prettifiedFetchedMemo1).toEqual(memoToFetch1);
 
       const memoToFetch2 = await getMemoById(memos[2].id);
       const { id: id2 } = memoToFetch2;
@@ -121,7 +122,8 @@ describe.only('fetching the memos', () => {
         .get(`/api/memos/${id2}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      expect(memoPrettifier(fetchedMemo2)).toEqual(memoToFetch2);
+      const prettifiedFetchedMemo2 = memoPrettifier(fetchedMemo2);
+      expect(prettifiedFetchedMemo2).toEqual(memoToFetch2);
     });
     test('returns SC 404 when given nonexistent id', async () => {
       await api
@@ -151,6 +153,7 @@ describe('creating memos', () => {
         .send(memoToCreate)
         .expect(201)
         .expect('Content-Type', /application\/json/);
+      const prettifiedCreatedMemo = memoPrettifier(createdMemo);
 
       expect(createdMemo.title).toBe(memoToCreate.title);
       expect(createdMemo.content).toBe(memoToCreate.content);
@@ -158,7 +161,7 @@ describe('creating memos', () => {
 
       const memosAfter = await getAllMemos();
       expect(memosAfter).toHaveLength(memosBefore.length + 1);
-      expect(memosAfter).toContainEqual(createdMemo);
+      expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
     });
     test('returns SC 201 + created user and assigns a default title, content and creation date when not given any data', async () => {
       const memosBefore = await getAllMemos();
@@ -172,20 +175,21 @@ describe('creating memos', () => {
         .send(memoToCreate)
         .expect(201)
         .expect('Content-Type', /application\/json/);
+      const prettifiedCreatedMemo = memoPrettifier(createdMemo);
 
       expect(createdMemo.title).toBe('untitled memo');
       expect(createdMemo.content).toBe('');
 
       const memosAfter = await getAllMemos();
       expect(memosAfter).toHaveLength(memosBefore.length + 1);
-      expect(memosAfter).toContainEqual(createdMemo);
+      expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
     });
   });
-  describe('creating a memo with invalid data', () => {});
+  // describe('creating a memo with invalid data', () => {}); not necessarily necessary, as default values are assigned
 });
 
 describe('updating memos', () => {
-  test('returns SC 200 + updated memo when updating the title with a valid token', async () => {
+  test.only('returns SC 200 + updated memo when updating the title with a valid token', async () => {
     const memosBefore = await getAllMemos();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const { token } = (await api.post('/api/login').send({ ...login })).body;
