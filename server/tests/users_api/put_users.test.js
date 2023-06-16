@@ -1,16 +1,14 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const bcrypt = require('bcrypt');
-const app = require('../app');
+const app = require('../../app');
 const api = supertest(app);
-const User = require('../models/user');
+const User = require('../../models/user');
 const {
   getAllUsers,
   getByUsername,
-  // getUserById
-  prettifyUsers,
   prettifyUser
-} = require('../utils/api_helper');
+} = require('../../utils/api_helper');
 
 beforeEach(async () => {
   await User.deleteMany({});
@@ -49,202 +47,10 @@ beforeEach(async () => {
   await user3.save();
 }, 50000);
 
-describe('fetching the users', () => {
-  describe('fetching all users', () => {
-    test('returns SC 200 + all users in the correct order', async () => {
-      const allUsers = await getAllUsers();
-
-      const { body: users } = await api
-        .get('/api/users')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedUsers = prettifyUsers(users);
-
-      expect(prettifiedUsers).toEqual(allUsers);
-      expect(users[1].username).toBe('reservecrate');
-      expect(users[2].name).toBe('Joel');
-    });
-  });
-  describe('fetching a single user', () => {
-    test('returns SC 200 + the right user when given a valid id', async () => {
-      const userToFetch1 = await getByUsername('reservecrate');
-      const { body: fetchedUser1 } = await api
-        .get(`/api/users/${userToFetch1.id}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedUser1 = prettifyUser(fetchedUser1);
-      expect(prettifiedFetchedUser1).toEqual(userToFetch1);
-
-      const userToFetch2 = await getByUsername('wirelessspice');
-      const { body: fetchedUser2 } = await api
-        .get(`/api/users/${userToFetch2.id}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedUser2 = prettifyUser(fetchedUser2);
-      expect(prettifiedFetchedUser2).toEqual(userToFetch2);
-    });
-    test('fails with SC 404 when given nonexistent id', async () => {
-      await api
-        .get('/api/users/nonexistent')
-        .expect(404)
-        .expect('Content-Type', /application\/json/);
-    });
-  });
-});
-
-describe('creating users', () => {
-  describe('creating a user with valid data', () => {
-    test('returns SC 201 + created user when given a valid username + password', async () => {
-      const usersBefore = await getAllUsers();
-
-      const userToCreate = {
-        username: 'theelx',
-        name: 'Jonah',
-        password: 'pythonista'
-      };
-
-      const { body: createdUser } = await api
-        .post('/api/users')
-        .send(userToCreate)
-        .expect(201)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedCreatedUser = prettifyUser(createdUser);
-
-      expect(createdUser.username).toBe(userToCreate.username);
-      expect(createdUser.name).toBe(userToCreate.name);
-
-      const usersAfter = await getAllUsers();
-      expect(usersAfter).toHaveLength(usersBefore.length + 1);
-      expect(usersAfter).toContainEqual(prettifiedCreatedUser);
-    });
-
-    test('if name not given, assigns a default one (Incognito); returns SC 201 + created user', async () => {
-      const usersBefore = await getAllUsers();
-
-      const userToCreate = {
-        username: 'theelx',
-        password: 'pythonista'
-      };
-
-      const { body: createdUser } = await api
-        .post('/api/users')
-        .send(userToCreate)
-        .expect(201)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedCreatedUser = prettifyUser(createdUser);
-
-      expect(createdUser.username).toBe(userToCreate.username);
-      expect(createdUser.name).toBe('Incognito');
-
-      const usersAfter = await getAllUsers();
-      expect(usersAfter).toHaveLength(usersBefore.length + 1);
-      expect(usersAfter).toContainEqual(prettifiedCreatedUser);
-    });
-  });
-
-  describe('creating a user with invalid data', () => {
-    test('fails with SC 400 if the username is shorter than 3 characters', async () => {
-      const usersBefore = await getAllUsers();
-
-      const userToCreate = {
-        username: 'tx',
-        name: 'Jonah',
-        password: 'pythonista'
-      };
-
-      await api
-        .post('/api/users')
-        .send(userToCreate)
-        .expect(400)
-        .expect('Content-Type', /application\/json/);
-
-      const usersAfter = await getAllUsers();
-      const usernames = usersAfter.map(user => user.username);
-      expect(usersAfter).toHaveLength(usersBefore.length);
-      expect(usernames).not.toContain(userToCreate.username);
-    });
-    test('fails with SC 400 if the password is shorter than 5 characters', async () => {
-      const usersBefore = await getAllUsers();
-
-      const userToCreate = {
-        username: 'theelx',
-        name: 'Jonah',
-        password: 'pyth'
-      };
-
-      await api
-        .post('/api/users')
-        .send(userToCreate)
-        .expect(400)
-        .expect('Content-Type', /application\/json/);
-
-      const usersAfter = await getAllUsers();
-      const usernames = usersAfter.map(user => user.username);
-      expect(usersAfter).toHaveLength(usersBefore.length);
-      expect(usernames).not.toContain(userToCreate.username);
-    });
-    test('fails with SC 400 if the username is already taken', async () => {
-      const usersBefore = await getAllUsers();
-
-      const userToCreate = {
-        username: 'breezehash',
-        name: 'Joel',
-        password: 'jemals'
-      };
-
-      await api
-        .post('/api/users')
-        .send(userToCreate)
-        .expect(400)
-        .expect('Content-Type', /application\/json/);
-
-      const usersAfter = await getAllUsers();
-      expect(usersAfter).toHaveLength(usersBefore.length);
-    });
-  });
-
-  describe('creating a user with missing data', () => {
-    test('fails with SC 400 if the username is missing', async () => {
-      const usersBefore = await getAllUsers();
-
-      const userToCreate = {
-        name: 'Jonah',
-        password: 'pythonista'
-      };
-
-      await api
-        .post('/api/users')
-        .send(userToCreate)
-        .expect(400)
-        .expect('Content-Type', /application\/json/);
-
-      const usersAfter = await getAllUsers();
-      expect(usersAfter).toHaveLength(usersBefore.length);
-    });
-    test('fails with SC 400 if the password is missing', async () => {
-      const usersBefore = await getAllUsers();
-
-      const userToCreate = {
-        username: 'theelx',
-        name: 'Jonah'
-      };
-
-      await api
-        .post('/api/users')
-        .send(userToCreate)
-        .expect(400)
-        .expect('Content-Type', /application\/json/);
-
-      const usersAfter = await getAllUsers();
-      expect(usersAfter).toHaveLength(usersBefore.length);
-    });
-  });
-});
-
 describe('updating users', () => {
   //start here!!!
   describe('updating the name', () => {
-    test.only('returns 200 + updated user when the token is valid', async () => {
+    test('returns 200 + updated user when the token is valid', async () => {
       const usersBefore = await getAllUsers();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const userToUpdate = await getByUsername(login.username);
@@ -266,7 +72,7 @@ describe('updating users', () => {
       expect(usersAfter).toHaveLength(usersBefore.length);
       expect(usersAfter).toContainEqual(prettifiedUpdatedUser);
     });
-    test()
+    // test()
   });
   describe('updating the username', () => {
     test('returns SC 200 + updated user when the token is valid', async () => {
@@ -489,63 +295,6 @@ describe('updating users', () => {
 
     const usersAfter = await getAllUsers();
     expect(usersAfter).toEqual(usersBefore);
-  });
-});
-
-describe('deleting users', () => {
-  test('returns SC 200 + deleted user when the token is valid', async () => {
-    const usersBefore = await getAllUsers();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const userToDelete = await getByUsername(login.username);
-    const { id } = userToDelete;
-    const { token } = (await api.post('/api/login').send({ ...login })).body;
-
-    const { body: deletedUser } = await api
-      .delete(`/api/users/${id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-    const prettifiedDeletedUser = prettifyUser(deletedUser);
-
-    const usersAfter = await getAllUsers();
-    expect(prettifiedDeletedUser).toEqual(userToDelete);
-    expect(usersAfter).toHaveLength(usersBefore.length - 1);
-    expect(usersAfter).not.toContainEqual(prettifiedDeletedUser);
-  });
-  test('fails with SC 401 when the token is invalid', async () => {
-    const usersBefore = await getAllUsers();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const wrongLogin = { username: 'breezehash', password: 'niemals' };
-    const userToDelete = await getByUsername(login.username);
-    const { id } = userToDelete;
-    const { token: wrongToken } = (
-      await api.post('/api/login').send({ ...wrongLogin })
-    ).body;
-
-    await api
-      .delete(`/api/users/${id}`)
-      .set('Authorization', `Bearer ${wrongToken}`)
-      .expect(401)
-      .expect('Content-Type', /application\/json/);
-
-    const usersAfter = await getAllUsers();
-    expect(usersAfter).toHaveLength(usersBefore.length);
-    expect(usersAfter).toContainEqual(userToDelete);
-  });
-  test('fails with SC 401 when the token is missing', async () => {
-    const usersBefore = await getAllUsers();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const userToDelete = await getByUsername(login.username);
-    const { id } = userToDelete;
-
-    await api
-      .delete(`/api/users/${id}`)
-      .expect(401)
-      .expect('Content-Type', /application\/json/);
-
-    const usersAfter = await getAllUsers();
-    expect(usersAfter).toEqual(usersBefore);
-    expect(usersAfter).toContainEqual(userToDelete);
   });
 });
 
