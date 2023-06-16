@@ -48,9 +48,8 @@ beforeEach(async () => {
 }, 50000);
 
 describe('updating users', () => {
-  //start here!!!
   describe('updating the name', () => {
-    test('returns 200 + updated user when the token is valid', async () => {
+    test('returns SC 200 + updated user when the token is valid', async () => {
       const usersBefore = await getAllUsers();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const userToUpdate = await getByUsername(login.username);
@@ -61,18 +60,54 @@ describe('updating users', () => {
       const { body: updatedUser } = await api
         .put(`/api/users/${id}`)
         .set('Authorization', `Bearer ${token}`)
-        .send({ updatedUserData, toUpdate: 'username' })
+        .send({ updatedUserData, toUpdate: 'name' })
         .expect(200)
         .expect('Content-Type', /application\/json/);
       const prettifiedUpdatedUser = prettifyUser(updatedUser);
 
-      expect(updatedUser.username).toBe(updatedUserData.username);
+      expect(updatedUser.name).toBe(updatedUserData.name);
 
       const usersAfter = await getAllUsers();
       expect(usersAfter).toHaveLength(usersBefore.length);
       expect(usersAfter).toContainEqual(prettifiedUpdatedUser);
     });
-    // test()
+    test('fails with SC 401 when the token is invalid', async () => {
+      const usersBefore = await getAllUsers();
+      const login = { username: 'reservecrate', password: 'kennwort' };
+      const wrongLogin = { username: 'breezehash', password: 'niemals' };
+      const userToUpdate = await getByUsername(login.username);
+      const { id } = userToUpdate;
+      const { token: wrongToken } = (
+        await api.post('/api/login').send({ ...wrongLogin })
+      ).body;
+
+      const updatedUserData = { ...userToUpdate, name: 'Aldiyar' };
+      await api
+        .put(`/api/users/${id}`)
+        .set('Authorization', `Bearer ${wrongToken}`)
+        .send({ updatedUserData, toUpdate: 'name' })
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+
+      const usersAfter = await getAllUsers();
+      expect(usersAfter).toEqual(usersBefore);
+    });
+    test('fails with SC 401 when the token is missing', async () => {
+      const usersBefore = await getAllUsers();
+      const login = { username: 'reservecrate', password: 'kennwort' };
+      const userToUpdate = await getByUsername(login.username);
+      const { id } = userToUpdate;
+
+      const updatedUserData = { ...userToUpdate, name: 'Aldiyar' };
+      await api
+        .put(`/api/users/${id}`)
+        .send({ updatedUserData, toUpdate: 'name' })
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+
+      const usersAfter = await getAllUsers();
+      expect(usersAfter).toEqual(usersBefore);
+    });
   });
   describe('updating the username', () => {
     test('returns SC 200 + updated user when the token is valid', async () => {
