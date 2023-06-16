@@ -242,6 +242,32 @@ describe('creating users', () => {
 });
 
 describe('updating users', () => {
+  //start here!!!
+  describe('updating the name', () => {
+    test.only('returns 200 + updated user when the token is valid', async () => {
+      const usersBefore = await getAllUsers();
+      const login = { username: 'reservecrate', password: 'kennwort' };
+      const userToUpdate = await getByUsername(login.username);
+      const { id } = userToUpdate;
+      const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+      const updatedUserData = { ...userToUpdate, name: 'Aldiyar' };
+      const { body: updatedUser } = await api
+        .put(`/api/users/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ updatedUserData, toUpdate: 'username' })
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+      const prettifiedUpdatedUser = prettifyUser(updatedUser);
+
+      expect(updatedUser.username).toBe(updatedUserData.username);
+
+      const usersAfter = await getAllUsers();
+      expect(usersAfter).toHaveLength(usersBefore.length);
+      expect(usersAfter).toContainEqual(prettifiedUpdatedUser);
+    });
+    test()
+  });
   describe('updating the username', () => {
     test('returns SC 200 + updated user when the token is valid', async () => {
       const usersBefore = await getAllUsers();

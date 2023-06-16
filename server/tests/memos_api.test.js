@@ -189,7 +189,8 @@ describe('creating memos', () => {
 });
 
 describe('updating memos', () => {
-  test('returns SC 200 + updated memo when updating the title with a valid token', async () => {
+  //here!
+  test.only('returns SC 200 + updated memo when updating the title or content (one at a time) with a valid token', async () => {
     const memosBefore = await getAllMemos();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const { token } = (await api.post('/api/login').send({ ...login })).body;
@@ -213,6 +214,7 @@ describe('updating memos', () => {
     expect(memosAfter).toHaveLength(memosBefore.length);
     expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
   });
+  // test('returns SC 200 + updated memo when updating the title and content simultaneously with a valid token', async () => {});
   // test('invalid token, any modification to the memo', async () => {});
   // test('missing token, any modification', async () => {});
 });
