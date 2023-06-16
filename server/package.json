@@ -19,7 +19,7 @@
     "build:dev": "shx rm -rf dist && cd ../frontend/ && npm run build && shx cp -r dist ../backend && nodemon index.js"
   },
   "author": "reservecrate",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
