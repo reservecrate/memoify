@@ -47,7 +47,6 @@ beforeEach(async () => {
   await user3.save();
 }, 50000);
 
-describe('deleting users', () => {
   test('returns SC 200 + deleted user when the token is valid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
@@ -103,7 +102,6 @@ describe('deleting users', () => {
     expect(usersAfter).toContainEqual(userToDelete);
   });
   //test when the user id is invalid but the token is valid! if the id is invalid, then it should say so without even checking if the request has a token
-});
 
 afterAll(async () => {
   await mongoose.connection.close();

@@ -48,46 +48,44 @@ beforeEach(async () => {
   await user3.save();
 }, 50000);
 
-describe('fetching users', () => {
-  describe('fetching all users', () => {
-    test('returns SC 200 + all users in the correct order', async () => {
-      const allUsers = await getAllUsers();
+describe('fetching all users', () => {
+  test('returns SC 200 + all users in the correct order', async () => {
+    const allUsers = await getAllUsers();
 
-      const { body: users } = await api
-        .get('/api/users')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedUsers = prettifyUsers(users);
+    const { body: users } = await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedUsers = prettifyUsers(users);
 
-      expect(prettifiedUsers).toEqual(allUsers);
-      expect(users[1].username).toBe('reservecrate');
-      expect(users[2].name).toBe('Joel');
-    });
+    expect(prettifiedUsers).toEqual(allUsers);
+    expect(users[1].username).toBe('reservecrate');
+    expect(users[2].name).toBe('Joel');
   });
-  describe('fetching a single user', () => {
-    test('returns SC 200 + the right user when given a valid id', async () => {
-      const userToFetch1 = await getByUsername('reservecrate');
-      const { body: fetchedUser1 } = await api
-        .get(`/api/users/${userToFetch1.id}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedUser1 = prettifyUser(fetchedUser1);
-      expect(prettifiedFetchedUser1).toEqual(userToFetch1);
+});
+describe('fetching a single user', () => {
+  test('returns SC 200 + the right user when given a valid id', async () => {
+    const userToFetch1 = await getByUsername('reservecrate');
+    const { body: fetchedUser1 } = await api
+      .get(`/api/users/${userToFetch1.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedFetchedUser1 = prettifyUser(fetchedUser1);
+    expect(prettifiedFetchedUser1).toEqual(userToFetch1);
 
-      const userToFetch2 = await getByUsername('wirelessspice');
-      const { body: fetchedUser2 } = await api
-        .get(`/api/users/${userToFetch2.id}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedUser2 = prettifyUser(fetchedUser2);
-      expect(prettifiedFetchedUser2).toEqual(userToFetch2);
-    });
-    test('fails with SC 404 when given nonexistent id', async () => {
-      await api
-        .get('/api/users/nonexistent')
-        .expect(404)
-        .expect('Content-Type', /application\/json/);
-    });
+    const userToFetch2 = await getByUsername('wirelessspice');
+    const { body: fetchedUser2 } = await api
+      .get(`/api/users/${userToFetch2.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedFetchedUser2 = prettifyUser(fetchedUser2);
+    expect(prettifiedFetchedUser2).toEqual(userToFetch2);
+  });
+  test('fails with SC 404 when given nonexistent id', async () => {
+    await api
+      .get('/api/users/nonexistent')
+      .expect(404)
+      .expect('Content-Type', /application\/json/);
   });
 });
 
