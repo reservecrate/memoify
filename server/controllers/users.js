@@ -49,9 +49,14 @@ usersRouter.put('/:id', async (req, res) => {
   const { toUpdate } = req.body;
   if (toUpdate === 'name') {
     if (updatedUserData.password || updatedUserData.username !== user.username)
-      return res.status(409).json({
+      return res.status(400).json({
         error: 'cannot update name + password/username simultaneously'
       });
+
+    if (!updatedUserData.name.trim())
+      return res
+        .status(400)
+        .json({ error: 'new name must not be an empty string/whitespace' });
 
     const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, {
       new: true

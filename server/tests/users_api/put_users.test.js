@@ -108,6 +108,22 @@ describe('updating users', () => {
       const usersAfter = await getAllUsers();
       expect(usersAfter).toEqual(usersBefore);
     });
+    test('fails with SC 400 if the new name is an emptry string/whitespace', async () => {
+      const usersBefore = await getAllUsers();
+      const login = { username: 'reservecrate', password: 'kennwort' };
+      const userToUpdate = await getByUsername(login.username);
+      const { id } = userToUpdate;
+
+      const updatedUserData = { ...userToUpdate, name: '  ' };
+      await api
+        .put(`/api/users/${id}`)
+        .send({ updatedUserData, toUpdate: 'name' })
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+
+      const usersAfter = await getAllUsers();
+      expect(usersAfter).toEqual(usersBefore);
+    });
   });
   describe('updating the username', () => {
     test('returns SC 200 + updated user when the token is valid', async () => {
