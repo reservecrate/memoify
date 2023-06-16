@@ -86,11 +86,8 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-describe('deleting memos',()=>{
-  test.only('')
-})
+test.only('');
 
 afterAll(async () => {
   await mongoose.connection.close();
 });
-

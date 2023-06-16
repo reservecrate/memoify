@@ -84,7 +84,6 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-describe('updating memos', () => {
   //here!
   test.only('returns SC 200 + updated memo when updating the title or content (one at a time) with a valid token', async () => {
     const memosBefore = await getAllMemos();
@@ -113,7 +112,6 @@ describe('updating memos', () => {
   // test('returns SC 200 + updated memo when updating the title and content simultaneously with a valid token', async () => {});
   // test('invalid token, any modification to the memo', async () => {});
   // test('missing token, any modification', async () => {});
-});
 
 afterAll(async () => {
   await mongoose.connection.close();

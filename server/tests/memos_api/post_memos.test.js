@@ -4,10 +4,7 @@ const app = require('../../app');
 const api = supertest(app);
 const Memo = require('../../models/memo');
 const User = require('../../models/user');
-const {
-  getAllMemos,
-  prettifyMemo
-} = require('../../utils/api_helper');
+const { getAllMemos, prettifyMemo } = require('../../utils/api_helper');
 
 beforeEach(async () => {
   await Memo.deleteMany({});
@@ -84,59 +81,57 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-describe('creating memos', () => {
-  describe('creating a memo with valid data', () => {
-    test('returns SC 201 + created user when given valid data', async () => {
-      const memosBefore = await getAllMemos();
-      const login = { username: 'reservecrate', password: 'kennwort' };
-      const { token } = (await api.post('/api/login').send({ ...login })).body;
+describe('creating a memo with valid data', () => {
+  test('returns SC 201 + created user when given valid data', async () => {
+    const memosBefore = await getAllMemos();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-      const memoToCreate = {
-        title: 'best videogames ever',
-        content: 'apex legends, minecraft',
-        dateCreated: Date.now()
-      };
+    const memoToCreate = {
+      title: 'best videogames ever',
+      content: 'apex legends, minecraft',
+      dateCreated: Date.now()
+    };
 
-      const { body: createdMemo } = await api
-        .post('/api/memos')
-        .set('Authorization', `Bearer ${token}`)
-        .send(memoToCreate)
-        .expect(201)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedCreatedMemo = prettifyMemo(createdMemo);
+    const { body: createdMemo } = await api
+      .post('/api/memos')
+      .set('Authorization', `Bearer ${token}`)
+      .send(memoToCreate)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedCreatedMemo = prettifyMemo(createdMemo);
 
-      expect(createdMemo.title).toBe(memoToCreate.title);
-      expect(createdMemo.content).toBe(memoToCreate.content);
-      expect(createdMemo.dateCreated).toBe(memoToCreate.dateCreated);
+    expect(createdMemo.title).toBe(memoToCreate.title);
+    expect(createdMemo.content).toBe(memoToCreate.content);
+    expect(createdMemo.dateCreated).toBe(memoToCreate.dateCreated);
 
-      const memosAfter = await getAllMemos();
-      expect(memosAfter).toHaveLength(memosBefore.length + 1);
-      expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
-    });
-    test('returns SC 201 + created user and assigns a default title, content and creation date when not given any data', async () => {
-      const memosBefore = await getAllMemos();
-      const login = { username: 'reservecrate', password: 'kennwort' };
-      const { token } = (await api.post('/api/login').send({ ...login })).body;
-
-      const memoToCreate = {};
-      const { body: createdMemo } = await api
-        .post('/api/memos')
-        .set('Authorization', `Bearer ${token}`)
-        .send(memoToCreate)
-        .expect(201)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedCreatedMemo = prettifyMemo(createdMemo);
-
-      expect(createdMemo.title).toBe('untitled memo');
-      expect(createdMemo.content).toBe('');
-
-      const memosAfter = await getAllMemos();
-      expect(memosAfter).toHaveLength(memosBefore.length + 1);
-      expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
-    });
+    const memosAfter = await getAllMemos();
+    expect(memosAfter).toHaveLength(memosBefore.length + 1);
+    expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
   });
-  // describe('creating a memo with invalid data', () => {}); not necessarily necessary, as default values are assigned
+  test('returns SC 201 + created user and assigns a default title, content and creation date when not given any data', async () => {
+    const memosBefore = await getAllMemos();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    const memoToCreate = {};
+    const { body: createdMemo } = await api
+      .post('/api/memos')
+      .set('Authorization', `Bearer ${token}`)
+      .send(memoToCreate)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedCreatedMemo = prettifyMemo(createdMemo);
+
+    expect(createdMemo.title).toBe('untitled memo');
+    expect(createdMemo.content).toBe('');
+
+    const memosAfter = await getAllMemos();
+    expect(memosAfter).toHaveLength(memosBefore.length + 1);
+    expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
+  });
 });
+// describe('creating a memo with invalid data', () => {}); not necessarily necessary, as default values are assigned
 
 afterAll(async () => {
   await mongoose.connection.close();

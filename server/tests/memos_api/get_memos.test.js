@@ -86,50 +86,48 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-describe('fetching memos', () => {
-  describe('fetching all memos', () => {
-    test('returns SC 200 + all memos in the correct order', async () => {
-      const allMemos = await getAllMemos();
+describe('fetching all memos', () => {
+  test('returns SC 200 + all memos in the correct order', async () => {
+    const allMemos = await getAllMemos();
 
-      const { body: memos } = await api
-        .get('/api/memos')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedMemos = prettifyMemos(memos);
+    const { body: memos } = await api
+      .get('/api/memos')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedMemos = prettifyMemos(memos);
 
-      expect(prettifiedMemos).toEqual(allMemos);
-      expect(memos[0].title).toBe('test memo 1');
-      expect(memos[2].content).toBe('placeholder 3');
-    });
+    expect(prettifiedMemos).toEqual(allMemos);
+    expect(memos[0].title).toBe('test memo 1');
+    expect(memos[2].content).toBe('placeholder 3');
   });
-  describe('fetching a single memo', () => {
-    test('returns SC 200 + correct memo when given a valid id', async () => {
-      const memos = await getAllMemos();
+});
+describe('fetching a single memo', () => {
+  test('returns SC 200 + correct memo when given a valid id', async () => {
+    const memos = await getAllMemos();
 
-      const memoToFetch1 = await getMemoById(memos[0].id);
-      const { id: id1 } = memoToFetch1;
-      const { body: fetchedMemo1 } = await api
-        .get(`/api/memos/${id1}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedMemo1 = prettifyMemo(fetchedMemo1);
-      expect(prettifiedFetchedMemo1).toEqual(memoToFetch1);
+    const memoToFetch1 = await getMemoById(memos[0].id);
+    const { id: id1 } = memoToFetch1;
+    const { body: fetchedMemo1 } = await api
+      .get(`/api/memos/${id1}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedFetchedMemo1 = prettifyMemo(fetchedMemo1);
+    expect(prettifiedFetchedMemo1).toEqual(memoToFetch1);
 
-      const memoToFetch2 = await getMemoById(memos[2].id);
-      const { id: id2 } = memoToFetch2;
-      const { body: fetchedMemo2 } = await api
-        .get(`/api/memos/${id2}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-      const prettifiedFetchedMemo2 = prettifyMemo(fetchedMemo2);
-      expect(prettifiedFetchedMemo2).toEqual(memoToFetch2);
-    });
-    test('returns SC 404 when given nonexistent id', async () => {
-      await api
-        .get('/api/memos/nonexistent')
-        .expect(404)
-        .expect('Content-Type', /application\/json/);
-    });
+    const memoToFetch2 = await getMemoById(memos[2].id);
+    const { id: id2 } = memoToFetch2;
+    const { body: fetchedMemo2 } = await api
+      .get(`/api/memos/${id2}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedFetchedMemo2 = prettifyMemo(fetchedMemo2);
+    expect(prettifiedFetchedMemo2).toEqual(memoToFetch2);
+  });
+  test('returns SC 404 when given nonexistent id', async () => {
+    await api
+      .get('/api/memos/nonexistent')
+      .expect(404)
+      .expect('Content-Type', /application\/json/);
   });
 });
 
