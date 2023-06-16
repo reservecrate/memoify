@@ -113,12 +113,14 @@ describe('updating users', () => {
       const login = { username: 'reservecrate', password: 'kennwort' };
       const userToUpdate = await getByUsername(login.username);
       const { id } = userToUpdate;
+      const { token } = (await api.post('/api/login').send({ ...login })).body;
 
       const updatedUserData = { ...userToUpdate, name: '  ' };
       await api
         .put(`/api/users/${id}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({ updatedUserData, toUpdate: 'name' })
-        .expect(401)
+        .expect(400)
         .expect('Content-Type', /application\/json/);
 
       const usersAfter = await getAllUsers();
