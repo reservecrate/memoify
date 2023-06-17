@@ -81,7 +81,7 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-test.only('returns SC 200 + updated memo when updating the title or content (one at a time) with a valid token', async () => {
+test('returns SC 200 + updated memo when updating the title or content (one at a time) with a valid token', async () => {
   const memosBefore = await getAllMemos();
   const login = { username: 'reservecrate', password: 'kennwort' };
   const { token } = (await api.post('/api/login').send({ ...login })).body;
@@ -95,8 +95,7 @@ test.only('returns SC 200 + updated memo when updating the title or content (one
     .set('Authorization', `Bearer ${token}`)
     .send(updatedMemoData)
     .expect(200)
-    .expect('Content-Type', /application\/json/)
-    .catch(err => console.log(err));
+    .expect('Content-Type', /application\/json/);
   const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
 
   expect(updatedMemo.title).toBe(updatedMemoData.title);
