@@ -47,7 +47,8 @@ beforeEach(async () => {
   await user3.save();
 }, 50000);
 
-  test('returns SC 200 + deleted user when the token is valid', async () => {
+describe('valid token', () => {
+  test('returns SC 200 + deleted user when the token + user id is valid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const userToDelete = await getByUsername(login.username);
@@ -66,6 +67,24 @@ beforeEach(async () => {
     expect(usersAfter).toHaveLength(usersBefore.length - 1);
     expect(usersAfter).not.toContainEqual(prettifiedDeletedUser);
   });
+  //test when the user id is invalid but the token is valid! if the id is invalid, then it should say so without even checking if the request has a token
+  test('fails with SC 401 when the token is valid but the user id is invalid', async () => {
+    const usersBefore = await getAllUsers();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    await api
+      .delete('/api/users/nonexistent')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAfter = await getAllUsers();
+    expect(usersAfter).toEqual(usersBefore);
+  });
+});
+
+describe('invalid/missing token', () => {
   test('fails with SC 401 when the token is invalid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
@@ -83,7 +102,7 @@ beforeEach(async () => {
       .expect('Content-Type', /application\/json/);
 
     const usersAfter = await getAllUsers();
-    expect(usersAfter).toHaveLength(usersBefore.length);
+    expect(usersAfter).toEqual(usersBefore);
     expect(usersAfter).toContainEqual(userToDelete);
   });
   test('fails with SC 401 when the token is missing', async () => {
@@ -101,7 +120,7 @@ beforeEach(async () => {
     expect(usersAfter).toEqual(usersBefore);
     expect(usersAfter).toContainEqual(userToDelete);
   });
-  //test when the user id is invalid but the token is valid! if the id is invalid, then it should say so without even checking if the request has a token
+});
 
 afterAll(async () => {
   await mongoose.connection.close();

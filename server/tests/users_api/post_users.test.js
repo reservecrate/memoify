@@ -67,7 +67,6 @@ describe('creating a user with valid data', () => {
     expect(usersAfter).toHaveLength(usersBefore.length + 1);
     expect(usersAfter).toContainEqual(prettifiedCreatedUser);
   });
-
   test('if name not given, assigns a default one (Incognito); returns SC 201 + created user', async () => {
     const usersBefore = await getAllUsers();
 
