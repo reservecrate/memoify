@@ -4,10 +4,7 @@ const app = require('../../app');
 const api = supertest(app);
 const Memo = require('../../models/memo');
 const User = require('../../models/user');
-const {
-  getAllMemos,
-  prettifyMemo
-} = require('../../utils/api_helper');
+const { getAllMemos, prettifyMemo } = require('../../utils/api_helper');
 
 beforeEach(async () => {
   await Memo.deleteMany({});
@@ -84,36 +81,34 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-  //here!
-  test.only('returns SC 200 + updated memo when updating the title or content (one at a time) with a valid token', async () => {
-    const memosBefore = await getAllMemos();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const { token } = (await api.post('/api/login').send({ ...login })).body;
+test.only('returns SC 200 + updated memo when updating the title or content (one at a time) with a valid token', async () => {
+  const memosBefore = await getAllMemos();
+  const login = { username: 'reservecrate', password: 'kennwort' };
+  const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-    const memoToUpdate = memosBefore[0];
-    const { id } = memoToUpdate;
-    const updatedMemoData = { ...memoToUpdate, title: 'eine Notiz 1' };
+  const memoToUpdate = memosBefore[0];
+  const { id } = memoToUpdate;
+  const updatedMemoData = { ...memoToUpdate, title: 'eine Notiz 1' };
 
-    const { body: updatedMemo } = await api
-      .put(`/api/memos/${id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send(updatedMemoData)
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-      .catch(err => console.log(err));
-    const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
+  const { body: updatedMemo } = await api
+    .put(`/api/memos/${id}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send(updatedMemoData)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+    .catch(err => console.log(err));
+  const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
 
-    expect(updatedMemo.title).toBe(updatedMemoData.title);
+  expect(updatedMemo.title).toBe(updatedMemoData.title);
 
-    const memosAfter = await getAllMemos();
-    expect(memosAfter).toHaveLength(memosBefore.length);
-    expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
-  });
-  // test('returns SC 200 + updated memo when updating the title and content simultaneously with a valid token', async () => {});
-  // test('invalid token, any modification to the memo', async () => {});
-  // test('missing token, any modification', async () => {});
+  const memosAfter = await getAllMemos();
+  expect(memosAfter).toHaveLength(memosBefore.length);
+  expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
+});
+// test('returns SC 200 + updated memo when updating the title and content simultaneously with a valid token', async () => {});
+// test('invalid token, any modification to the memo', async () => {});
+// test('missing token, any modification', async () => {});
 
 afterAll(async () => {
   await mongoose.connection.close();
 });
-
