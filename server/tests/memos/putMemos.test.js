@@ -156,6 +156,7 @@ describe('valid token', () => {
     expect(memosAfter).toHaveLength(memosBefore.length);
     expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
   });
+  // test.only('fails with SC 404 when the memo id is invalid', async () => {});
 });
 
 describe('invalid/missing token', () => {
