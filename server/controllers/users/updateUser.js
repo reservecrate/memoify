@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const User = require('../../models/user');
 const { getUserById } = require('../../utils/api_helper');
 
-const putUser = async (req, res) => {
+const updateUser = async (req, res) => {
   const userId = req.params.id;
   const userToUpdate = await getUserById(userId);
   if (!userToUpdate) return res.status(404).json('invalid/nonexistent user id');
@@ -77,4 +77,4 @@ const putUser = async (req, res) => {
   //move this into an if clause at the top and remove the returns at the bottom of the remaining else if clauses
 };
 
-module.exports = putUser;
+module.exports = updateUser;

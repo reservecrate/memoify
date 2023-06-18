@@ -1,16 +1,16 @@
 const memosRouter = require('express').Router();
 const { getMemos, getMemo } = require('./getMemos');
-const postMemo = require('./postMemo');
-const putMemo = require('./putMemo');
+const createMemo = require('./createMemo');
+const updateMemo = require('./updateMemo');
 const deleteMemo = require('./deleteMemo');
 
 memosRouter.get('/', getMemos);
 
 memosRouter.get('/:id', getMemo);
 
-memosRouter.post('/', postMemo);
+memosRouter.post('/', createMemo);
 
-memosRouter.put('/:id', putMemo);
+memosRouter.put('/:id', updateMemo);
 
 memosRouter.delete('/:id', deleteMemo);
 

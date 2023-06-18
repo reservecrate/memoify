@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../../models/user');
 
-const postUser = async (req, res) => {
+const createUser = async (req, res) => {
   const name = req.body.name || 'Incognito';
   const { username, password } = req.body;
   if (!(username && password))
@@ -20,4 +20,4 @@ const postUser = async (req, res) => {
   res.status(201).json(createdUser);
 };
 
-module.exports = postUser;
+module.exports = createUser;

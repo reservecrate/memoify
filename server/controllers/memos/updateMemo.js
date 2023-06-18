@@ -1,6 +1,6 @@
 const Memo = require('../../models/memo');
 
-const putMemo = async (req, res) => {
+const updateMemo = async (req, res) => {
   const memoId = req.params.id;
   const memoToUpdate = await Memo.findById(memoId);
   if (!memoToUpdate)
@@ -20,4 +20,4 @@ const putMemo = async (req, res) => {
   res.status(200).json(updatedMemo);
 };
 
-module.exports = putMemo;
+module.exports = updateMemo;

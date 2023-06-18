@@ -1,6 +1,6 @@
 const Memo = require('../../models/memo');
 
-const postMemo = async (req, res) => {
+const createMemo = async (req, res) => {
   !req.body.title ? (req.body.title = 'untitled memo') : null;
   !req.body.content ? (req.body.content = '') : null;
   !req.body.dateCreated ? (req.body.dateCreated = Date.now()) : null;
@@ -13,4 +13,4 @@ const postMemo = async (req, res) => {
   res.status(201).json(createdMemo);
 };
 
-module.exports = postMemo;
+module.exports = createMemo;
