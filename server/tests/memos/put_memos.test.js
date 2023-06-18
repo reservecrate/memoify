@@ -81,32 +81,130 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-test('returns SC 200 + updated memo when updating the title or content (one at a time) with a valid token', async () => {
-  const memosBefore = await getAllMemos();
-  const login = { username: 'reservecrate', password: 'kennwort' };
-  const { token } = (await api.post('/api/login').send({ ...login })).body;
+describe('valid token', () => {
+  test('returns SC 200 + updated memo when updating the title', async () => {
+    const memosBefore = await getAllMemos();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-  const memoToUpdate = memosBefore[0];
-  const { id } = memoToUpdate;
-  const updatedMemoData = { ...memoToUpdate, title: 'eine Notiz 1' };
+    const memoToUpdate = memosBefore[0];
+    const { id } = memoToUpdate;
+    const updatedMemoData = { ...memoToUpdate, title: 'eine Notiz 1' };
 
-  const { body: updatedMemo } = await api
-    .put(`/api/memos/${id}`)
-    .set('Authorization', `Bearer ${token}`)
-    .send(updatedMemoData)
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
-  const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
+    const { body: updatedMemo } = await api
+      .put(`/api/memos/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(updatedMemoData)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
 
-  expect(updatedMemo.title).toBe(updatedMemoData.title);
+    expect(updatedMemo.title).toBe(updatedMemoData.title);
 
-  const memosAfter = await getAllMemos();
-  expect(memosAfter).toHaveLength(memosBefore.length);
-  expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
+    const memosAfter = await getAllMemos();
+    expect(memosAfter).toHaveLength(memosBefore.length);
+    expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
+  });
+  test('returns SC 200 + updated memo when updating the content', async () => {
+    const memosBefore = await getAllMemos();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    const memoToUpdate = memosBefore[0];
+    const { id } = memoToUpdate;
+    const updatedMemoData = { ...memoToUpdate, content: 'something something' };
+
+    const { body: updatedMemo } = await api
+      .put(`/api/memos/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(updatedMemoData)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
+
+    expect(updatedMemo.content).toBe(updatedMemoData.content);
+
+    const memosAfter = await getAllMemos();
+    expect(memosAfter).toHaveLength(memosBefore.length);
+    expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
+  });
+  test('returns SC 200 + updated memo when updating the title and content simultaneously', async () => {
+    const memosBefore = await getAllMemos();
+    const login = { username: 'reservecrate', password: 'kennwort' };
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+    const memoToUpdate = memosBefore[0];
+    const { id } = memoToUpdate;
+    const updatedMemoData = {
+      ...memoToUpdate,
+      title: 'Merkzettel 1',
+      content: 'etwas etwas'
+    };
+
+    const { body: updatedMemo } = await api
+      .put(`/api/memos/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(updatedMemoData)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
+
+    expect(updatedMemo.title).toBe(updatedMemoData.title);
+    expect(updatedMemo.content).toBe(updatedMemoData.content);
+
+    const memosAfter = await getAllMemos();
+    expect(memosAfter).toHaveLength(memosBefore.length);
+    expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
+  });
 });
-// test('returns SC 200 + updated memo when updating the title and content simultaneously with a valid token', async () => {});
-// test('invalid token, any modification to the memo', async () => {});
-// test('missing token, any modification', async () => {});
+
+describe('invalid/missing token', () => {
+  test('fails with SC 401 when the token is invalid (any modification to the memo)', async () => {
+    const memosBefore = await getAllMemos();
+    const wrongLogin = { username: 'breezehash', password: 'niemals' };
+    const { token: wrongToken } = (
+      await api.post('/api/login').send({ ...wrongLogin })
+    ).body;
+
+    const memoToUpdate = memosBefore[0];
+    const { id } = memoToUpdate;
+    const updatedMemoData = {
+      ...memoToUpdate,
+      title: 'Merkzettel 1',
+      content: 'etwas etwas'
+    };
+
+    await api
+      .put(`/api/memos/${id}`)
+      .set('Authorization', `Bearer ${wrongToken}`)
+      .send(updatedMemoData)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    const memosAfter = await getAllMemos();
+    expect(memosAfter).toEqual(memosBefore);
+  });
+  test('fails with SC 401 when the token is missing (any modification to the memo)', async () => {
+    const memosBefore = await getAllMemos();
+
+    const memoToUpdate = memosBefore[0];
+    const { id } = memoToUpdate;
+    const updatedMemoData = {
+      ...memoToUpdate,
+      title: 'Merkzettel 1',
+      content: 'etwas etwas'
+    };
+
+    await api
+      .put(`/api/memos/${id}`)
+      .send(updatedMemoData)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    const memosAfter = await getAllMemos();
+    expect(memosAfter).toEqual(memosBefore);
+  });
+});
 
 afterAll(async () => {
   await mongoose.connection.close();
