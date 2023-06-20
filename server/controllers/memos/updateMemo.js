@@ -7,7 +7,7 @@ const updateMemo = async (req, res) => {
     return res.status(404).json({ error: 'invalid/nonexistent memo id' });
 
   const { user } = req;
-  if (!user) return res.status(401).json({ error: 'token not given' });
+  if (!user) return res.status(401).json({ error: 'invalid/missing token' });
   if (memoToUpdate.user.toString() !== user.id)
     return res.status(401).json({
       error: 'wrong/invalid token (not authorised)'

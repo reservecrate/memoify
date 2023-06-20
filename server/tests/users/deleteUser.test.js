@@ -48,12 +48,13 @@ beforeEach(async () => {
 }, 50000);
 
 describe('valid token', () => {
-  test('returns SC 200 + deleted user when the token + user id is valid', async () => {
+  test('returns SC 200 + deleted user when the user id is valid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
+    const { token } = (await api.post('/api/login').send({ ...login })).body;
+
     const userToDelete = await getByUsername(login.username);
     const { id } = userToDelete;
-    const { token } = (await api.post('/api/login').send({ ...login })).body;
 
     const { body: deletedUser } = await api
       .delete(`/api/users/${id}`)
@@ -61,14 +62,13 @@ describe('valid token', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/);
     const prettifiedDeletedUser = prettifyUser(deletedUser);
+    expect(prettifiedDeletedUser).toEqual(userToDelete);
 
     const usersAfter = await getAllUsers();
-    expect(prettifiedDeletedUser).toEqual(userToDelete);
     expect(usersAfter).toHaveLength(usersBefore.length - 1);
     expect(usersAfter).not.toContainEqual(prettifiedDeletedUser);
   });
-  //test when the user id is invalid but the token is valid! if the id is invalid, then it should say so without even checking if the request has a token
-  test('fails with SC 401 when the token is valid but the user id is invalid', async () => {
+  test('fails with SC 404 when the the user id is invalid/nonexistent', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const { token } = (await api.post('/api/login').send({ ...login })).body;
@@ -76,7 +76,7 @@ describe('valid token', () => {
     await api
       .delete('/api/users/nonexistent')
       .set('Authorization', `Bearer ${token}`)
-      .expect(401)
+      .expect(404)
       .expect('Content-Type', /application\/json/);
 
     const usersAfter = await getAllUsers();
@@ -85,7 +85,7 @@ describe('valid token', () => {
 });
 
 describe('invalid/missing token', () => {
-  test('fails with SC 401 when the token is invalid', async () => {
+  test('fails with SC 401 when the token is wrong/invalid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const wrongLogin = { username: 'breezehash', password: 'niemals' };
