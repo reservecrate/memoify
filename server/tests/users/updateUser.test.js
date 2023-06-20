@@ -92,7 +92,7 @@ describe('updating the name', () => {
     });
   });
   describe('invalid/missing token', () => {
-    test.only('fails with SC 401 when the token is invalid', async () => {
+    test('fails with SC 401 when the token is invalid', async () => {
       const usersBefore = await getAllUsers();
       const login = { username: 'reservecrate', password: 'kennwort' };
       const wrongLogin = { username: 'breezehash', password: 'niemals' };

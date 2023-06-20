@@ -16,7 +16,12 @@ const updateUser = async (req, res) => {
 
   const { updatedUserData } = req.body;
   const { toUpdate } = req.body;
-  if (toUpdate === 'name') {
+  if (!toUpdate)
+    return res.status(400).json({
+      error:
+        "invalid update flag (toUpdate must either be set to 'name', 'username' or 'password'"
+    });
+  else if (toUpdate === 'name') {
     if (updatedUserData.password || updatedUserData.username !== user.username)
       return res.status(400).json({
         error: 'cannot update name + password/username simultaneously'
@@ -30,7 +35,7 @@ const updateUser = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, {
       new: true
     });
-    return res.status(200).json(updatedUser);
+    res.status(200).json(updatedUser);
   } else if (toUpdate === 'username') {
     if (updatedUserData.password || updatedUserData.name !== user.name)
       return res.status(400).json({
@@ -45,7 +50,7 @@ const updateUser = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, {
       new: true
     });
-    return res.status(200).json(updatedUser);
+    res.status(200).json(updatedUser);
   } else if (toUpdate === 'password') {
     if (
       updatedUserData.name !== user.name ||
@@ -68,13 +73,8 @@ const updateUser = async (req, res) => {
       { ...updatedUserData, passwordHash },
       { new: true }
     );
-    return res.status(200).json(updatedUser);
+    res.status(200).json(updatedUser);
   }
-  res.status(400).json({
-    error:
-      "invalid update flag (toUpdate must either be set to 'name', 'username' or 'password'"
-  });
-  //move this into an if clause at the top and remove the returns at the bottom of the remaining else if clauses
 };
 
 module.exports = updateUser;
