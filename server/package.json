@@ -1,10 +1,11 @@
 {
   "name": "memoify",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A minimalist notes app for your basic daily needs.",
   "keywords": [
-    "memo",
+    "memoify",
     "stack",
+    "memo",
     "minimalist",
     "notes"
   ],
