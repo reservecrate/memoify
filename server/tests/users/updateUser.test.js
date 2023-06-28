@@ -89,23 +89,6 @@ describe('updating the name', () => {
     const usersAfter = await getAllUsers();
     expect(usersAfter).toEqual(usersBefore);
   });
-  test('fails with SC 404 when the user id is invalid', async () => {
-    const usersBefore = await getAllUsers();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const userToUpdate = await getByUsername(login.username);
-    const { token } = (await api.post('/api/login').send({ ...login })).body;
-
-    const updatedUserData = { ...userToUpdate, name: 'Aldiyar' };
-    await api
-      .put('/api/users/doesnotexist')
-      .set('Authorization', `Bearer ${token}`)
-      .send({ updatedUserData, toUpdate: 'name' })
-      .expect(404)
-      .expect('Content-Type', /application\/json/);
-
-    const usersAfter = await getAllUsers();
-    expect(usersAfter).toEqual(usersBefore);
-  });
 });
 describe('updating the username', () => {
   test('returns SC 200 + updated user when the update payload is valid', async () => {
@@ -283,7 +266,25 @@ test('fails with SC 400 when the update flag (toUpdate) is invalid/missing', asy
   expect(usersAfter).toEqual(usersBefore);
 });
 
-describe.only('invalid/missing token (arbitrary changes to the user)', () => {
+test.only('fails with SC 404 when the user id is invalid (arbitrary changes to the user)', async () => {
+  const usersBefore = await getAllUsers();
+  const login = { username: 'reservecrate', password: 'kennwort' };
+  const userToUpdate = await getByUsername(login.username);
+  const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+  const updatedUserData = { ...userToUpdate, username: 'gigatag' };
+  await api
+    .put('/api/users/doesnotexist')
+    .set('Authorization', `Bearer ${token}`)
+    .send({ updatedUserData, toUpdate: 'username' })
+    .expect(404)
+    .expect('Content-Type', /application\/json/);
+
+  const usersAfter = await getAllUsers();
+  expect(usersAfter).toEqual(usersBefore);
+});
+
+describe('invalid/missing token (arbitrary changes to the user)', () => {
   test('fails with SC 401 when the token is invalid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
