@@ -131,7 +131,27 @@ describe('creating a memo with valid data', () => {
     expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
   });
 });
+
 // describe('creating a memo with invalid data', () => {}); not necessarily necessary, as default values are assigned
+
+test('fails with SC 401 when the token is missing', async () => {
+  const memosBefore = await getAllMemos();
+
+  const memoToCreate = {
+    title: 'best videogames ever',
+    content: 'apex legends, minecraft',
+    dateCreated: Date.now()
+  };
+
+  await api
+    .post('/api/memos')
+    .send(memoToCreate)
+    .expect(401)
+    .expect('Content-Type', /application\/json/);
+
+  const memosAfter = await getAllMemos();
+  expect(memosAfter).toEqual(memosBefore);
+});
 
 afterAll(async () => {
   await mongoose.connection.close();
