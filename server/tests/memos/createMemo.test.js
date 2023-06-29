@@ -81,8 +81,8 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-describe('creating a memo with valid data', () => {
-  test('returns SC 201 + created user when given valid data', async () => {
+describe('creating a memo with valid payload data', () => {
+  test('returns SC 201 + created user when given valid payload data', async () => {
     const memosBefore = await getAllMemos();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const { token } = (await api.post('/api/login').send({ ...login })).body;
@@ -109,7 +109,7 @@ describe('creating a memo with valid data', () => {
     expect(memosAfter).toHaveLength(memosBefore.length + 1);
     expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
   });
-  test('returns SC 201 + created user and assigns a default title, content and creation date when not given any data', async () => {
+  test('returns SC 201 + created user and assigns a default title, content and creation date when given an empty payload', async () => {
     const memosBefore = await getAllMemos();
     const login = { username: 'reservecrate', password: 'kennwort' };
     const { token } = (await api.post('/api/login').send({ ...login })).body;
