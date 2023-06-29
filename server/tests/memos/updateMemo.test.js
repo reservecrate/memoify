@@ -156,14 +156,33 @@ describe('valid token', () => {
     expect(memosAfter).toHaveLength(memosBefore.length);
     expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
   });
-  //HERE!!
-  test.only('fails with SC 404 when the memo id is invalid', async () => {
-    
-  });
+});
+
+test('fails with SC 404 when the memo id is invalid (any modification(s))', async () => {
+  const memosBefore = await getAllMemos();
+  const login = { username: 'reservecrate', password: 'kennwort' };
+  const { token } = (await api.post('/api/login').send({ ...login })).body;
+
+  const memoToUpdate = memosBefore[0];
+  const updatedMemoData = {
+    ...memoToUpdate,
+    title: 'Merkzettel 1',
+    content: 'etwas etwas'
+  };
+
+  await api
+    .put('/api/memos/doesnotexist')
+    .set('Authorization', `Bearer ${token}`)
+    .send(updatedMemoData)
+    .expect(404)
+    .expect('Content-Type', /application\/json/);
+
+  const memosAfter = await getAllMemos();
+  expect(memosAfter).toEqual(memosBefore);
 });
 
 describe('invalid/missing token', () => {
-  test('fails with SC 401 when the token is invalid (any modification to the memo)', async () => {
+  test('fails with SC 401 when the token is invalid (any modification(s) to the memo)', async () => {
     const memosBefore = await getAllMemos();
     const wrongLogin = { username: 'breezehash', password: 'niemals' };
     const { token: wrongToken } = (

@@ -267,7 +267,7 @@ test('fails with SC 400 when the update flag (toUpdate) is invalid/missing', asy
   expect(usersAfter).toEqual(usersBefore);
 });
 
-test('fails with SC 404 when the user id is invalid (arbitrary changes to the user)', async () => {
+test('fails with SC 404 when the user id is invalid (any modification(s) to the user)', async () => {
   const usersBefore = await getAllUsers();
   const login = { username: 'reservecrate', password: 'kennwort' };
   const userToUpdate = await getByUsername(login.username);
@@ -285,7 +285,7 @@ test('fails with SC 404 when the user id is invalid (arbitrary changes to the us
   expect(usersAfter).toEqual(usersBefore);
 });
 
-describe('invalid/missing token (arbitrary changes to the user)', () => {
+describe('invalid/missing token (any modification(s) to the user)', () => {
   test('fails with SC 401 when the token is invalid', async () => {
     const usersBefore = await getAllUsers();
     const login = { username: 'reservecrate', password: 'kennwort' };
