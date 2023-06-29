@@ -207,7 +207,7 @@ describe('invalid/missing token', () => {
     const memosAfter = await getAllMemos();
     expect(memosAfter).toEqual(memosBefore);
   });
-  test('fails with SC 401 when the token is missing (any modification to the memo)', async () => {
+  test('fails with SC 401 when the token is missing (any modification(s) to the memo)', async () => {
     const memosBefore = await getAllMemos();
 
     const memoToUpdate = memosBefore[0];

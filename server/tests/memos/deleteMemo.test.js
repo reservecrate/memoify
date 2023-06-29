@@ -6,7 +6,6 @@ const Memo = require('../../models/memo');
 const User = require('../../models/user');
 const {
   getAllMemos,
-  getMemoById,
   prettifyMemo
 } = require('../../utils/api_helper');
 
@@ -85,45 +84,43 @@ beforeEach(async () => {
   i += 1;
 }, 50000);
 
-describe('valid token', () => {
-  test('returns SC 200 + deleted memo when the memo id is valid', async () => {
-    const memosBefore = await getAllMemos();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const { token } = (await api.post('/api/login').send({ ...login })).body;
+test('returns SC 200 + deleted memo when the memo id is valid', async () => {
+  const memosBefore = await getAllMemos();
+  const login = { username: 'reservecrate', password: 'kennwort' };
+  const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-    const memoToDelete = memosBefore[0];
-    const { id } = memoToDelete;
+  const memoToDelete = memosBefore[0];
+  const { id } = memoToDelete;
 
-    const { body: deletedMemo } = await api
-      .delete(`/api/memos/${id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-    const prettifiedDeletedMemo = prettifyMemo(deletedMemo);
-    expect(prettifiedDeletedMemo).toEqual(memoToDelete);
+  const { body: deletedMemo } = await api
+    .delete(`/api/memos/${id}`)
+    .set('Authorization', `Bearer ${token}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+  const prettifiedDeletedMemo = prettifyMemo(deletedMemo);
+  expect(prettifiedDeletedMemo).toEqual(memoToDelete);
 
-    const memosAfter = await getAllMemos();
-    expect(memosAfter).toHaveLength(memosBefore.length - 1);
-    expect(memosAfter).not.toContainEqual(prettifiedDeletedMemo);
-  });
-  test('fails with SC 404 when the the memo id is invalid/nonexistent', async () => {
-    const memosBefore = await getAllMemos();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const { token } = (await api.post('/api/login').send({ ...login })).body;
+  const memosAfter = await getAllMemos();
+  expect(memosAfter).toHaveLength(memosBefore.length - 1);
+  expect(memosAfter).not.toContainEqual(prettifiedDeletedMemo);
+});
+test('fails with SC 404 when the the memo id is invalid', async () => {
+  const memosBefore = await getAllMemos();
+  const login = { username: 'reservecrate', password: 'kennwort' };
+  const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-    await api
-      .delete('/api/memos/nonexistent')
-      .set('Authorization', `Bearer ${token}`)
-      .expect(404)
-      .expect('Content-Type', /application\/json/);
+  await api
+    .delete('/api/memos/nonexistent')
+    .set('Authorization', `Bearer ${token}`)
+    .expect(404)
+    .expect('Content-Type', /application\/json/);
 
-    const memosAfter = await getAllMemos();
-    expect(memosAfter).toEqual(memosBefore);
-  });
+  const memosAfter = await getAllMemos();
+  expect(memosAfter).toEqual(memosBefore);
 });
 
 describe('invalid/missing token', () => {
-  test('fails with SC 401 when the token is wrong/invalid', async () => {
+  test('fails with SC 401 when the token is invalid', async () => {
     const memosBefore = await getAllMemos();
     const wrongLogin = { username: 'breezehash', password: 'niemals' };
     const { token: wrongToken } = (
