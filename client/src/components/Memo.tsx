@@ -1,7 +1,8 @@
 import { Card, Text, Row } from '@nextui-org/react';
 import MemoProps from '../interfaces/Memo';
 
-const Memo = ({ title, content, dateCreated }: MemoProps) => {
+const Memo = ({ title, content, dateCreated, user }: MemoProps) => {
+  const { username, name } = user;
   return (
     <Card variant='bordered' isPressable isHoverable>
       <Card.Header>
@@ -15,7 +16,9 @@ const Memo = ({ title, content, dateCreated }: MemoProps) => {
       </Card.Body>
       <Card.Divider />
       <Card.Footer>
-        <Text>created on: {dateCreated}</Text>
+        <Text>
+          created on: {dateCreated} by <b>{username}</b>
+        </Text>
       </Card.Footer>
     </Card>
   );

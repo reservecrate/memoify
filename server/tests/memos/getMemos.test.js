@@ -5,7 +5,7 @@ const api = supertest(app);
 const Memo = require('../../models/memo');
 const User = require('../../models/user');
 
-//tests fetch the raw data and prettify it themselves; the controllers should return the prettified data ready to be consumed by the frontend; the tests make sure the controllers prettify the raw data in the desired/correct format
+// tests fetch the raw data and prettify it themselves; the controllers should return the prettified data ready to be consumed by the frontend; the tests make sure the controllers prettify the raw data in the desired/correct format
 
 const testHelper = async () => {
   await Memo.deleteMany({});
@@ -103,7 +103,7 @@ describe('fetching all memos', () => {
 describe('fetching a single memo', () => {
   beforeEach(testHelper, 50000);
 
-  test.only('returns SC 200 + correct memo when given a valid id', async () => {
+  test('returns SC 200 + correct memo when given a valid id', async () => {
     const memos = await Memo.find({});
 
     const memoToFetch1 = (

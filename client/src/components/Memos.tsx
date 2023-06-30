@@ -16,7 +16,6 @@ const Memos = () => {
   const hook = () => {
     (async () => {
       const memosData = await getAllMemos();
-      const clone: any = memosData[0];
       setMemos(memosData);
     })();
   };
@@ -26,10 +25,16 @@ const Memos = () => {
   return (
     <Grid.Container gap={1}>
       {memos.map(memo => {
-        const { title, content, dateCreated } = memo;
+        const { title, content, dateCreated, user, id } = memo;
         return (
-          <Grid xs={3}>
-            <Memo title={title} content={content} dateCreated={dateCreated} />
+          <Grid xs={3} key={id}>
+            <Memo
+              title={title}
+              content={content}
+              dateCreated={dateCreated}
+              user={user}
+              id={id}
+            />
           </Grid>
         );
       })}
