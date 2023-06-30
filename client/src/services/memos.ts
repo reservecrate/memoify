@@ -13,10 +13,22 @@ const getMemo = async (id: string) => {
   return memo;
 };
 
-const createMemo = async (payload: Memo) => {
+const createMemo = async (
+  payload: {
+    title: string;
+    content: string;
+    dateCreated: number;
+  },
+  config: {
+    headers: {
+      Authorization: string;
+    };
+  }
+) => {
   const { data: createdMemo }: { data: Memo } = await axios.post(
     baseUrl,
-    payload
+    payload,
+    config
   );
   return createdMemo;
 };

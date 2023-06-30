@@ -1,27 +1,8 @@
-import { useState, useEffect } from 'react';
 import Memo from './Memo';
 import { Grid } from '@nextui-org/react';
-import MemoProps from '../interfaces/Memo';
-import {
-  getAllMemos
-  // getMemo,
-  // createMemo,
-  // updateMemo,
-  // deleteMemo
-} from '../services/memos';
+import MemoInterface from '../interfaces/Memo';
 
-const Memos = () => {
-  const [memos, setMemos] = useState<MemoProps[]>([]);
-
-  const hook = () => {
-    (async () => {
-      const memosData = await getAllMemos();
-      setMemos(memosData);
-    })();
-  };
-
-  useEffect(hook, []);
-
+const Memos = ({ memos }: { memos: MemoInterface[] }) => {
   return (
     <Grid.Container gap={1}>
       {memos.map(memo => {
