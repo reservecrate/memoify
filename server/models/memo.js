@@ -8,8 +8,8 @@ const memoSchema = new Schema(
       required: true
     },
     content: String,
-    dateCreated: { type: Number, required: true, immutable: true }, //Number for now, to simplify things
-    lastEdited: String,
+    dateCreated: { type: Number, required: true, immutable: true }, //Number for now, to simplify things; change to createdAt later?
+    // lastEdited: String,
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'

@@ -6,7 +6,7 @@ const createMemo = async (req, res) => {
   !req.body.dateCreated ? (req.body.dateCreated = Date.now()) : null;
 
   const { user } = req;
-  if (!user) return res.status(401).json({ error: 'missing/invalid token' });
+  if (!user) return res.status(401).json({ error: 'invalid/missing token' });
   const createdMemo = await new Memo({ ...req.body, user: user._id }).save();
   user.memos = [...user.memos, createdMemo.id];
   await user.save();

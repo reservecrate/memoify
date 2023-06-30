@@ -87,7 +87,7 @@ beforeEach(async () => {
 }, 50000);
 
 describe('fetching all memos', () => {
-  test('returns SC 200 + all memos in the correct order', async () => {
+  test.only('returns SC 200 + all memos in the correct order', async () => {
     const allMemos = await getAllMemos();
 
     const { body: memos } = await api

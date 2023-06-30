@@ -56,7 +56,7 @@ const getMemoById = async id => {
   return memo.prettify();
 };
 
-// memo prettifiers; rename to prettifyMemos, perhaps? tomorrow. no, today, sleep can wait!!!!
+// memo prettifiers;
 const prettifyMemos = memos => {
   const prettifiedMemos = memos.map(memo => {
     const prettifiedMemo = {
