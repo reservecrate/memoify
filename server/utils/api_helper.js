@@ -47,13 +47,23 @@ const prettifyUser = user => {
 
 // memo fetchers
 const getAllMemos = async () => {
-  const memos = await Memo.find({});
-  return memos.map(memo => memo.prettify());
+  const memos = (
+    await Memo.find({}).populate('user', {
+      username: 1,
+      name: 1
+    })
+  ).map(memo => memo.prettify());
+  return memos;
 };
 
 const getMemoById = async id => {
-  const memo = await Memo.findById(id);
-  return memo.prettify();
+  const memo = (
+    await Memo.findById(id).populate('user', {
+      username: 1,
+      name: 1
+    })
+  ).prettify();
+  return memo;
 };
 
 // memo prettifiers;

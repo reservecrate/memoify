@@ -4,14 +4,10 @@ const app = require('../../app');
 const api = supertest(app);
 const Memo = require('../../models/memo');
 const User = require('../../models/user');
-const {
-  getAllMemos,
-  getMemoById,
-  prettifyMemos,
-  prettifyMemo
-} = require('../../utils/api_helper');
 
-beforeEach(async () => {
+//tests fetch the raw data and prettify it themselves; the controllers should return the prettified data ready to be consumed by the frontend; the tests make sure the controllers prettify the raw data in the desired/correct format
+
+const testHelper = async () => {
   await Memo.deleteMany({});
   await User.deleteMany({});
   await api
@@ -84,51 +80,74 @@ beforeEach(async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/);
   i += 1;
-}, 50000);
+};
 
 describe('fetching all memos', () => {
-  test.only('returns SC 200 + all memos in the correct order', async () => {
-    const allMemos = await getAllMemos();
+  beforeEach(testHelper, 50000);
+
+  test('returns SC 200 + all memos in the correct order', async () => {
+    const allMemos = (
+      await Memo.find({}).populate('user', { username: 1, name: 1 })
+    ).map(memo => memo.prettify());
 
     const { body: memos } = await api
       .get('/api/memos')
       .expect(200)
       .expect('Content-Type', /application\/json/);
-    const prettifiedMemos = prettifyMemos(memos);
 
-    expect(prettifiedMemos).toEqual(allMemos);
+    expect(memos).toEqual(allMemos);
     expect(memos[0].title).toBe('test memo 1');
     expect(memos[2].content).toBe('placeholder 3');
   });
 });
 describe('fetching a single memo', () => {
-  test('returns SC 200 + correct memo when given a valid id', async () => {
-    const memos = await getAllMemos();
+  beforeEach(testHelper, 50000);
 
-    const memoToFetch1 = await getMemoById(memos[0].id);
+  test.only('returns SC 200 + correct memo when given a valid id', async () => {
+    const memos = await Memo.find({});
+
+    const memoToFetch1 = (
+      await Memo.findById(memos[0].id).populate('user', {
+        username: 1,
+        name: 1
+      })
+    ).prettify();
     const { id: id1 } = memoToFetch1;
     const { body: fetchedMemo1 } = await api
       .get(`/api/memos/${id1}`)
       .expect(200)
       .expect('Content-Type', /application\/json/);
-    const prettifiedFetchedMemo1 = prettifyMemo(fetchedMemo1);
-    expect(prettifiedFetchedMemo1).toEqual(memoToFetch1);
+    expect(fetchedMemo1).toEqual(memoToFetch1);
 
-    const memoToFetch2 = await getMemoById(memos[2].id);
+    const memoToFetch2 = (
+      await Memo.findById(memos[2].id).populate('user', {
+        username: 1,
+        name: 1
+      })
+    ).prettify();
     const { id: id2 } = memoToFetch2;
     const { body: fetchedMemo2 } = await api
       .get(`/api/memos/${id2}`)
       .expect(200)
       .expect('Content-Type', /application\/json/);
-    const prettifiedFetchedMemo2 = prettifyMemo(fetchedMemo2);
-    expect(prettifiedFetchedMemo2).toEqual(memoToFetch2);
+    expect(fetchedMemo2).toEqual(memoToFetch2);
   });
-  test('returns SC 404 when given nonexistent id', async () => {
+  test('fails with SC 404 when given nonexistent id', async () => {
     await api
       .get('/api/memos/nonexistent')
       .expect(404)
       .expect('Content-Type', /application\/json/);
   });
+});
+
+test('fetching an empty array of memos', async () => {
+  await Memo.deleteMany({});
+  const { body: memos } = await api
+    .get('/api/memos')
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  expect(memos).toEqual([]);
 });
 
 afterAll(async () => {
