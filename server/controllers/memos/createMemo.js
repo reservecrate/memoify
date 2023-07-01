@@ -7,7 +7,10 @@ const createMemo = async (req, res) => {
 
   const { user } = req;
   if (!user) return res.status(401).json({ error: 'invalid/missing token' });
-  const createdMemo = await new Memo({ ...req.body, user: user._id }).save();
+  const memoToCreate = await new Memo({ ...req.body, user: user.id }).populate(
+    'user'
+  );
+  const createdMemo = (await memoToCreate.save()).prettify();
   user.memos = [...user.memos, createdMemo.id];
   await user.save();
   res.status(201).json(createdMemo);

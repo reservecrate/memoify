@@ -6,7 +6,7 @@ const Memo = require('../../models/memo');
 const User = require('../../models/user');
 const { getAllMemos, prettifyMemo } = require('../../utils/api_helper');
 
-beforeEach(async () => {
+const testHelper = async () => {
   await Memo.deleteMany({});
   await User.deleteMany({});
   await api
@@ -79,11 +79,16 @@ beforeEach(async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/);
   i += 1;
-}, 50000);
+};
+
+beforeEach(testHelper, 50000);
 
 describe('creating a memo with valid payload data', () => {
-  test('returns SC 201 + created user when given valid payload data', async () => {
-    const memosBefore = await getAllMemos();
+  test('returns SC 201 + created user when given a valid payload', async () => {
+    const memosBefore = (
+      await Memo.find({}).populate('user', { username: 1, name: 1 })
+    ).map(memo => memo.prettify());
+
     const login = { username: 'reservecrate', password: 'kennwort' };
     const { token } = (await api.post('/api/login').send({ ...login })).body;
 
@@ -99,18 +104,22 @@ describe('creating a memo with valid payload data', () => {
       .send(memoToCreate)
       .expect(201)
       .expect('Content-Type', /application\/json/);
-    const prettifiedCreatedMemo = prettifyMemo(createdMemo);
 
     expect(createdMemo.title).toBe(memoToCreate.title);
     expect(createdMemo.content).toBe(memoToCreate.content);
     expect(createdMemo.dateCreated).toBe(memoToCreate.dateCreated);
 
-    const memosAfter = await getAllMemos();
+    const memosAfter = (
+      await Memo.find({}).populate('user', { username: 1, name: 1 })
+    ).map(memo => memo.prettify());
     expect(memosAfter).toHaveLength(memosBefore.length + 1);
-    expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
+    expect(memosAfter).toContainEqual(createdMemo);
   });
   test('returns SC 201 + created user and assigns a default title, content and creation date when given an empty payload', async () => {
-    const memosBefore = await getAllMemos();
+    const memosBefore = (
+      await Memo.find({}).populate('user', { username: 1, name: 1 })
+    ).map(memo => memo.prettify());
+
     const login = { username: 'reservecrate', password: 'kennwort' };
     const { token } = (await api.post('/api/login').send({ ...login })).body;
 
@@ -121,20 +130,21 @@ describe('creating a memo with valid payload data', () => {
       .send(memoToCreate)
       .expect(201)
       .expect('Content-Type', /application\/json/);
-    const prettifiedCreatedMemo = prettifyMemo(createdMemo);
 
     expect(createdMemo.title).toBe('untitled memo');
     expect(createdMemo.content).toBe('');
 
-    const memosAfter = await getAllMemos();
+    const memosAfter = (
+      await Memo.find({}).populate('user', { username: 1, name: 1 })
+    ).map(memo => memo.prettify());
     expect(memosAfter).toHaveLength(memosBefore.length + 1);
-    expect(memosAfter).toContainEqual(prettifiedCreatedMemo);
+    expect(memosAfter).toContainEqual(createdMemo);
   });
 });
 
-// describe('creating a memo with invalid data', () => {}); not necessarily necessary, as default values are assigned
+// describe('creating a memo with invalid data', () => {}); not necessary, as default values are assigned anyway
 
-test('fails with SC 401 when the token is missing', async () => {
+test.only('fails with SC 401 when the token is missing', async () => {
   const memosBefore = await getAllMemos();
 
   const memoToCreate = {
