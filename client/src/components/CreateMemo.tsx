@@ -28,6 +28,7 @@ const CreateMemo = ({
     if (inputElement === 'InputTitle') setTitle(inputValue);
     else if (inputElement === 'TextareaContent') setContent(inputValue);
   };
+  //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER WHEN THEY HAVE SUCCESSFULLY CREATED A NEW MEMO
   const handleCreate = async () => {
     try {
       const config = {

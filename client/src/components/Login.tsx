@@ -28,6 +28,7 @@ const Login = ({
         'Error. Input not matched (must either be username or password)'
       );
   };
+  //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER THAT THEY HAVE SUCCESSFULLY LOGGED IN/LOGGED OUT
   const handleLogin = async () => {
     try {
       const loginPayload = { username, password };
@@ -39,6 +40,10 @@ const Login = ({
     } catch (err) {
       console.error(err);
     }
+  };
+  const handleSignout = async () => {
+    setToken('');
+    setUser({ ...user, username: '', isLoggedIn: false });
   };
 
   return (
@@ -71,8 +76,13 @@ const Login = ({
       {user.isLoggedIn ? (
         <>
           <Spacer />
-          <Button color='gradient' shadow size='sm'>
-            sign out
+          <Button
+            color='gradient'
+            shadow
+            size='sm'
+            onPressStart={handleSignout}
+          >
+            log out
           </Button>
         </>
       ) : null}
