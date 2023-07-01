@@ -43,6 +43,8 @@ const CreateMemo = ({
         },
         config
       );
+      setTitle('')
+      setContent('')
       setMemos([...memos, createdMemo]);
     } catch (err) {
       console.error(err);
