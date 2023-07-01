@@ -4,7 +4,6 @@ const app = require('../../app');
 const api = supertest(app);
 const Memo = require('../../models/memo');
 const User = require('../../models/user');
-const { getAllMemos, prettifyMemo } = require('../../utils/api_helper');
 
 const testHelper = async () => {
   await Memo.deleteMany({});
@@ -107,7 +106,7 @@ describe('creating a memo with valid payload data', () => {
 
     expect(createdMemo.title).toBe(memoToCreate.title);
     expect(createdMemo.content).toBe(memoToCreate.content);
-    expect(createdMemo.dateCreated).toBe(memoToCreate.dateCreated);
+    expect(createdMemo.dateCreated).toEqual(memoToCreate.dateCreated);
 
     const memosAfter = (
       await Memo.find({}).populate('user', { username: 1, name: 1 })
@@ -144,8 +143,8 @@ describe('creating a memo with valid payload data', () => {
 
 // describe('creating a memo with invalid data', () => {}); not necessary, as default values are assigned anyway
 
-test.only('fails with SC 401 when the token is missing', async () => {
-  const memosBefore = await getAllMemos();
+test('fails with SC 401 when the token is missing', async () => {
+  const memosBefore = await Memo.find({});
 
   const memoToCreate = {
     title: 'best videogames ever',
@@ -159,7 +158,7 @@ test.only('fails with SC 401 when the token is missing', async () => {
     .expect(401)
     .expect('Content-Type', /application\/json/);
 
-  const memosAfter = await getAllMemos();
+  const memosAfter = await Memo.find({});
   expect(memosAfter).toEqual(memosBefore);
 });
 
