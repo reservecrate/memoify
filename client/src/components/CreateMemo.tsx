@@ -43,8 +43,8 @@ const CreateMemo = ({
         },
         config
       );
-      setTitle('')
-      setContent('')
+      setTitle('');
+      setContent('');
       setMemos([...memos, createdMemo]);
     } catch (err) {
       console.error(err);
@@ -65,7 +65,9 @@ const CreateMemo = ({
         onChange={handleInputChange}
       />
       <Spacer y={0.5} />
-      <Button onPressStart={handleCreate}>create memo</Button>
+      <Button color='gradient' bordered  onPressStart={handleCreate}>
+        create memo
+      </Button>
     </Container>
   );
 };

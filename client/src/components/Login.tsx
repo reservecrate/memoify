@@ -4,7 +4,8 @@ import {
   Input,
   Button,
   FormElement,
-  Spacer
+  Spacer,
+  Text
 } from '@nextui-org/react';
 import login from '../services/login';
 
@@ -15,7 +16,7 @@ const Login = ({
 }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({ username: '', isLoggedIn: false });
 
   const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
     const inputElement = e.currentTarget.id;
@@ -32,7 +33,7 @@ const Login = ({
       const loginPayload = { username, password };
       const token = await login(loginPayload);
       setToken(token);
-      setIsLoggedIn(!isLoggedIn);
+      setUser({ ...user, username, isLoggedIn: !user.isLoggedIn });
       setUsername('');
       setPassword('');
     } catch (err) {
@@ -58,9 +59,23 @@ const Login = ({
         value={password}
       />
       <Spacer />
-      <Button size='sm' onPressStart={handleLogin}>
-        {isLoggedIn ? 'logged in' : 'log in'}
+      <Button color='gradient' bordered size='sm' onPressStart={handleLogin}>
+        {user.isLoggedIn ? (
+          <Text>
+            logged in as: <b>{user.username}</b>
+          </Text>
+        ) : (
+          'log in'
+        )}
       </Button>
+      {user.isLoggedIn ? (
+        <>
+          <Spacer />
+          <Button color='gradient' shadow size='sm'>
+            sign out
+          </Button>
+        </>
+      ) : null}
     </Container>
   );
 };
