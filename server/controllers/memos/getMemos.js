@@ -1,4 +1,7 @@
-const { getAllMemos, getMemoById } = require('../../utils/api_helper');
+const {
+  getMemos: getAllMemos,
+  getMemo: getMemoById
+} = require('../../utils/api_helper');
 
 const getMemos = async (req, res) => {
   const memos = await getAllMemos();
