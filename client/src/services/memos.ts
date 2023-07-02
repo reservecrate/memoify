@@ -19,12 +19,13 @@ const createMemo = async (
     content: string;
     dateCreated: number;
   },
-  config: {
-    headers: {
-      Authorization: string;
-    };
-  }
+  token: string
 ) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
   const { data: createdMemo }: { data: Memo } = await axios.post(
     baseUrl,
     payload,
@@ -41,9 +42,15 @@ const updateMemo = async (id: string, payload: Memo) => {
   return updatedMemo;
 };
 
-const deleteMemo = async (id: string) => {
+const deleteMemo = async (id: string, token: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
   const { data: deletedMemo }: { data: Memo } = await axios.delete(
-    `${baseUrl}/${id}`
+    `${baseUrl}/${id}`,
+    config
   );
   return deletedMemo;
 };

@@ -1,8 +1,34 @@
-import { Card, Text, Row } from '@nextui-org/react';
-import MemoProps from '../interfaces/Memo';
+import { Card, Text, Row, Button } from '@nextui-org/react';
+import MemoInterface from '../interfaces/Memo';
+// import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteMemo } from '../services/memos';
 
-const Memo = ({ title, content, dateCreated, user }: MemoProps) => {
+interface MemoComponentInterface extends MemoInterface {
+  memos: MemoInterface[];
+  setMemos: React.Dispatch<React.SetStateAction<MemoInterface[]>>;
+  token: string;
+}
+
+const Memo = ({
+  title,
+  content,
+  dateCreated,
+  user,
+  id,
+  memos,
+  setMemos,
+  token
+}: MemoComponentInterface) => {
   const { username, name } = user;
+  const handleDelete = async () => {
+    const { id: deletedMemoId } = await deleteMemo(id, token);
+    const memoToDeleteIndex = memos.findIndex(
+      memo => memo.id === deletedMemoId
+    );
+    const memosCopy = JSON.parse(JSON.stringify(memos));
+    memosCopy.splice(memoToDeleteIndex, 1);
+    setMemos(memosCopy);
+  };
   return (
     <Card variant='bordered' isPressable isHoverable>
       <Card.Header>
@@ -19,6 +45,9 @@ const Memo = ({ title, content, dateCreated, user }: MemoProps) => {
         <Text>
           created on: {dateCreated} by <b>{username}</b>
         </Text>
+        <Button onPressStart={handleDelete} size='xs'>
+          delete
+        </Button>
       </Card.Footer>
     </Card>
   );

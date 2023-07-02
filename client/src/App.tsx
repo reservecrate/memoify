@@ -26,7 +26,7 @@ const App = () => {
   return (
     <Container id='App'>
       <Text h1>memoify</Text>
-      <Memos memos={memos} />
+      <Memos memos={memos} setMemos={setMemos} token={token} />
       <Spacer y={2} />
       <Login setToken={setToken} />
       <Spacer y={2} />

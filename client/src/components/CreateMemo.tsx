@@ -28,21 +28,16 @@ const CreateMemo = ({
     if (inputElement === 'InputTitle') setTitle(inputValue);
     else if (inputElement === 'TextareaContent') setContent(inputValue);
   };
-  //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER WHEN THEY HAVE SUCCESSFULLY CREATED A NEW MEMO
+  //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER WHEN THEY HAVE SUCCESSFULLY CREATED A NEW MEMO, LATER
   const handleCreate = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      };
       const createdMemo = await createMemo(
         {
           title,
           content,
           dateCreated: Date.now()
         },
-        config
+        token
       );
       setTitle('');
       setContent('');
@@ -66,7 +61,7 @@ const CreateMemo = ({
         onChange={handleInputChange}
       />
       <Spacer y={0.5} />
-      <Button color='gradient' bordered  onPressStart={handleCreate}>
+      <Button color='gradient' bordered onPressStart={handleCreate}>
         create memo
       </Button>
     </Container>

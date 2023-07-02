@@ -11,7 +11,7 @@ const deleteMemo = async (req, res) => {
       error: 'wrong token (not authorised)'
     });
 
-  const deletedMemo = await Memo.findByIdAndDelete(memoId);
+  const deletedMemo = await Memo.findByIdAndDelete(memoId).populate();
   res.status(200).json(deletedMemo);
 };
 

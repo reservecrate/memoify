@@ -2,7 +2,15 @@ import Memo from './Memo';
 import { Grid } from '@nextui-org/react';
 import MemoInterface from '../interfaces/Memo';
 
-const Memos = ({ memos }: { memos: MemoInterface[] }) => {
+const Memos = ({
+  memos,
+  setMemos,
+  token
+}: {
+  memos: MemoInterface[];
+  setMemos: React.Dispatch<React.SetStateAction<MemoInterface[]>>;
+  token: string;
+}) => {
   return (
     <Grid.Container gap={1}>
       {memos.map(memo => {
@@ -15,6 +23,9 @@ const Memos = ({ memos }: { memos: MemoInterface[] }) => {
               dateCreated={dateCreated}
               user={user}
               id={id}
+              memos={memos}
+              setMemos={setMemos}
+              token={token}
             />
           </Grid>
         );

@@ -19,30 +19,6 @@ const getUserById = async id => {
   return user.prettify();
 };
 
-// user prettifiers
-const prettifyUsers = users => {
-  const prettifiedUsers = users.map(user => {
-    const prettifiedUser = {
-      id: user._id.toString(),
-      username: user.username,
-      name: user.name,
-      memos: user.memos.map(memo => memo.toString())
-    };
-    return prettifiedUser;
-  });
-  return prettifiedUsers;
-};
-
-const prettifyUser = user => {
-  const prettifiedUser = {
-    id: user._id.toString(),
-    username: user.username,
-    name: user.name,
-    memos: user.memos.map(memo => memo.toString())
-  };
-  return prettifiedUser;
-};
-
 /* MEMOS */
 
 // memo fetchers
@@ -66,41 +42,13 @@ const getMemoById = async id => {
   return memo;
 };
 
-// memo prettifiers;
-const prettifyMemos = memos => {
-  const prettifiedMemos = memos.map(memo => {
-    const prettifiedMemo = {
-      id: memo._id.toString(),
-      title: memo.title,
-      content: memo.content,
-      dateCreated: memo.dateCreated,
-      user: memo.user.toString()
-    };
-    return prettifiedMemo;
-  });
-  return prettifiedMemos;
-};
-
-const prettifyMemo = memo => {
-  const prettifiedMemo = {
-    id: memo._id.toString(),
-    title: memo.title,
-    content: memo.content,
-    dateCreated: memo.dateCreated,
-    user: memo.user.toString()
-  };
-  return prettifiedMemo;
-};
+// const deleteMemo=async id=>{}
 
 /* EXPORTS */
 module.exports = {
   getAllUsers,
   getByUsername,
   getUserById,
-  prettifyUsers,
-  prettifyUser,
   getAllMemos,
   getMemoById,
-  prettifyMemos,
-  prettifyMemo
 };
