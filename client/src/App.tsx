@@ -8,6 +8,7 @@ import { getAllMemos } from './services/memos';
 
 const App = () => {
   const [token, setToken] = useState('');
+  //implement client side form checking for faster rendering
   const [memos, setMemos] = useState<Memo[]>([]);
 
   const hook = () => {
@@ -31,6 +32,7 @@ const App = () => {
       <Login setToken={setToken} />
       <Spacer y={2} />
       <CreateMemo memos={memos} setMemos={setMemos} token={token} />
+      <Spacer y={2} />
     </Container>
   );
 };

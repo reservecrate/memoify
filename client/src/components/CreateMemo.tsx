@@ -53,12 +53,14 @@ const CreateMemo = ({
         id='InputTitle'
         labelPlaceholder='title'
         onChange={handleInputChange}
+        value={title}
       />
       <Spacer y={0.5} />
       <Textarea
         id='TextareaContent'
         labelPlaceholder='content'
         onChange={handleInputChange}
+        value={content}
       />
       <Spacer y={0.5} />
       <Button color='gradient' bordered onPressStart={handleCreate}>

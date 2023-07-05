@@ -55,7 +55,7 @@ const Login = ({
         onChange={handleInputChange}
         value={username}
       />
-      <Spacer />
+      <Spacer y={2} />
       <Input.Password
         underlined
         id='InputPassword'
