@@ -22,7 +22,7 @@ const getUserById = async id => {
 /* MEMOS */
 
 // memo fetchers
-const getMemos = async () => {
+const getAllMemos = async () => {
   const memos = (
     await Memo.find({}).populate('user', {
       username: 1,
@@ -32,7 +32,7 @@ const getMemos = async () => {
   return memos;
 };
 
-const getMemo = async id => {
+const getMemoById = async id => {
   const memo = (
     await Memo.findById(id).populate('user', {
       username: 1,
@@ -49,6 +49,6 @@ module.exports = {
   getAllUsers,
   getByUsername,
   getUserById,
-  getMemos,
-  getMemo
+  getAllMemos,
+  getMemoById
 };

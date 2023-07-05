@@ -4,7 +4,7 @@ const app = require('../../app');
 const api = supertest(app);
 const Memo = require('../../models/memo');
 const User = require('../../models/user');
-const { getAllMemos, prettifyMemo } = require('../../utils/api_helper');
+const { getAllMemos } = require('../../utils/api_helper');
 
 const testHelper = async () => {
   await Memo.deleteMany({});
@@ -83,25 +83,29 @@ const testHelper = async () => {
 
 beforeEach(testHelper, 50000);
 
-test.only('returns SC 200 + deleted memo when the memo id is valid', async () => {
+test('returns SC 200 + deleted memo when the memo id is valid', async () => {
   const memosBefore = await getAllMemos();
   const login = { username: 'reservecrate', password: 'kennwort' };
   const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-  const memoToDelete = memosBefore[0];
+  const memoToDelete = (
+    await Memo.findOne().populate('user', {
+      username: 1,
+      name: 1
+    })
+  ).prettify();
   const { id } = memoToDelete;
-  console.log(memoToDelete)
 
   const { body: deletedMemo } = await api
     .delete(`/api/memos/${id}`)
     .set('Authorization', `Bearer ${token}`)
     .expect(200)
     .expect('Content-Type', /application\/json/);
-  // expect(deletedMemo).toEqual(memoToDelete);
+  expect(deletedMemo).toEqual(memoToDelete);
 
-  // const memosAfter = await getAllMemos();
-  // expect(memosAfter).toHaveLength(memosBefore.length - 1);
-  // expect(memosAfter).not.toContainEqual(deletedMemo);
+  const memosAfter = await getAllMemos();
+  expect(memosAfter).toHaveLength(memosBefore.length - 1);
+  expect(memosAfter).not.toContainEqual(deletedMemo);
 });
 test('fails with SC 404 when the the memo id is invalid', async () => {
   const memosBefore = await getAllMemos();
