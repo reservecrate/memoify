@@ -4,9 +4,9 @@ const app = require('../../app');
 const api = supertest(app);
 const Memo = require('../../models/memo');
 const User = require('../../models/user');
-const { getAllMemos, prettifyMemo } = require('../../utils/api_helper');
+const { getAllMemos } = require('../../utils/api_helper');
 
-beforeEach(async () => {
+const testHelper = async () => {
   await Memo.deleteMany({});
   await User.deleteMany({});
   await api
@@ -79,83 +79,58 @@ beforeEach(async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/);
   i += 1;
-}, 50000);
+};
 
-describe('valid token', () => {
-  test('returns SC 200 + updated memo when updating the title', async () => {
-    const memosBefore = await getAllMemos();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const { token } = (await api.post('/api/login').send({ ...login })).body;
+beforeEach(testHelper, 50000);
 
-    const memoToUpdate = memosBefore[0];
-    const { id } = memoToUpdate;
-    const updatedMemoData = { ...memoToUpdate, title: 'eine Notiz 1' };
+test('returns SC 200 + updated memo when updating the title/content', async () => {
+  const memosBefore = await getAllMemos();
+  const login = { username: 'reservecrate', password: 'kennwort' };
+  const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-    const { body: updatedMemo } = await api
-      .put(`/api/memos/${id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send(updatedMemoData)
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-    const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
+  const memoToUpdate = await Memo.findOne();
+  const { id } = memoToUpdate;
+  const updatedMemoPayload = { ...memoToUpdate._doc, content: 'UU RR' };
 
-    expect(updatedMemo.title).toBe(updatedMemoData.title);
+  const { body: updatedMemo } = await api
+    .put(`/api/memos/${id}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send(updatedMemoPayload)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
 
-    const memosAfter = await getAllMemos();
-    expect(memosAfter).toHaveLength(memosBefore.length);
-    expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
-  });
-  test('returns SC 200 + updated memo when updating the content', async () => {
-    const memosBefore = await getAllMemos();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const { token } = (await api.post('/api/login').send({ ...login })).body;
+  expect(updatedMemo.content).toBe(updatedMemoPayload.content);
 
-    const memoToUpdate = memosBefore[0];
-    const { id } = memoToUpdate;
-    const updatedMemoData = { ...memoToUpdate, content: 'something something' };
+  const memosAfter = await getAllMemos();
+  expect(memosAfter).toHaveLength(memosBefore.length);
+  expect(memosAfter).toContainEqual(updatedMemo);
+});
+test('returns SC 200 + updated memo when updating the title and content simultaneously', async () => {
+  const memosBefore = await getAllMemos();
+  const login = { username: 'reservecrate', password: 'kennwort' };
+  const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-    const { body: updatedMemo } = await api
-      .put(`/api/memos/${id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send(updatedMemoData)
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-    const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
+  const memoToUpdate = await Memo.findOne();
+  const { id } = memoToUpdate;
+  const updatedMemoPayload = {
+    ...memoToUpdate._doc,
+    title: 'Merkzettel 1',
+    content: 'etwas etwas'
+  };
 
-    expect(updatedMemo.content).toBe(updatedMemoData.content);
+  const { body: updatedMemo } = await api
+    .put(`/api/memos/${id}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send(updatedMemoPayload)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
 
-    const memosAfter = await getAllMemos();
-    expect(memosAfter).toHaveLength(memosBefore.length);
-    expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
-  });
-  test('returns SC 200 + updated memo when updating the title and content simultaneously', async () => {
-    const memosBefore = await getAllMemos();
-    const login = { username: 'reservecrate', password: 'kennwort' };
-    const { token } = (await api.post('/api/login').send({ ...login })).body;
+  expect(updatedMemo.title).toBe(updatedMemoPayload.title);
+  expect(updatedMemo.content).toBe(updatedMemoPayload.content);
 
-    const memoToUpdate = memosBefore[0];
-    const { id } = memoToUpdate;
-    const updatedMemoData = {
-      ...memoToUpdate,
-      title: 'Merkzettel 1',
-      content: 'etwas etwas'
-    };
-
-    const { body: updatedMemo } = await api
-      .put(`/api/memos/${id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send(updatedMemoData)
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-    const prettifiedUpdatedMemo = prettifyMemo(updatedMemo);
-
-    expect(updatedMemo.title).toBe(updatedMemoData.title);
-    expect(updatedMemo.content).toBe(updatedMemoData.content);
-
-    const memosAfter = await getAllMemos();
-    expect(memosAfter).toHaveLength(memosBefore.length);
-    expect(memosAfter).toContainEqual(prettifiedUpdatedMemo);
-  });
+  const memosAfter = await getAllMemos();
+  expect(memosAfter).toHaveLength(memosBefore.length);
+  expect(memosAfter).toContainEqual(updatedMemo);
 });
 
 test('fails with SC 404 when the memo id is invalid (any modification(s))', async () => {
@@ -163,9 +138,9 @@ test('fails with SC 404 when the memo id is invalid (any modification(s))', asyn
   const login = { username: 'reservecrate', password: 'kennwort' };
   const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-  const memoToUpdate = memosBefore[0];
+  const memoToUpdate = await Memo.findOne();
   const updatedMemoData = {
-    ...memoToUpdate,
+    ...memoToUpdate._doc,
     title: 'Merkzettel 1',
     content: 'etwas etwas'
   };
@@ -189,10 +164,10 @@ describe('invalid/missing token', () => {
       await api.post('/api/login').send({ ...wrongLogin })
     ).body;
 
-    const memoToUpdate = memosBefore[0];
+    const memoToUpdate = await Memo.findOne();
     const { id } = memoToUpdate;
     const updatedMemoData = {
-      ...memoToUpdate,
+      ...memoToUpdate._doc,
       title: 'Merkzettel 1',
       content: 'etwas etwas'
     };
@@ -210,10 +185,10 @@ describe('invalid/missing token', () => {
   test('fails with SC 401 when the token is missing (any modification(s) to the memo)', async () => {
     const memosBefore = await getAllMemos();
 
-    const memoToUpdate = memosBefore[0];
+    const memoToUpdate = await Memo.findOne();
     const { id } = memoToUpdate;
     const updatedMemoData = {
-      ...memoToUpdate,
+      ...memoToUpdate._doc,
       title: 'Merkzettel 1',
       content: 'etwas etwas'
     };

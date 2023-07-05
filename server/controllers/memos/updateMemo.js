@@ -13,10 +13,12 @@ const updateMemo = async (req, res) => {
       error: 'wrong/invalid token (not authorised)'
     });
 
-  const updatedMemoData = req.body;
-  const updatedMemo = await Memo.findByIdAndUpdate(memoId, updatedMemoData, {
-    new: true
-  });
+  const updatedMemoPayload = req.body;
+  const updatedMemo = (
+    await Memo.findByIdAndUpdate(memoId, updatedMemoPayload, {
+      new: true
+    }).populate('user', { username: 1, name: 1 })
+  ).prettify();
   res.status(200).json(updatedMemo);
 };
 
