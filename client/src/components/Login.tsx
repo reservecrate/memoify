@@ -21,8 +21,8 @@ const Login = ({
   const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
     const inputElement = e.currentTarget.id;
     const inputValue = e.currentTarget.value;
-    if (inputElement === 'InputUsername') setUsername(inputValue);
-    else if (inputElement === 'InputPassword') setPassword(inputValue);
+    if (inputElement === 'InputSignupUsername') setUsername(inputValue);
+    else if (inputElement === 'InputSignupPassword') setPassword(inputValue);
     else
       console.error(
         'Error. Input not matched (must either be username or password)'
@@ -34,9 +34,9 @@ const Login = ({
       const loginPayload = { username, password };
       const token = await login(loginPayload);
       setToken(token);
-      setUser({ ...user, username, isLoggedIn: !user.isLoggedIn });
       setUsername('');
       setPassword('');
+      setUser({ ...user, username, isLoggedIn: !user.isLoggedIn });
     } catch (err) {
       console.error(err);
     }
@@ -50,7 +50,7 @@ const Login = ({
     <Container>
       <Input
         underlined
-        id='InputUsername'
+        id='InputSignupUsername'
         labelPlaceholder='username'
         onChange={handleInputChange}
         value={username}
@@ -58,7 +58,7 @@ const Login = ({
       <Spacer y={2} />
       <Input.Password
         underlined
-        id='InputPassword'
+        id='InputSignupPassword'
         labelPlaceholder='password'
         onChange={handleInputChange}
         value={password}

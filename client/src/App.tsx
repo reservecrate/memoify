@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import Memos from './components/Memos';
 import Login from './components/Login';
+import Signup from './components/Signup';
 import CreateMemo from './components/CreateMemo';
-import { Container, Text, Spacer } from '@nextui-org/react';
+import { Container, Text, Spacer, Row } from '@nextui-org/react';
 import Memo from './interfaces/Memo';
 import { getAllMemos } from './services/memos';
 
@@ -26,10 +27,14 @@ const App = () => {
 
   return (
     <Container id='App'>
-      <Text h1>memoify</Text>
+      <Row justify='center'>
+        <Text h1>memoify</Text>
+      </Row>
       <Memos memos={memos} setMemos={setMemos} token={token} />
       <Spacer y={2} />
       <Login setToken={setToken} />
+      <Spacer y={4} />
+      <Signup />
       <Spacer y={2} />
       <CreateMemo memos={memos} setMemos={setMemos} token={token} />
       <Spacer y={2} />
