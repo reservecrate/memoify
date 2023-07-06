@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Memos from './components/Memos';
-import Login from './components/Login';
-import Signup from './components/Signup';
+import Sidebar from './components/Sidebar';
 import { Grid, Container, Text, Spacer, Row } from '@nextui-org/react';
 import Memo from './interfaces/Memo';
 import { getAllMemos } from './services/memos';
@@ -33,10 +32,7 @@ const App = () => {
         <Memos memos={memos} setMemos={setMemos} token={token} />
       </Grid>
       <Grid xs={3} direction='column'>
-        <Spacer y={2} />
-        <Login setToken={setToken} />
-        <Spacer y={4} />
-        <Signup />
+        <Sidebar setToken={setToken} />
       </Grid>
     </Grid.Container>
   );
