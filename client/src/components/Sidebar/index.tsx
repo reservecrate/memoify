@@ -8,9 +8,10 @@ const Sidebar = ({
   setToken: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
-    <Container>
+    <Container direction='column'>
       <Spacer y={2} />
       <Login setToken={setToken} />
+      <Spacer y={2.5}/>
       <Signup />
     </Container>
   );

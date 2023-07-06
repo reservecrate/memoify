@@ -55,15 +55,22 @@ const CreateMemo = ({
         onChange={handleInputChange}
         value={title}
         clearable
+        bordered
+        color='secondary'
       />
       <Spacer y={0.5} />
       <Textarea
         id='TextareaContent'
-        labelPlaceholder='content'
+        label="what's on your mind?"
+        placeholder='content'
         onChange={handleInputChange}
         value={content}
+        minRows={5}
+        maxRows={10}
+        bordered
+        color='secondary'
       />
-      <Spacer y={0.5} />
+      <Spacer />
       <Button color='gradient' bordered onPressStart={handleCreate} shadow>
         create memo
       </Button>

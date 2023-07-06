@@ -25,13 +25,13 @@ const App = () => {
 
   return (
     <Grid.Container id='App'>
-      <Grid xs={9} direction='column'>
+      <Grid xs={9.5} direction='column'>
         <Row justify='center'>
           <Text h1>memoify</Text>
         </Row>
         <Memos memos={memos} setMemos={setMemos} token={token} />
       </Grid>
-      <Grid xs={3} direction='column'>
+      <Grid xs={2.5} direction='column'>
         <Sidebar setToken={setToken} />
       </Grid>
     </Grid.Container>
