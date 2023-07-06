@@ -48,7 +48,7 @@ const CreateMemo = ({
   };
 
   return (
-    <Container>
+    <Container direction='column'>
       <Input
         id='InputTitle'
         labelPlaceholder='title'
@@ -63,7 +63,7 @@ const CreateMemo = ({
         value={content}
       />
       <Spacer y={0.5} />
-      <Button color='gradient' bordered onPressStart={handleCreate}>
+      <Button color='gradient' bordered onPressStart={handleCreate} shadow>
         create memo
       </Button>
     </Container>

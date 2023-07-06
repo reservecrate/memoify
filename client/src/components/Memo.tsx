@@ -45,7 +45,7 @@ const Memo = ({
         <Text>
           created on: {dateCreated} by <b>{username}</b>
         </Text>
-        <Button onPressStart={handleDelete} size='xs'>
+        <Button onPressStart={handleDelete} size='xs' shadow color='error'>
           delete
         </Button>
       </Card.Footer>

@@ -1,4 +1,5 @@
 import Memo from './Memo';
+import CreateMemo from './CreateMemo';
 import { Grid } from '@nextui-org/react';
 import MemoInterface from '../interfaces/Memo';
 
@@ -11,9 +12,16 @@ const Memos = ({
   setMemos: React.Dispatch<React.SetStateAction<MemoInterface[]>>;
   token: string;
 }) => {
+  const reverseMemos: MemoInterface[] = JSON.parse(
+    JSON.stringify(memos)
+  ).toReversed();
+  console.log(reverseMemos);
   return (
     <Grid.Container gap={1}>
-      {memos.map(memo => {
+      <Grid xs={3}>
+        <CreateMemo memos={memos} setMemos={setMemos} token={token} />
+      </Grid>
+      {reverseMemos.map(memo => {
         const { title, content, dateCreated, user, id } = memo;
         return (
           <Grid xs={3} key={id}>

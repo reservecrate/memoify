@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   Container,
   Input,
+  Tooltip,
   Button,
   FormElement,
   Spacer,
@@ -64,27 +65,24 @@ const Login = ({
         value={password}
       />
       <Spacer />
-      <Button color='gradient' bordered size='sm' onPressStart={handleLogin}>
-        {user.isLoggedIn ? (
-          <Text>
-            logged in as: <b>{user.username}</b>
-          </Text>
-        ) : (
-          'log in'
-        )}
-      </Button>
       {user.isLoggedIn ? (
-        <>
-          <Spacer />
-          <Button
-            color='gradient'
-            shadow
-            size='sm'
-            onPressStart={handleSignout}
-          >
-            log out
+        <Tooltip content='your account username' color='secondary'>
+          <Button flat color='primary'>
+            <Text>
+              logged in as: <b>{user.username}</b>
+            </Text>
           </Button>
-        </>
+        </Tooltip>
+      ) : (
+        <Button color='gradient' bordered size='sm' onPressStart={handleLogin} shadow>
+          log in
+        </Button>
+      )}
+      <Spacer />
+      {user.isLoggedIn ? (
+        <Button color='gradient' shadow size='sm' onPressStart={handleSignout}>
+          log out
+        </Button>
       ) : null}
     </Container>
   );
