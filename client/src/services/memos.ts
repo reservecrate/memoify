@@ -34,10 +34,16 @@ const createMemo = async (
   return createdMemo;
 };
 
-const updateMemo = async (id: string, payload: Memo) => {
+const updateMemo = async (id: string, payload: Memo, token: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
   const { data: updatedMemo }: { data: Memo } = await axios.put(
     `${baseUrl}/${id}`,
-    payload
+    payload,
+    config
   );
   return updatedMemo;
 };
