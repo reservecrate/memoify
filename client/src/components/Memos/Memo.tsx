@@ -1,4 +1,4 @@
-import { Card, Text, Row, Button } from '@nextui-org/react';
+import { Card, Text, Row, Tooltip, Button } from '@nextui-org/react';
 import MemoInterface from '../../interfaces/Memo';
 // import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteMemo } from '../../services/memos';
@@ -45,9 +45,11 @@ const Memo = ({
         <Text>
           created on: {dateCreated} by <b>{username}</b>
         </Text>
-        <Button onPressStart={handleDelete} size='xs' shadow color='error'>
-          delete
-        </Button>
+        <Tooltip content='delete this memo' contentColor='warning'>
+          <Button onPressStart={handleDelete} size='xs' shadow color='error'>
+            <Text>delete</Text>
+          </Button>
+        </Tooltip>
       </Card.Footer>
     </Card>
   );
