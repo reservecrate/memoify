@@ -1,6 +1,7 @@
 import {
   useState,
   useEffect,
+  useMemo,
   createContext,
   Dispatch,
   SetStateAction
@@ -10,6 +11,7 @@ import Sidebar from './components/Sidebar';
 import { Grid, Text, Row } from '@nextui-org/react';
 import IMemo from './interfaces/Memo';
 import { getMemos } from './services/memos';
+import { useSessionStorage } from 'usehooks-ts';
 
 type user = {
   username: string;
@@ -43,6 +45,8 @@ const App = () => {
     id: '',
     token: ''
   });
+  const [token, setToken] = useSessionStorage('token', loggedInUser.token);
+  const sessionStorageToken = useMemo(() => token, [token]);
 
   const hook = () => {
     (async () => {
