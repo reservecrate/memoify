@@ -24,6 +24,7 @@ const EditableMemo = ({ title, content, dateCreated, author, id }: IMemo) => {
           value={title}
           onChange={handleInputChange}
           css={{ width: '100%' }}
+          clearable
         />
       </Card.Header>
       <Card.Divider />
