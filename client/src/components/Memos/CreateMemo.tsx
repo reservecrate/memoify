@@ -9,12 +9,11 @@ import {
 } from '@nextui-org/react';
 import { createMemo } from '../../services/memos';
 import { AppContext } from '../../App';
-import { MemosContext } from '.';
 
 const CreateMemo = () => {
-  const { memos, setMemos, memoifiedUser } =
+  const { memos, setMemos, loggedInUser } =
     useContext(AppContext);
-  const { demoMemos, setDemoMemos } = useContext(MemosContext);
+  const { demoMemos, setDemoMemos } = useContext(AppContext);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
@@ -26,7 +25,7 @@ const CreateMemo = () => {
   };
   //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER WHEN THEY HAVE SUCCESSFULLY CREATED A NEW MEMO, LATER
   const handleCreate = async () => {
-    if (!memoifiedUser.token) {
+    if (!loggedInUser.token) {
       const tempMemo = {
         title,
         content,
@@ -44,16 +43,16 @@ const CreateMemo = () => {
           content,
           dateCreated: Date.now(),
           author: {
-            username: memoifiedUser.username,
-            name: memoifiedUser.name,
-            id: memoifiedUser.id
+            username: loggedInUser.username,
+            name: loggedInUser.name,
+            id: loggedInUser.id
           },
           id: 'tempMemoId' + Date.now() + Math.floor(Math.random() * 9999)
         };
         setTitle('');
         setContent('');
         setMemos([...memos, memoToCreate]);
-        const createdMemo = await createMemo(memoToCreate, memoifiedUser.token);
+        const createdMemo = await createMemo(memoToCreate, loggedInUser.token);
         setMemos([...memos, createdMemo]);
       } catch (err) {
         console.error(err);

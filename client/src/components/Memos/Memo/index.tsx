@@ -5,7 +5,6 @@ import EditableMemo from './EditableMemo';
 import ViewMemo from './ViewMemo';
 import { FormElement } from '@nextui-org/react';
 import { AppContext } from '../../../App';
-import { MemosContext } from '..';
 
 interface IMemoContext {
   handleInputChange: (e: React.ChangeEvent<FormElement>) => void;
@@ -24,8 +23,8 @@ const initialMemoContextData = {
 export const MemoContext = createContext<IMemoContext>(initialMemoContextData);
 
 const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
-  const { memos, setMemos, memoifiedUser } = useContext(AppContext);
-  const { demoMemos, setDemoMemos } = useContext(MemosContext);
+  const { memos, setMemos, loggedInUser, demoMemos, setDemoMemos } =
+    useContext(AppContext);
   const [isEditable, setIsEditable] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);
   const [editableContent, setEditableContent] = useState(content);
@@ -38,7 +37,7 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
       setEditableContent(inputValue);
   };
   const handleDelete = async () => {
-    if (!memoifiedUser.token) {
+    if (!loggedInUser.token) {
       const deletedDemoMemoIndex = demoMemos.findIndex(memo => memo.id === id);
       const demoMemosCopy = JSON.parse(JSON.stringify(demoMemos));
       demoMemosCopy.splice(deletedDemoMemoIndex, 1);
@@ -49,7 +48,7 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
         const memosCopy = JSON.parse(JSON.stringify(memos));
         memosCopy.splice(deletedMemoIndex, 1);
         setMemos(memosCopy);
-        await deleteMemo(id, memoifiedUser.token);
+        await deleteMemo(id, loggedInUser.token);
       } catch (err) {
         console.log(err);
       }
@@ -57,7 +56,7 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
   };
   const handleEdit = () => setIsEditable(isEditable => !isEditable);
   const handleUpdate = async () => {
-    if (!memoifiedUser.token) {
+    if (!loggedInUser.token) {
       setIsEditable(isEditable => !isEditable);
       const demoMemoToUpdate = demoMemos.find(memo => memo.id === id);
       const updatedDemoMemo = {
@@ -81,7 +80,7 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
         const updatedMemo = await updateMemo(
           id,
           updatedMemoPayload,
-          memoifiedUser.token
+          loggedInUser.token
         );
         //remove this below?
         const { id: updatedMemoId } = updatedMemo;

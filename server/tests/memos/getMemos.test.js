@@ -28,10 +28,9 @@ const testHelper = async () => {
       .send({ username: 'breezehash', password: 'niemals' })
   ).body;
 
-  let i = 0;
   const memo1 = {
-    title: `test memo ${i + 1}`,
-    content: `placeholder ${i + 1}`,
+    title: 'reservecrate title 1',
+    content: 'reservecrate content 1',
     dateCreated: Date.now()
   };
   await api
@@ -40,37 +39,34 @@ const testHelper = async () => {
     .send(memo1)
     .expect(201)
     .expect('Content-Type', /application\/json/);
-  i += 1;
 
   const memo2 = {
-    title: `test memo ${i + 1}`,
-    content: `placeholder ${i + 1}`,
-    dateCreated: Date.now()
-  };
-  await api
-    .post('/api/memos')
-    .set('Authorization', `Bearer ${token1}`)
-    .send(memo2)
-    .expect(201)
-    .expect('Content-Type', /application\/json/);
-  i += 1;
-
-  const memo3 = {
-    title: `test memo ${i + 1}`,
-    content: `placeholder ${i + 1}`,
+    title: 'breezehash title 1',
+    content: 'breezehash content 1',
     dateCreated: Date.now()
   };
   await api
     .post('/api/memos')
     .set('Authorization', `Bearer ${token2}`)
+    .send(memo2)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const memo3 = {
+    title: 'reservecrate title 2',
+    content: 'reservecrate content 2',
+    dateCreated: Date.now()
+  };
+  await api
+    .post('/api/memos')
+    .set('Authorization', `Bearer ${token1}`)
     .send(memo3)
     .expect(201)
     .expect('Content-Type', /application\/json/);
-  i += 1;
 
   const memo4 = {
-    title: `test memo ${i + 1}`,
-    content: `placeholder ${i + 1}`,
+    title: 'breezehash title 2',
+    content: 'breezehash content 2',
     dateCreated: Date.now()
   };
   await api
@@ -79,7 +75,6 @@ const testHelper = async () => {
     .send(memo4)
     .expect(201)
     .expect('Content-Type', /application\/json/);
-  i += 1;
 };
 
 describe('fetching all memos', () => {
@@ -96,10 +91,11 @@ describe('fetching all memos', () => {
       .expect('Content-Type', /application\/json/);
 
     expect(memos).toEqual(allMemos);
-    expect(memos[0].title).toBe('test memo 1');
-    expect(memos[2].content).toBe('placeholder 3');
+    expect(memos[0].title).toBe('reservecrate title 1');
+    expect(memos[3].content).toBe('breezehash content 2');
   });
 });
+
 describe('fetching a single memo', () => {
   beforeEach(testHelper, 25000);
 

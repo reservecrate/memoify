@@ -1,7 +1,6 @@
 import {
   useState,
   useEffect,
-  useMemo,
   createContext,
   Dispatch,
   SetStateAction
@@ -10,8 +9,9 @@ import Memos from './components/Memos';
 import Sidebar from './components/Sidebar';
 import { Grid, Text, Row } from '@nextui-org/react';
 import IMemo from './interfaces/Memo';
-import { getMemos } from './services/memos';
+import { getMemosByAuthor } from './services/memos';
 import { useSessionStorage } from 'usehooks-ts';
+import demoMemosData from './data/demoMemos';
 
 type user = {
   username: string;
@@ -23,20 +23,24 @@ type user = {
 interface IAppContext {
   memos: IMemo[];
   setMemos: Dispatch<SetStateAction<IMemo[]>>;
-  memoifiedUser: user;
+  loggedInUser: user;
   setLoggedInUser: Dispatch<SetStateAction<user>>;
+  demoMemos: IMemo[];
+  setDemoMemos: Dispatch<SetStateAction<IMemo[]>>;
 }
 
 const initialAppContextData: IAppContext = {
   memos: [],
   setMemos: () => null,
-  memoifiedUser: {
+  loggedInUser: {
     username: '',
     name: '',
     id: '',
     token: ''
   },
-  setLoggedInUser: () => null
+  setLoggedInUser: () => null,
+  demoMemos: [],
+  setDemoMemos: () => null
 };
 
 export const AppContext = createContext<IAppContext>(initialAppContextData);
@@ -44,32 +48,38 @@ export const AppContext = createContext<IAppContext>(initialAppContextData);
 const App = () => {
   //implement client side form checking for faster rendering
   const [memos, setMemos] = useState<IMemo[]>([]);
+  const [demoMemos, setDemoMemos] = useState<IMemo[]>(demoMemosData);
   const [loggedInUser, setLoggedInUser] = useSessionStorage(
     'loggedInUser',
-    initialAppContextData.memoifiedUser
+    initialAppContextData.loggedInUser
   );
-  const memoifiedUser = useMemo(() => loggedInUser, [loggedInUser]);
 
   const hook = () => {
     (async () => {
-      try {
-        const memosData = await getMemos();
-        setMemos(memosData);
-      } catch (err) {
-        console.error(err);
+      if (loggedInUser.token) {
+        try {
+          const memosData = await getMemosByAuthor(loggedInUser.username);
+          setMemos(memosData);
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        setMemos(demoMemos);
       }
     })();
   };
 
-  useEffect(hook, []);
+  useEffect(hook, [loggedInUser.token, loggedInUser.username, demoMemos]);
 
   return (
     <AppContext.Provider
       value={{
         memos,
         setMemos,
+        loggedInUser,
         setLoggedInUser,
-        memoifiedUser
+        demoMemos,
+        setDemoMemos
       }}
     >
       <Grid.Container id='App'>

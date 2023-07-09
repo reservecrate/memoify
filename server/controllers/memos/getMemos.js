@@ -6,8 +6,7 @@ const getMemos = async (req, res) => {
 };
 
 const getMemo = async (req, res) => {
-  const { id } = req.params;
-  const memo = await getMemoById(id);
+  const memo = await getMemoById(req.params.id);
   res.status(200).json(memo);
 };
 

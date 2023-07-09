@@ -3,6 +3,7 @@ const express = require('express');
 require('express-async-errors');
 const app = express();
 const cors = require('cors');
+const userMemosRouter = require('./controllers/userMemos');
 const memosRouter = require('./controllers/memos');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
@@ -33,6 +34,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+app.use('/', userExtractor, userMemosRouter);
 app.use('/api/memos', userExtractor, memosRouter);
 app.use('/api/users', userExtractor, usersRouter);
 app.use('/api/login', loginRouter);

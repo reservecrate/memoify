@@ -1,16 +1,24 @@
 import axios from 'axios';
-import Memo from '../interfaces/Memo';
+import IMemo from '../interfaces/Memo';
 
 const baseUrl = 'http://localhost:3004/api/memos';
+const newBaseUrl = 'http://localhost:3004';
 
-const getMemos = async () => {
-  const { data: memos }: { data: Memo[] } = await axios.get(baseUrl);
-  return memos;
-};
+// const getMemos = async () => {
+//   const { data: memos }: { data: IMemo[] } = await axios.get(baseUrl);
+//   return memos;
+// };
 
 const getMemo = async (id: string) => {
-  const { data: memo }: { data: Memo } = await axios.get(`${baseUrl}/${id}`);
+  const { data: memo }: { data: IMemo } = await axios.get(`${baseUrl}/${id}`);
   return memo;
+};
+
+const getMemosByAuthor = async (username: string) => {
+  const { data: memos }: { data: IMemo[] } = await axios.get(
+    `${newBaseUrl}/${username}/memos`
+  );
+  return memos;
 };
 
 const createMemo = async (
@@ -26,7 +34,7 @@ const createMemo = async (
       Authorization: `Bearer ${token}`
     }
   };
-  const { data: createdMemo }: { data: Memo } = await axios.post(
+  const { data: createdMemo }: { data: IMemo } = await axios.post(
     baseUrl,
     payload,
     config
@@ -34,13 +42,13 @@ const createMemo = async (
   return createdMemo;
 };
 
-const updateMemo = async (id: string, payload: Memo, token: string) => {
+const updateMemo = async (id: string, payload: IMemo, token: string) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
     }
   };
-  const { data: updatedMemo }: { data: Memo } = await axios.put(
+  const { data: updatedMemo }: { data: IMemo } = await axios.put(
     `${baseUrl}/${id}`,
     payload,
     config
@@ -54,11 +62,11 @@ const deleteMemo = async (id: string, token: string) => {
       Authorization: `Bearer ${token}`
     }
   };
-  const { data: deletedMemo }: { data: Memo } = await axios.delete(
+  const { data: deletedMemo }: { data: IMemo } = await axios.delete(
     `${baseUrl}/${id}`,
     config
   );
   return deletedMemo;
 };
 
-export { getMemos, getMemo, createMemo, updateMemo, deleteMemo };
+export { getMemo, getMemosByAuthor, createMemo, updateMemo, deleteMemo };

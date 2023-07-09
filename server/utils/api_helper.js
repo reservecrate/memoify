@@ -35,12 +35,23 @@ const getAllMemos = async () => {
 const getMemoById = async id => {
   const memo = await Memo.findById(id);
   const prettifiedMemo = (
-    await Memo.findById(id).populate('user', {
+    await memo.populate('user', {
       username: 1,
       name: 1
     })
   ).prettify();
   return { memo, prettifiedMemo };
+};
+
+const getAllMemosByAuthor = async username => {
+  const memos = (
+    await Memo.find({}).populate('user', {
+      username: 1,
+      name: 1
+    })
+  ).map(memo => memo.prettify());
+  const memosByAuthor = memos.filter(memo => memo.author.username === username);
+  return memosByAuthor;
 };
 
 // const deleteMemo=async id=>{}
@@ -51,5 +62,6 @@ module.exports = {
   getByUsername,
   getUserById,
   getAllMemos,
-  getMemoById
+  getMemoById,
+  getAllMemosByAuthor
 };

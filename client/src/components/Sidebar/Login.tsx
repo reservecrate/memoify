@@ -12,7 +12,7 @@ import login from '../../services/login';
 import { AppContext } from '../../App';
 
 const Login = () => {
-  const { setLoggedInUser, memoifiedUser } = useContext(AppContext);
+  const { setLoggedInUser, loggedInUser } = useContext(AppContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   // const [user, setUser] = useState({ username: '', isLoggedIn: false });
@@ -46,13 +46,13 @@ const Login = () => {
 
   return (
     <Container>
-      {memoifiedUser.token ? (
+      {loggedInUser.token ? (
         <>
           <Spacer />
           <Tooltip content='your account username' color='secondary'>
             <Button flat color='primary'>
               <Text>
-                logged in as: <b>{memoifiedUser.username}</b>
+                logged in as: <b>{loggedInUser.username}</b>
               </Text>
             </Button>
             <Spacer />
@@ -99,28 +99,6 @@ const Login = () => {
       )}
     </Container>
   );
-
-  // <Container>
-  //         {memoifiedUser.token ? (
-  //     <Tooltip content='your account username' color='secondary'>
-  //       <Button flat color='primary'>
-  //         <Text>
-  //           logged in as: <b>{memoifiedUser.username}</b>
-  //         </Text>
-  //       </Button>
-  //       <Spacer />
-  //       <Button
-  //         color='gradient'
-  //         shadow
-  //         size='sm'
-  //         onPressStart={handleSignout}
-  //       >
-  //         log out
-  //       </Button>
-  //     </Tooltip>
-  //   ) : (
-  //       //   )}
-  // </Container>
 };
 
 export default Login;

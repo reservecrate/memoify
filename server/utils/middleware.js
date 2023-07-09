@@ -9,7 +9,7 @@ const errorHandler = (err, req, res, next) => {
   logger.error(err.message);
   if (err.name === 'CastError')
     return res
-      .status(404)
+      .status(400)
       .send({ error: `${err.message} (invalid/nonexistent id)` });
   else if (err.name === 'ValidationError')
     return res.status(400).json({ error: err.message });
