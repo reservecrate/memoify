@@ -38,16 +38,23 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
       setEditableContent(inputValue);
   };
   const handleDelete = async () => {
-    try {
-      const { id: deletedMemoId } = await deleteMemo(id, loggedInUser.token);
-      const deletedMemoIndex = memos.findIndex(
-        memo => memo.id === deletedMemoId
-      );
-      const memosCopy = JSON.parse(JSON.stringify(memos));
-      memosCopy.splice(deletedMemoIndex, 1);
-      setMemos(memosCopy);
-    } catch (err) {
-      console.log(err);
+    if (!loggedInUser.token) {
+      const deletedDemoMemoIndex = demoMemos.findIndex(memo => memo.id === id);
+      const demoMemosCopy = JSON.parse(JSON.stringify(demoMemos));
+      demoMemosCopy.splice(deletedDemoMemoIndex, 1);
+      setDemoMemos(demoMemosCopy);
+    } else {
+      try {
+        const { id: deletedMemoId } = await deleteMemo(id, loggedInUser.token);
+        const deletedMemoIndex = memos.findIndex(
+          memo => memo.id === deletedMemoId
+        );
+        const memosCopy = JSON.parse(JSON.stringify(memos));
+        memosCopy.splice(deletedMemoIndex, 1);
+        setMemos(memosCopy);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
   const handleEdit = () => setIsEditable(isEditable => !isEditable);

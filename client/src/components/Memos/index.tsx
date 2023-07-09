@@ -40,7 +40,7 @@ const Memos = () => {
       content: '-> built for your basic daily needs!',
       dateCreated: Date.now(),
       author: { username: 'Memoify', name: 'Memoify', id: '' },
-      id: 'id' + Date.now()+Math.floor(Math.random() * 9999)
+      id: 'id' + Date.now() + Math.floor(Math.random() * 9999)
     }
   ]);
   const reverseMemos: IMemo[] = JSON.parse(JSON.stringify(memos)).toReversed();
