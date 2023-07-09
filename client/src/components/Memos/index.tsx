@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Memo from './Memo';
 import CreateMemo from './CreateMemo';
-import { Grid } from '@nextui-org/react';
+import { Grid,  } from '@nextui-org/react';
 import IMemo from '../../interfaces/Memo';
 import { AppContext } from '../../App';
 
@@ -12,7 +12,7 @@ const Memos = () => {
     : JSON.parse(JSON.stringify(demoMemos)).toReversed();
 
   return (
-    <Grid.Container gap={1}>
+    <Grid.Container gap={1.5}>
       <Grid xs={3}>
         <CreateMemo />
       </Grid>
