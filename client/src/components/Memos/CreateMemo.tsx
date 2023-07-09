@@ -12,7 +12,8 @@ import { AppContext } from '../../App';
 import { MemosContext } from '.';
 
 const CreateMemo = () => {
-  const { memos, setMemos, loggedInUser } = useContext(AppContext);
+  const { memos, setMemos, memoifiedUser } =
+    useContext(AppContext);
   const { demoMemos, setDemoMemos } = useContext(MemosContext);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -25,7 +26,7 @@ const CreateMemo = () => {
   };
   //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER WHEN THEY HAVE SUCCESSFULLY CREATED A NEW MEMO, LATER
   const handleCreate = async () => {
-    if (!loggedInUser.token) {
+    if (!memoifiedUser.token) {
       const tempMemo = {
         title,
         content,
@@ -43,16 +44,16 @@ const CreateMemo = () => {
           content,
           dateCreated: Date.now(),
           author: {
-            username: loggedInUser.username,
-            name: loggedInUser.name,
-            id: loggedInUser.id
+            username: memoifiedUser.username,
+            name: memoifiedUser.name,
+            id: memoifiedUser.id
           },
           id: 'tempMemoId' + Date.now() + Math.floor(Math.random() * 9999)
         };
         setTitle('');
         setContent('');
         setMemos([...memos, memoToCreate]);
-        const createdMemo = await createMemo(memoToCreate, loggedInUser.token);
+        const createdMemo = await createMemo(memoToCreate, memoifiedUser.token);
         setMemos([...memos, createdMemo]);
       } catch (err) {
         console.error(err);

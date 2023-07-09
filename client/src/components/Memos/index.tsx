@@ -26,7 +26,7 @@ export const MemosContext = createContext<IMemosContext>(
 );
 
 const Memos = () => {
-  const { loggedInUser, memos } = useContext(AppContext);
+  const { memos, memoifiedUser } = useContext(AppContext);
   const [demoMemos, setDemoMemos] = useState<IMemo[]>([
     {
       title: 'welcome...',
@@ -54,7 +54,7 @@ const Memos = () => {
         <Grid xs={3}>
           <CreateMemo />
         </Grid>
-        {loggedInUser.token
+        {memoifiedUser.token
           ? reverseMemos.map(memo => {
               const { title, content, dateCreated, author, id } = memo;
               return (

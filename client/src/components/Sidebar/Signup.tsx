@@ -36,8 +36,8 @@ const Signup = () => {
       setUsername('');
       setName('');
       setPassword('');
-      const user = await signup(signupPayload);
-      setCreatedUser(user);
+      const createdUser = await signup(signupPayload);
+      setCreatedUser(createdUser);
     } catch (err) {
       console.error(err);
     }

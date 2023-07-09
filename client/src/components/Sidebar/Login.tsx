@@ -12,7 +12,7 @@ import login from '../../services/login';
 import { AppContext } from '../../App';
 
 const Login = () => {
-  const { loggedInUser, setLoggedInUser } = useContext(AppContext);
+  const { setLoggedInUser, memoifiedUser } = useContext(AppContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   // const [user, setUser] = useState({ username: '', isLoggedIn: false });
@@ -33,8 +33,8 @@ const Login = () => {
       const loginPayload = { username, password };
       setUsername('');
       setPassword('');
-      const user = await login(loginPayload);
-      setLoggedInUser(user);
+      const userData = await login(loginPayload);
+      setLoggedInUser(userData);
     } catch (err) {
       console.error(err);
     }
@@ -63,11 +63,11 @@ const Login = () => {
         clearable
       />
       <Spacer />
-      {loggedInUser.token ? (
+      {memoifiedUser.token ? (
         <Tooltip content='your account username' color='secondary'>
           <Button flat color='primary'>
             <Text>
-              logged in as: <b>{loggedInUser.username}</b>
+              logged in as: <b>{memoifiedUser.username}</b>
             </Text>
           </Button>
           <Spacer />

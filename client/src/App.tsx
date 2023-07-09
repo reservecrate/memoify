@@ -21,17 +21,22 @@ type user = {
 };
 
 interface IAppContext {
-  loggedInUser: user;
-  setLoggedInUser: Dispatch<SetStateAction<user>>;
   memos: IMemo[];
   setMemos: Dispatch<SetStateAction<IMemo[]>>;
+  memoifiedUser: user;
+  setLoggedInUser: Dispatch<SetStateAction<user>>;
 }
 
 const initialAppContextData: IAppContext = {
-  loggedInUser: { username: '', name: '', id: '', token: '' },
-  setLoggedInUser: () => null,
   memos: [],
-  setMemos: () => null
+  setMemos: () => null,
+  memoifiedUser: {
+    username: '',
+    name: '',
+    id: '',
+    token: ''
+  },
+  setLoggedInUser: () => null
 };
 
 export const AppContext = createContext<IAppContext>(initialAppContextData);
@@ -39,14 +44,11 @@ export const AppContext = createContext<IAppContext>(initialAppContextData);
 const App = () => {
   //implement client side form checking for faster rendering
   const [memos, setMemos] = useState<IMemo[]>([]);
-  const [loggedInUser, setLoggedInUser] = useState<user>({
-    username: '',
-    name: '',
-    id: '',
-    token: ''
-  });
-  const [token, setToken] = useSessionStorage('token', loggedInUser.token);
-  const sessionStorageToken = useMemo(() => token, [token]);
+  const [loggedInUser, setLoggedInUser] = useSessionStorage(
+    'loggedInUser',
+    initialAppContextData.memoifiedUser
+  );
+  const memoifiedUser = useMemo(() => loggedInUser, [loggedInUser]);
 
   const hook = () => {
     (async () => {
@@ -63,7 +65,12 @@ const App = () => {
 
   return (
     <AppContext.Provider
-      value={{ loggedInUser, setLoggedInUser, memos, setMemos }}
+      value={{
+        memos,
+        setMemos,
+        setLoggedInUser,
+        memoifiedUser
+      }}
     >
       <Grid.Container id='App'>
         <Grid xs={10} direction='column'>

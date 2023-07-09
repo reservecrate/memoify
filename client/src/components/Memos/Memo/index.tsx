@@ -24,7 +24,7 @@ const initialMemoContextData = {
 export const MemoContext = createContext<IMemoContext>(initialMemoContextData);
 
 const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
-  const { loggedInUser, memos, setMemos } = useContext(AppContext);
+  const { memos, setMemos, memoifiedUser } = useContext(AppContext);
   const { demoMemos, setDemoMemos } = useContext(MemosContext);
   const [isEditable, setIsEditable] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);
@@ -38,7 +38,7 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
       setEditableContent(inputValue);
   };
   const handleDelete = async () => {
-    if (!loggedInUser.token) {
+    if (!memoifiedUser.token) {
       const deletedDemoMemoIndex = demoMemos.findIndex(memo => memo.id === id);
       const demoMemosCopy = JSON.parse(JSON.stringify(demoMemos));
       demoMemosCopy.splice(deletedDemoMemoIndex, 1);
@@ -49,7 +49,7 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
         const memosCopy = JSON.parse(JSON.stringify(memos));
         memosCopy.splice(deletedMemoIndex, 1);
         setMemos(memosCopy);
-        await deleteMemo(id, loggedInUser.token);
+        await deleteMemo(id, memoifiedUser.token);
       } catch (err) {
         console.log(err);
       }
@@ -57,7 +57,7 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
   };
   const handleEdit = () => setIsEditable(isEditable => !isEditable);
   const handleUpdate = async () => {
-    if (!loggedInUser.token) {
+    if (!memoifiedUser.token) {
       setIsEditable(isEditable => !isEditable);
       const demoMemoToUpdate = demoMemos.find(memo => memo.id === id);
       const updatedDemoMemo = {
@@ -81,7 +81,7 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
         const updatedMemo = await updateMemo(
           id,
           updatedMemoPayload,
-          loggedInUser.token
+          memoifiedUser.token
         );
         //remove this below?
         const { id: updatedMemoId } = updatedMemo;
