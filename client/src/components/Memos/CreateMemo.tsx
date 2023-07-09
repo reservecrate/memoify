@@ -9,9 +9,11 @@ import {
 } from '@nextui-org/react';
 import { createMemo } from '../../services/memos';
 import { AppContext } from '../../App';
+import { MemosContext } from '.';
 
 const CreateMemo = () => {
   const { memos, setMemos, loggedInUser } = useContext(AppContext);
+  const { demoMemos, setDemoMemos } = useContext(MemosContext);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
@@ -28,12 +30,12 @@ const CreateMemo = () => {
         title,
         content,
         dateCreated: Date.now(),
-        user: { username: 'Incognito', name: '', id: '' },
-        id: ''
+        author: { username: 'Incognito', name: '', id: '' },
+        id: 'id' + Date.now() + Math.floor(Math.random() * 9999)
       };
       setTitle('');
       setContent('');
-      setMemos([...memos, tempMemo]);
+      setDemoMemos([...demoMemos, tempMemo]);
     } else {
       try {
         const memoToCreate = {

@@ -5,6 +5,7 @@ import EditableMemo from './EditableMemo';
 import ViewMemo from './ViewMemo';
 import { FormElement } from '@nextui-org/react';
 import { AppContext } from '../../../App';
+import { MemosContext } from '..';
 
 interface IMemoContext {
   handleInputChange: (e: React.ChangeEvent<FormElement>) => void;
@@ -22,8 +23,9 @@ const initialMemoContextData = {
 
 export const MemoContext = createContext<IMemoContext>(initialMemoContextData);
 
-const Memo = ({ title, content, dateCreated, user, id }: IMemo) => {
+const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
   const { loggedInUser, memos, setMemos } = useContext(AppContext);
+  const { demoMemos, setDemoMemos } = useContext(MemosContext);
   const [isEditable, setIsEditable] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);
   const [editableContent, setEditableContent] = useState(content);
@@ -36,36 +38,57 @@ const Memo = ({ title, content, dateCreated, user, id }: IMemo) => {
       setEditableContent(inputValue);
   };
   const handleDelete = async () => {
-    const { id: deletedMemoId } = await deleteMemo(id, loggedInUser.token);
-    const deletedMemoIndex = memos.findIndex(memo => memo.id === deletedMemoId);
-    const memosCopy = JSON.parse(JSON.stringify(memos));
-    memosCopy.splice(deletedMemoIndex, 1);
-    setMemos(memosCopy);
-  };
-  const handleEdit = () => setIsEditable(isEditable => !isEditable);
-  const handleUpdate = async () => {
     try {
-      setIsEditable(isEditable => !isEditable);
-      const memoToUpdate = await getMemo(id);
-      const updatedMemoPayload = {
-        ...memoToUpdate,
-        title: editableTitle,
-        content: editableContent
-      };
-      const updatedMemo = await updateMemo(
-        id,
-        updatedMemoPayload,
-        loggedInUser.token
-      );
-      const { id: updatedMemoId } = updatedMemo;
-      const updatedMemoIndex = memos.findIndex(
-        memo => memo.id === updatedMemoId
+      const { id: deletedMemoId } = await deleteMemo(id, loggedInUser.token);
+      const deletedMemoIndex = memos.findIndex(
+        memo => memo.id === deletedMemoId
       );
       const memosCopy = JSON.parse(JSON.stringify(memos));
-      memosCopy.splice(updatedMemoIndex, 1, updatedMemo);
+      memosCopy.splice(deletedMemoIndex, 1);
       setMemos(memosCopy);
     } catch (err) {
       console.log(err);
+    }
+  };
+  const handleEdit = () => setIsEditable(isEditable => !isEditable);
+  const handleUpdate = async () => {
+    if (!loggedInUser.token) {
+      setIsEditable(isEditable => !isEditable);
+      const demoMemoToUpdate = demoMemos.find(memo => memo.id === id);
+      const updatedDemoMemo = {
+        ...demoMemoToUpdate,
+        title: editableTitle,
+        content: editableContent
+      };
+      const updatedDemoMemoIndex = demoMemos.findIndex(memo => memo.id === id);
+      const demoMemosCopy = JSON.parse(JSON.stringify(demoMemos));
+      demoMemosCopy.splice(updatedDemoMemoIndex, 1, updatedDemoMemo);
+      setDemoMemos(demoMemosCopy);
+    } else {
+      try {
+        setIsEditable(isEditable => !isEditable);
+        const memoToUpdate = await getMemo(id);
+        const updatedMemoPayload = {
+          ...memoToUpdate,
+          title: editableTitle,
+          content: editableContent
+        };
+        const updatedMemo = await updateMemo(
+          id,
+          updatedMemoPayload,
+          loggedInUser.token
+        );
+        //remove this below?
+        const { id: updatedMemoId } = updatedMemo;
+        const updatedMemoIndex = memos.findIndex(
+          memo => memo.id === updatedMemoId
+        );
+        const memosCopy = JSON.parse(JSON.stringify(memos));
+        memosCopy.splice(updatedMemoIndex, 1, updatedMemo);
+        setMemos(memosCopy);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
@@ -78,7 +101,7 @@ const Memo = ({ title, content, dateCreated, user, id }: IMemo) => {
           title={editableTitle}
           content={editableContent}
           dateCreated={dateCreated}
-          user={user}
+          author={author}
           id={id}
         />
       ) : (
@@ -86,7 +109,7 @@ const Memo = ({ title, content, dateCreated, user, id }: IMemo) => {
           title={editableTitle}
           content={editableContent}
           dateCreated={dateCreated}
-          user={user}
+          author={author}
           id={id}
         />
       )}

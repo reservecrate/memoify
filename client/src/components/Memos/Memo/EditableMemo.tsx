@@ -10,10 +10,10 @@ import {
 import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
 
-const EditableMemo = ({ title, content, dateCreated, user, id }: IMemo) => {
+const EditableMemo = ({ title, content, dateCreated, author, id }: IMemo) => {
   const { handleInputChange, handleDelete, handleUpdate } =
     useContext(MemoContext);
-  const { username } = user;
+  const { username } = author;
 
   return (
     <Card variant='bordered' isHoverable>
