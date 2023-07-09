@@ -31,6 +31,7 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const loginPayload = { username, password };
+      setLoggedInUser({ username, name: '', id: '', token: '' });
       setUsername('');
       setPassword('');
       const userData = await login(loginPayload);
@@ -84,6 +85,7 @@ const Login = () => {
             value={password}
             clearable
           />
+          <Spacer />
           <Button
             color='gradient'
             bordered
