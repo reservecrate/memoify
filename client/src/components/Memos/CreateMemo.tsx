@@ -31,7 +31,7 @@ const CreateMemo = () => {
         content,
         dateCreated: Date.now(),
         author: { username: 'Incognito', name: '', id: '' },
-        id: 'id' + Date.now() + Math.floor(Math.random() * 9999)
+        id: 'tempDemoMemoId' + Date.now() + Math.floor(Math.random() * 9999)
       };
       setTitle('');
       setContent('');
@@ -41,11 +41,18 @@ const CreateMemo = () => {
         const memoToCreate = {
           title,
           content,
-          dateCreated: Date.now()
+          dateCreated: Date.now(),
+          author: {
+            username: loggedInUser.username,
+            name: loggedInUser.name,
+            id: loggedInUser.id
+          },
+          id: 'tempMemoId' + Date.now() + Math.floor(Math.random() * 9999)
         };
-        const createdMemo = await createMemo(memoToCreate, loggedInUser.token);
         setTitle('');
         setContent('');
+        setMemos([...memos, memoToCreate]);
+        const createdMemo = await createMemo(memoToCreate, loggedInUser.token);
         setMemos([...memos, createdMemo]);
       } catch (err) {
         console.error(err);

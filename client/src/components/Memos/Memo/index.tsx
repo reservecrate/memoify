@@ -45,13 +45,11 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
       setDemoMemos(demoMemosCopy);
     } else {
       try {
-        const { id: deletedMemoId } = await deleteMemo(id, loggedInUser.token);
-        const deletedMemoIndex = memos.findIndex(
-          memo => memo.id === deletedMemoId
-        );
+        const deletedMemoIndex = memos.findIndex(memo => memo.id === id);
         const memosCopy = JSON.parse(JSON.stringify(memos));
         memosCopy.splice(deletedMemoIndex, 1);
         setMemos(memosCopy);
+        await deleteMemo(id, loggedInUser.token);
       } catch (err) {
         console.log(err);
       }
