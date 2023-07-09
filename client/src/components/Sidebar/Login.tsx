@@ -45,54 +45,80 @@ const Login = () => {
 
   return (
     <Container>
-      <Input
-        underlined
-        id='InputSignupUsername'
-        labelPlaceholder='username'
-        onChange={handleInputChange}
-        value={username}
-        clearable
-      />
-      <Spacer y={2} />
-      <Input.Password
-        underlined
-        id='InputSignupPassword'
-        labelPlaceholder='password'
-        onChange={handleInputChange}
-        value={password}
-        clearable
-      />
-      <Spacer />
       {memoifiedUser.token ? (
-        <Tooltip content='your account username' color='secondary'>
-          <Button flat color='primary'>
-            <Text>
-              logged in as: <b>{memoifiedUser.username}</b>
-            </Text>
-          </Button>
+        <>
           <Spacer />
+          <Tooltip content='your account username' color='secondary'>
+            <Button flat color='primary'>
+              <Text>
+                logged in as: <b>{memoifiedUser.username}</b>
+              </Text>
+            </Button>
+            <Spacer />
+            <Button
+              color='gradient'
+              shadow
+              size='sm'
+              onPressStart={handleSignout}
+            >
+              log out
+            </Button>
+          </Tooltip>
+        </>
+      ) : (
+        <>
+          <Input
+            underlined
+            id='InputSignupUsername'
+            labelPlaceholder='username'
+            onChange={handleInputChange}
+            value={username}
+            clearable
+          />
+          <Spacer y={2} />
+          <Input.Password
+            underlined
+            id='InputSignupPassword'
+            labelPlaceholder='password'
+            onChange={handleInputChange}
+            value={password}
+            clearable
+          />
           <Button
             color='gradient'
-            shadow
+            bordered
             size='sm'
-            onPressStart={handleSignout}
+            onPressStart={handleLogin}
+            shadow
           >
-            log out
+            log in
           </Button>
-        </Tooltip>
-      ) : (
-        <Button
-          color='gradient'
-          bordered
-          size='sm'
-          onPressStart={handleLogin}
-          shadow
-        >
-          log in
-        </Button>
+        </>
       )}
     </Container>
   );
+
+  // <Container>
+  //         {memoifiedUser.token ? (
+  //     <Tooltip content='your account username' color='secondary'>
+  //       <Button flat color='primary'>
+  //         <Text>
+  //           logged in as: <b>{memoifiedUser.username}</b>
+  //         </Text>
+  //       </Button>
+  //       <Spacer />
+  //       <Button
+  //         color='gradient'
+  //         shadow
+  //         size='sm'
+  //         onPressStart={handleSignout}
+  //       >
+  //         log out
+  //       </Button>
+  //     </Tooltip>
+  //   ) : (
+  //       //   )}
+  // </Container>
 };
 
 export default Login;
