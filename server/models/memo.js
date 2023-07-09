@@ -23,9 +23,10 @@ const memoSchema = new Schema(
           title: this.title,
           content: this.content,
           dateCreated: this.dateCreated,
-          user: {
+          author: {
             username: this.user.username,
-            name: this.user.name
+            name: this.user.name,
+            id: this.user._id.toString()
           }
         };
         return prettifiedMemo;

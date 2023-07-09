@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   Container,
   Input,
@@ -8,17 +8,10 @@ import {
   Spacer
 } from '@nextui-org/react';
 import { createMemo } from '../../services/memos';
-import Memo from '../../interfaces/Memo';
+import { AppContext } from '../../App';
 
-const CreateMemo = ({
-  memos,
-  setMemos,
-  token
-}: {
-  memos: Memo[];
-  setMemos: React.Dispatch<React.SetStateAction<Memo[]>>;
-  token: string;
-}) => {
+const CreateMemo = () => {
+  const { memos, setMemos, loggedInUser } = useContext(AppContext);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
@@ -30,20 +23,31 @@ const CreateMemo = ({
   };
   //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER WHEN THEY HAVE SUCCESSFULLY CREATED A NEW MEMO, LATER
   const handleCreate = async () => {
-    try {
-      const createdMemo = await createMemo(
-        {
+    if (!loggedInUser.token) {
+      const tempMemo = {
+        title,
+        content,
+        dateCreated: Date.now(),
+        user: { username: 'Incognito', name: '', id: '' },
+        id: ''
+      };
+      setTitle('');
+      setContent('');
+      setMemos([...memos, tempMemo]);
+    } else {
+      try {
+        const memoToCreate = {
           title,
           content,
           dateCreated: Date.now()
-        },
-        token
-      );
-      setTitle('');
-      setContent('');
-      setMemos([...memos, createdMemo]);
-    } catch (err) {
-      console.error(err);
+        };
+        const createdMemo = await createMemo(memoToCreate, loggedInUser.token);
+        setTitle('');
+        setContent('');
+        setMemos([...memos, createdMemo]);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 

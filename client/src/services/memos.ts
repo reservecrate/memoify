@@ -3,7 +3,7 @@ import Memo from '../interfaces/Memo';
 
 const baseUrl = 'http://localhost:3004/api/memos';
 
-const getAllMemos = async () => {
+const getMemos = async () => {
   const { data: memos }: { data: Memo[] } = await axios.get(baseUrl);
   return memos;
 };
@@ -61,4 +61,4 @@ const deleteMemo = async (id: string, token: string) => {
   return deletedMemo;
 };
 
-export { getAllMemos, getMemo, createMemo, updateMemo, deleteMemo };
+export { getMemos, getMemo, createMemo, updateMemo, deleteMemo };

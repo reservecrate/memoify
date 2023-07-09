@@ -1,36 +1,30 @@
+import { useContext } from 'react';
 import {
   Card,
   Text,
-  Row,
   Tooltip,
   Button,
   Input,
   Textarea
 } from '@nextui-org/react';
-import { EditableMemoComponentInterface } from '../../../interfaces/Memo';
+import IMemo from '../../../interfaces/Memo';
+import { MemoContext } from '.';
 
-const EditableMemo = ({
-  title,
-  content,
-  dateCreated,
-  user,
-  handleUpdate,
-  handleDelete,
-  handleInputChange
-}: EditableMemoComponentInterface) => {
+const EditableMemo = ({ title, content, dateCreated, user, id }: IMemo) => {
+  const { handleInputChange, handleDelete, handleUpdate } =
+    useContext(MemoContext);
   const { username } = user;
 
   return (
     <Card variant='bordered' isHoverable>
       <Card.Header>
-        <Row justify='center'>
-          <Input
-            aria-label='InputUpdateTitle'
-            id='InputUpdateTitle'
-            value={title}
-            onChange={handleInputChange}
-          />
-        </Row>
+        <Input
+          aria-label='InputUpdateTitle'
+          id='InputUpdateTitle'
+          value={title}
+          onChange={handleInputChange}
+          css={{ width: '100%' }}
+        />
       </Card.Header>
       <Card.Divider />
       <Card.Body>

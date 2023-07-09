@@ -81,16 +81,17 @@ const testHelper = async () => {
   i += 1;
 };
 
-beforeEach(testHelper, 50000);
+beforeEach(testHelper, 25000);
 
 test('returns SC 200 + updated memo when updating the title/content', async () => {
   const memosBefore = await getAllMemos();
   const login = { username: 'reservecrate', password: 'kennwort' };
   const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-  const memoToUpdate = await Memo.findOne();
-  const { id } = memoToUpdate;
-  const updatedMemoPayload = { ...memoToUpdate._doc, content: 'UU RR' };
+  const { id } = memosBefore[0];
+  const { body } = await api.get(`/api/memos/${id}`);
+  const { memo: memoToUpdate } = body;
+  const updatedMemoPayload = { ...memoToUpdate, content: 'UU RR' };
 
   const { body: updatedMemo } = await api
     .put(`/api/memos/${id}`)
@@ -105,15 +106,18 @@ test('returns SC 200 + updated memo when updating the title/content', async () =
   expect(memosAfter).toHaveLength(memosBefore.length);
   expect(memosAfter).toContainEqual(updatedMemo);
 });
+
 test('returns SC 200 + updated memo when updating the title and content simultaneously', async () => {
   const memosBefore = await getAllMemos();
   const login = { username: 'reservecrate', password: 'kennwort' };
   const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-  const memoToUpdate = await Memo.findOne();
-  const { id } = memoToUpdate;
+  const { id } = memosBefore[0];
+  const { body } = await api.get(`/api/memos/${id}`);
+  const { memo: memoToUpdate } = body;
+
   const updatedMemoPayload = {
-    ...memoToUpdate._doc,
+    ...memoToUpdate,
     title: 'Merkzettel 1',
     content: 'etwas etwas'
   };
@@ -131,24 +135,27 @@ test('returns SC 200 + updated memo when updating the title and content simultan
   const memosAfter = await getAllMemos();
   expect(memosAfter).toHaveLength(memosBefore.length);
   expect(memosAfter).toContainEqual(updatedMemo);
-});
+}, 10000);
 
-test('fails with SC 404 when the memo id is invalid (any modification(s))', async () => {
+test('fails with SC 404 when the memo id is invalid', async () => {
   const memosBefore = await getAllMemos();
   const login = { username: 'reservecrate', password: 'kennwort' };
   const { token } = (await api.post('/api/login').send({ ...login })).body;
 
-  const memoToUpdate = await Memo.findOne();
-  const updatedMemoData = {
-    ...memoToUpdate._doc,
+  const { id } = memosBefore[0];
+  const { body } = await api.get(`/api/memos/${id}`);
+  const { memo: memoToUpdate } = body;
+
+  const updatedMemoPayload = {
+    ...memoToUpdate,
     title: 'Merkzettel 1',
     content: 'etwas etwas'
   };
 
   await api
-    .put('/api/memos/doesnotexist')
+    .put('/api/memos/nonexistent')
     .set('Authorization', `Bearer ${token}`)
-    .send(updatedMemoData)
+    .send(updatedMemoPayload)
     .expect(404)
     .expect('Content-Type', /application\/json/);
 
@@ -157,17 +164,19 @@ test('fails with SC 404 when the memo id is invalid (any modification(s))', asyn
 });
 
 describe('invalid/missing token', () => {
-  test('fails with SC 401 when the token is invalid (any modification(s) to the memo)', async () => {
+  test('fails with SC 401 when the token is invalid', async () => {
     const memosBefore = await getAllMemos();
     const wrongLogin = { username: 'breezehash', password: 'niemals' };
     const { token: wrongToken } = (
       await api.post('/api/login').send({ ...wrongLogin })
     ).body;
 
-    const memoToUpdate = await Memo.findOne();
-    const { id } = memoToUpdate;
+    const { id } = memosBefore[0];
+    const { body } = await api.get(`/api/memos/${id}`);
+    const { memo: memoToUpdate } = body;
+
     const updatedMemoData = {
-      ...memoToUpdate._doc,
+      ...memoToUpdate,
       title: 'Merkzettel 1',
       content: 'etwas etwas'
     };
@@ -182,13 +191,15 @@ describe('invalid/missing token', () => {
     const memosAfter = await getAllMemos();
     expect(memosAfter).toEqual(memosBefore);
   });
-  test('fails with SC 401 when the token is missing (any modification(s) to the memo)', async () => {
+  test('fails with SC 401 when the token is missing', async () => {
     const memosBefore = await getAllMemos();
 
-    const memoToUpdate = await Memo.findOne();
-    const { id } = memoToUpdate;
+    const { id } = memosBefore[0];
+    const { body } = await api.get(`/api/memos/${id}`);
+    const { memo: memoToUpdate } = body;
+
     const updatedMemoData = {
-      ...memoToUpdate._doc,
+      ...memoToUpdate,
       title: 'Merkzettel 1',
       content: 'etwas etwas'
     };

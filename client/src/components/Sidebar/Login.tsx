@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
   Container,
   Input,
@@ -9,15 +9,13 @@ import {
   Text
 } from '@nextui-org/react';
 import login from '../../services/login';
+import { AppContext } from '../../App';
 
-const Login = ({
-  setToken
-}: {
-  setToken: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+const Login = () => {
+  const { loggedInUser, setLoggedInUser } = useContext(AppContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState({ username: '', isLoggedIn: false });
+  // const [user, setUser] = useState({ username: '', isLoggedIn: false });
 
   const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
     const inputElement = e.currentTarget.id;
@@ -33,18 +31,16 @@ const Login = ({
   const handleLogin = async () => {
     try {
       const loginPayload = { username, password };
-      const token = await login(loginPayload);
-      setToken(token);
       setUsername('');
       setPassword('');
-      setUser({ ...user, username, isLoggedIn: !user.isLoggedIn });
+      const user = await login(loginPayload);
+      setLoggedInUser(user);
     } catch (err) {
       console.error(err);
     }
   };
   const handleSignout = async () => {
-    setToken('');
-    setUser({ ...user, username: '', isLoggedIn: false });
+    setLoggedInUser({ username: '', name: '', id: '', token: '' });
   };
 
   return (
@@ -67,12 +63,21 @@ const Login = ({
         clearable
       />
       <Spacer />
-      {user.isLoggedIn ? (
+      {loggedInUser.token ? (
         <Tooltip content='your account username' color='secondary'>
           <Button flat color='primary'>
             <Text>
-              logged in as: <b>{user.username}</b>
+              logged in as: <b>{loggedInUser.username}</b>
             </Text>
+          </Button>
+          <Spacer />
+          <Button
+            color='gradient'
+            shadow
+            size='sm'
+            onPressStart={handleSignout}
+          >
+            log out
           </Button>
         </Tooltip>
       ) : (
@@ -86,12 +91,6 @@ const Login = ({
           log in
         </Button>
       )}
-      <Spacer />
-      {user.isLoggedIn ? (
-        <Button color='gradient' shadow size='sm' onPressStart={handleSignout}>
-          log out
-        </Button>
-      ) : null}
     </Container>
   );
 };

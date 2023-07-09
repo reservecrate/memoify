@@ -33,10 +33,10 @@ const Signup = () => {
   const handleSignup = async () => {
     try {
       const signupPayload = { username, name, password };
-      const user = await signup(signupPayload);
       setUsername('');
       setName('');
       setPassword('');
+      const user = await signup(signupPayload);
       setCreatedUser(user);
     } catch (err) {
       console.error(err);

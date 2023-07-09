@@ -1,14 +1,10 @@
+import { useContext } from 'react';
 import { Card, Text, Row, Tooltip, Button, Spacer } from '@nextui-org/react';
-import { ViewMemoComponentInterface } from '../../../interfaces/Memo';
+import IMemo from '../../../interfaces/Memo';
+import { MemoContext } from '.';
 
-const ViewMemo = ({
-  title,
-  content,
-  dateCreated,
-  user,
-  handleEdit,
-  handleDelete
-}: ViewMemoComponentInterface) => {
+const ViewMemo = ({ title, content, dateCreated, user, id }: IMemo) => {
+  const { handleEdit, handleDelete } = useContext(MemoContext);
   const { username } = user;
 
   return (

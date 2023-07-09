@@ -33,13 +33,14 @@ const getAllMemos = async () => {
 };
 
 const getMemoById = async id => {
-  const memo = (
+  const memo = await Memo.findById(id);
+  const prettifiedMemo = (
     await Memo.findById(id).populate('user', {
       username: 1,
       name: 1
     })
   ).prettify();
-  return memo;
+  return { memo, prettifiedMemo };
 };
 
 // const deleteMemo=async id=>{}

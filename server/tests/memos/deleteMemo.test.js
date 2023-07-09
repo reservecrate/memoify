@@ -81,7 +81,7 @@ const testHelper = async () => {
   i += 1;
 };
 
-beforeEach(testHelper, 50000);
+beforeEach(testHelper, 25000);
 
 test('returns SC 200 + deleted memo when the memo id is valid', async () => {
   const memosBefore = await getAllMemos();
