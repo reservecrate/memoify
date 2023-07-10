@@ -39,7 +39,17 @@ const CreateMemo = () => {
   };
   //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER WHEN THEY HAVE SUCCESSFULLY CREATED A NEW MEMO, LATER
   const handleCreate = async () => {
-    if (titleIsVoid || contentIsVoid) return;
+    if (!title && !content) {
+      setTitleIsVoid(true);
+      setContentIsVoid(true);
+      return;
+    } else if (!title) {
+      setTitleIsVoid(true);
+      return;
+    } else if (!content) {
+      setContentIsVoid(true);
+      return;
+    }
     if (!loggedInUser.token) {
       const tempMemo = {
         title,
