@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Memo from './Memo';
 import CreateMemo from './CreateMemo';
-import { Grid,  } from '@nextui-org/react';
+import { Grid } from '@nextui-org/react';
 import IMemo from '../../interfaces/Memo';
 import { AppContext } from '../../App';
 

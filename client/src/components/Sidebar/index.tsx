@@ -7,7 +7,7 @@ const Sidebar = () => {
     <Container direction='column'>
       <Spacer y={2} />
       <Login />
-      <Spacer y={2.5} />
+      <Spacer y={4} />
       <Signup />
     </Container>
   );

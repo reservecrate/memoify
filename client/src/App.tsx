@@ -7,11 +7,12 @@ import {
 } from 'react';
 import Memos from './components/Memos';
 import Sidebar from './components/Sidebar';
-import { Grid, Text, Row } from '@nextui-org/react';
+import { Grid, Text, Row, Spacer } from '@nextui-org/react';
 import IMemo from './interfaces/Memo';
 import { getMemosByAuthor } from './services/memos';
 import { useSessionStorage } from 'usehooks-ts';
 import demoMemosData from './data/demoMemos';
+import Confetti from './components/Confetti';
 
 type user = {
   username: string;
@@ -46,7 +47,6 @@ const initialAppContextData: IAppContext = {
 export const AppContext = createContext<IAppContext>(initialAppContextData);
 
 const App = () => {
-  //implement client side form checking for faster rendering
   const [memos, setMemos] = useState<IMemo[]>([]);
   const [demoMemos, setDemoMemos] = useState<IMemo[]>(demoMemosData);
   const [loggedInUser, setLoggedInUser] = useSessionStorage(
@@ -84,8 +84,18 @@ const App = () => {
     >
       <Grid.Container id='App'>
         <Grid xs={10} direction='column'>
-          <Row justify='center'>
-            <Text h1>memoify OwO</Text>
+          <Row justify='center' align='center'>
+            <Text
+              h1
+              color='gradient'
+              css={{
+                textGradient: '45deg, $blue600 -20%, $pink600 50%'
+              }}
+            >
+              memoify
+            </Text>
+            <Spacer x={1.5} />
+            <Confetti />
           </Row>
           <Memos />
         </Grid>

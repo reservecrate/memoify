@@ -4,7 +4,8 @@ import {
   Spacer,
   Input,
   Button,
-  FormElement
+  FormElement,
+  Tooltip
 } from '@nextui-org/react';
 import signup from '../../services/signup';
 
@@ -48,41 +49,52 @@ const Signup = () => {
       <Input
         underlined
         id='InputLoginUsername'
-        labelPlaceholder='username'
+        labelPlaceholder='username uwu'
         onChange={handleInputChange}
         value={username}
         clearable
+        color='secondary'
       />
       <Spacer y={2} />
       <Input
         underlined
         id='InputLoginName'
-        labelPlaceholder='name'
+        labelPlaceholder='name uwu'
         onChange={handleInputChange}
         value={name}
         clearable
+        color='secondary'
       />
       <Spacer y={2} />
       <Input.Password
         underlined
         id='InputLoginPassword'
-        labelPlaceholder='password'
+        labelPlaceholder='password owo'
         onChange={handleInputChange}
         value={password}
         clearable
+        color='secondary'
       />
       <Spacer />
-      <Button
-        color='gradient'
-        bordered
-        size='sm'
-        onPressStart={handleSignup}
-        shadow
+      <Tooltip
+        content='sign up for a memoify account! ÓwÓ'
+        contentColor=''
+        color='secondary'
+        rounded
+        css={{}}
       >
-        {createdUser.username
-          ? `successfully created: ${createdUser.username}`
-          : 'sign up ÓwÓ'}
-      </Button>
+        <Button
+          color='gradient'
+          bordered
+          size='sm'
+          onPressStart={handleSignup}
+          shadow
+        >
+          {createdUser.username
+            ? `successfully created: ${createdUser.username}`
+            : 'sign up ÓwÓ'}
+        </Button>
+      </Tooltip>
     </Container>
   );
 };

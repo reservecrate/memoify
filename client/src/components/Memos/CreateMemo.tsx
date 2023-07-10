@@ -14,16 +14,32 @@ const CreateMemo = () => {
   const { memos, setMemos, loggedInUser } = useContext(AppContext);
   const { demoMemos, setDemoMemos } = useContext(AppContext);
   const [title, setTitle] = useState('');
+  const [titleIsVoid, setTitleIsVoid] = useState(false);
   const [content, setContent] = useState('');
+  const [contentIsVoid, setContentIsVoid] = useState(false);
+
+  const titleLabelPlaceholder = titleIsVoid
+    ? 'the title field must not be empty! ÙwÚ'
+    : 'title uwu';
+
+  const contentLabel = contentIsVoid
+    ? 'the content field must not be empty! ÒwÓ'
+    : "what's on your mind? O w O";
 
   const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
     const inputElement = e.currentTarget.id;
     const inputValue = e.currentTarget.value;
-    if (inputElement === 'InputTitle') setTitle(inputValue);
-    else if (inputElement === 'TextareaContent') setContent(inputValue);
+    if (inputElement === 'InputTitle') {
+      !inputValue ? setTitleIsVoid(true) : setTitleIsVoid(false);
+      setTitle(inputValue);
+    } else if (inputElement === 'TextareaContent') {
+      !inputValue ? setContentIsVoid(true) : setContentIsVoid(false);
+      setContent(inputValue);
+    }
   };
   //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER WHEN THEY HAVE SUCCESSFULLY CREATED A NEW MEMO, LATER
   const handleCreate = async () => {
+    if (titleIsVoid || contentIsVoid) return;
     if (!loggedInUser.token) {
       const tempMemo = {
         title,
@@ -63,17 +79,19 @@ const CreateMemo = () => {
     <Container direction='column'>
       <Input
         id='InputTitle'
-        labelPlaceholder='title uwu'
+        labelPlaceholder={titleLabelPlaceholder}
         onChange={handleInputChange}
         value={title}
         clearable
         bordered
         color='secondary'
+        css={{ width: '100%' }}
+        status={titleIsVoid ? 'error' : 'default'}
       />
       <Spacer y={0.5} />
       <Textarea
         id='TextareaContent'
-        label="what's on your mind? (O w O)"
+        label={contentLabel}
         placeholder='content owo'
         onChange={handleInputChange}
         value={content}
@@ -81,10 +99,18 @@ const CreateMemo = () => {
         maxRows={10}
         bordered
         color='secondary'
+        css={{ width: '100%' }}
+        status={contentIsVoid ? 'error' : 'default'}
       />
       <Spacer />
-      <Button color='gradient' bordered onPressStart={handleCreate} shadow>
-        create memo UwU 
+      <Button
+        color='gradient'
+        bordered
+        onPressStart={handleCreate}
+        shadow
+        css={{ width: '100%' }}
+      >
+        create memo UwU
       </Button>
     </Container>
   );

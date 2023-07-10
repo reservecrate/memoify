@@ -48,21 +48,35 @@ const Login = () => {
     <Container>
       {loggedInUser.token ? (
         <>
-          <Spacer />
-          <Tooltip content='your account username' color='secondary'>
+          <Spacer y={1.5} />
+          <Tooltip
+            content='your account username! úwú'
+            color='secondary'
+            rounded
+            contentColor=''
+            css={{}}
+          >
             <Button flat color='primary'>
               <Text>
                 logged in as: <b>{loggedInUser.username}</b>
               </Text>
             </Button>
-            <Spacer />
+          </Tooltip>
+          <Spacer y={1.5} />
+          <Tooltip
+            content=' log out of your memoify account (◕︿◕✿)'
+            color='secondary'
+            rounded
+            contentColor=''
+            css={{}}
+          >
             <Button
               color='gradient'
               shadow
               size='sm'
               onPressStart={handleSignout}
             >
-              log out
+              log out ÚwÚ
             </Button>
           </Tooltip>
         </>
@@ -71,30 +85,40 @@ const Login = () => {
           <Input
             underlined
             id='InputSignupUsername'
-            labelPlaceholder='username'
+            labelPlaceholder='username uwu'
             onChange={handleInputChange}
             value={username}
             clearable
+            color='secondary'
           />
           <Spacer y={2} />
           <Input.Password
             underlined
             id='InputSignupPassword'
-            labelPlaceholder='password'
+            labelPlaceholder='password owo'
             onChange={handleInputChange}
             value={password}
             clearable
+            color='secondary'
           />
           <Spacer />
-          <Button
-            color='gradient'
-            bordered
-            size='sm'
-            onPressStart={handleLogin}
-            shadow
+          <Tooltip
+            content='log in with your memoify account! ÚwÚ'
+            contentColor=''
+            color='secondary'
+            rounded
+            css={{}}
           >
-            log in ÚwÚ
-          </Button>
+            <Button
+              color='gradient'
+              bordered
+              size='sm'
+              onPressStart={handleLogin}
+              shadow
+            >
+              log in ÚwÚ
+            </Button>
+          </Tooltip>
         </>
       )}
     </Container>

@@ -16,11 +16,13 @@
     "@mui/material": "^5.13.6",
     "@nextui-org/react": "^1.0.0-beta.13",
     "axios": "^1.4.0",
+    "canvas-confetti": "^1.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.6.0",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.59.0",

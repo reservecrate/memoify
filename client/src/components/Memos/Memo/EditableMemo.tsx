@@ -6,13 +6,14 @@ import {
   Button,
   Input,
   Textarea,
-  Row
+  Row,
+  Spacer
 } from '@nextui-org/react';
 import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
 import dateFormatter from '../../../utils/dateFormatter';
 
-const EditableMemo = ({ title, content, dateCreated, author, id }: IMemo) => {
+const EditableMemo = ({ title, content, dateCreated, author }: IMemo) => {
   const { handleInputChange, handleDelete, handleUpdate } =
     useContext(MemoContext);
   const { username } = author;
@@ -38,30 +39,42 @@ const EditableMemo = ({ title, content, dateCreated, author, id }: IMemo) => {
           value={content}
           onChange={handleInputChange}
         />
-        <Tooltip
-          content='save your changes uwu'
-          contentColor='secondary'
-          color='default'
-          css={{}}
-        >
-          <Button size='sm' color='gradient' shadow onPressStart={handleUpdate}>
-            save
-          </Button>
-        </Tooltip>
       </Card.Body>
       <Card.Divider />
-      <Card.Footer>
-        <Row justify='space-between'>
-          <Text>
-            created on {formattedDate} at {formattedTime} by <b>{username}</b>
-          </Text>
+      <Card.Footer
+        css={{
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        <Text>
+          created on {formattedDate} at {formattedTime} by <b>{username}</b>
+        </Text>
+        <Spacer y={0.25} />
+        <Row justify='space-evenly'>
+          <Tooltip
+            content='save your changes UwU'
+            contentColor='secondary'
+            color='default'
+            css={{}}
+          >
+            <Button
+              size='sm'
+              color='gradient'
+              shadow
+              onPressStart={handleUpdate}
+            >
+              save
+            </Button>
+          </Tooltip>
+
           <Tooltip
             content='delete memo ÒwÓ'
             contentColor='warning'
             color='default'
             css={{}}
           >
-            <Button onPressStart={handleDelete} size='xs' shadow color='error'>
+            <Button onPressStart={handleDelete} size='sm' shadow color='error'>
               <Text>delete</Text>
             </Button>
           </Tooltip>
