@@ -64,7 +64,7 @@ const updateUser = async (req, res) => {
         .status(400)
         .json({ error: 'new password must be at least 5 characters long' });
 
-    const saltRounds = 10;
+    const saltRounds = 14;
     const { password } = updatedUserData;
     const passwordHash = await bcrypt.hash(password, saltRounds);
     const updatedUser = await User.findByIdAndUpdate(
