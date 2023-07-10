@@ -11,6 +11,7 @@ import signup from '../../services/signup';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
+  const [usernameIsTooShort, setUsernameIsTooShort] = useState(false);
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,6 +22,9 @@ const Signup = () => {
     passwordHash: ''
   });
 
+  const usernameLabelPlaceholder = usernameIsTooShort
+    ? 'your username is too short!'
+    : 'username uwu';
   const confirmPasswordLabelPlaceholder = passwordsDoNotMatch
     ? 'your passwords do not match! '
     : 'confirm password owo';
@@ -28,8 +32,12 @@ const Signup = () => {
   const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
     const inputElement = e.currentTarget.id;
     const inputValue = e.currentTarget.value;
-    if (inputElement === 'InputLoginUsername') setUsername(inputValue);
-    else if (inputElement === 'InputLoginName') setName(inputValue);
+    if (inputElement === 'InputLoginUsername') {
+      inputValue.length >= 1 && inputValue.length < 3
+        ? setUsernameIsTooShort(true)
+        : setUsernameIsTooShort(false);
+      setUsername(inputValue);
+    } else if (inputElement === 'InputLoginName') setName(inputValue);
     else if (inputElement === 'InputLoginPassword') {
       inputValue === confirmPassword ? setPasswordsDoNotMatch(false) : null;
       setPassword(inputValue);
@@ -62,11 +70,11 @@ const Signup = () => {
       <Input
         underlined
         id='InputLoginUsername'
-        labelPlaceholder='username uwu'
+        labelPlaceholder={usernameLabelPlaceholder}
         onChange={handleInputChange}
         value={username}
         clearable
-        color='secondary'
+        color={usernameIsTooShort ? 'warning' : 'secondary'}
       />
       <Spacer y={2} />
       <Input
