@@ -14,7 +14,7 @@ const createUser = async (req, res) => {
     return res
       .status(400)
       .json({ error: 'password must be at least 5 characters long' });
-  const saltRounds = 10;
+  const saltRounds = 14;
   const passwordHash = await bcrypt.hash(password, saltRounds);
   const createdUser = await new User({ username, name, passwordHash }).save();
   res.status(201).json(createdUser);

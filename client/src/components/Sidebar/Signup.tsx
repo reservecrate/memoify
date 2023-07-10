@@ -31,9 +31,7 @@ const Signup = () => {
     if (inputElement === 'InputLoginUsername') setUsername(inputValue);
     else if (inputElement === 'InputLoginName') setName(inputValue);
     else if (inputElement === 'InputLoginPassword') {
-      inputValue === confirmPassword
-        ? setPasswordsDoNotMatch(false)
-        : null;
+      inputValue === confirmPassword ? setPasswordsDoNotMatch(false) : null;
       setPassword(inputValue);
     } else if (inputElement === 'InputLoginPasswordConfirm') {
       inputValue !== password
@@ -101,7 +99,7 @@ const Signup = () => {
         color='secondary'
         status={passwordsDoNotMatch ? 'error' : 'default'}
       />
-      <Spacer />
+      <Spacer y={1.5} />
       <Tooltip
         content='sign up for a memoify account! ÓwÓ'
         contentColor=''

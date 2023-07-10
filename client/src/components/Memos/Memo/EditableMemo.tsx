@@ -47,10 +47,14 @@ const EditableMemo = ({ title, content, dateCreated, author }: IMemo) => {
           flexDirection: 'column'
         }}
       >
-        <Text>
+        <Text
+          css={{
+            textGradient: '45deg, $blue600 -20%, $red600 100%'
+          }}
+        >
           created on {formattedDate} at {formattedTime} by <b>{username}</b>
         </Text>
-        <Spacer y={0.25} />
+        <Spacer y={0.5} />
         <Row justify='space-evenly'>
           <Tooltip
             content='save your changes UwU'

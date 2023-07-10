@@ -100,7 +100,7 @@ const Login = () => {
             clearable
             color='secondary'
           />
-          <Spacer />
+          <Spacer y={1.5} />
           <Tooltip
             content='log in with your memoify account! ÚwÚ'
             contentColor=''
