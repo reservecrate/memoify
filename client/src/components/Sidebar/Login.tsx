@@ -15,7 +15,6 @@ const Login = () => {
   const { setLoggedInUser, loggedInUser } = useContext(AppContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // const [user, setUser] = useState({ username: '', isLoggedIn: false });
 
   const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
     const inputElement = e.currentTarget.id;

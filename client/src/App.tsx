@@ -7,12 +7,11 @@ import {
 } from 'react';
 import Memos from './components/Memos';
 import Sidebar from './components/Sidebar';
-import { Grid, Text, Row, Spacer } from '@nextui-org/react';
+import { Grid, Text, Row } from '@nextui-org/react';
 import IMemo from './interfaces/Memo';
 import { getMemosByAuthor } from './services/memos';
 import { useSessionStorage } from 'usehooks-ts';
 import demoMemosData from './data/demoMemos';
-import Confetti from './components/Confetti';
 
 type user = {
   username: string;
@@ -84,7 +83,7 @@ const App = () => {
     >
       <Grid.Container id='App'>
         <Grid xs={10} direction='column'>
-          <Row justify='center' align='center'>
+          <Row justify='center'>
             <Text
               h1
               color='gradient'
@@ -94,8 +93,6 @@ const App = () => {
             >
               memoify
             </Text>
-            <Spacer x={1.5} />
-            <Confetti />
           </Row>
           <Memos />
         </Grid>
