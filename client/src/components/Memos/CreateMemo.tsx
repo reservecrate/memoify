@@ -63,7 +63,7 @@ const CreateMemo = () => {
     <Container direction='column'>
       <Input
         id='InputTitle'
-        labelPlaceholder='title'
+        labelPlaceholder='title uwu'
         onChange={handleInputChange}
         value={title}
         clearable
@@ -73,8 +73,8 @@ const CreateMemo = () => {
       <Spacer y={0.5} />
       <Textarea
         id='TextareaContent'
-        label="what's on your mind?"
-        placeholder='content'
+        label="what's on your mind? (O w O)"
+        placeholder='content owo'
         onChange={handleInputChange}
         value={content}
         minRows={5}

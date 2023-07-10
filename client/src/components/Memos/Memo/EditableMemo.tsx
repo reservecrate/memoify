@@ -38,9 +38,16 @@ const EditableMemo = ({ title, content, dateCreated, author, id }: IMemo) => {
           value={content}
           onChange={handleInputChange}
         />
-        <Button size='sm' color='gradient' shadow onPressStart={handleUpdate}>
-          save
-        </Button>
+        <Tooltip
+          content='save your changes uwu'
+          contentColor='secondary'
+          color='default'
+          css={{}}
+        >
+          <Button size='sm' color='gradient' shadow onPressStart={handleUpdate}>
+            save
+          </Button>
+        </Tooltip>
       </Card.Body>
       <Card.Divider />
       <Card.Footer>
@@ -48,7 +55,12 @@ const EditableMemo = ({ title, content, dateCreated, author, id }: IMemo) => {
           <Text>
             created on {formattedDate} at {formattedTime} by <b>{username}</b>
           </Text>
-          <Tooltip content='delete memo ÒwÓ' contentColor='warning'>
+          <Tooltip
+            content='delete memo ÒwÓ'
+            contentColor='warning'
+            color='default'
+            css={{}}
+          >
             <Button onPressStart={handleDelete} size='xs' shadow color='error'>
               <Text>delete</Text>
             </Button>

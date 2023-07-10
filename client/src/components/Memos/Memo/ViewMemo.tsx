@@ -20,7 +20,12 @@ const ViewMemo = ({ title, content, dateCreated, author, id }: IMemo) => {
       <Card.Body>
         <Text>{content}</Text>
         <Spacer y={0.5} />
-        <Tooltip content='edit memo' contentColor='secondary'>
+        <Tooltip
+          content='edit memo owo'
+          contentColor='secondary'
+          color='default'
+          css={{}}
+        >
           <Button
             size='sm'
             color='gradient'
@@ -38,7 +43,12 @@ const ViewMemo = ({ title, content, dateCreated, author, id }: IMemo) => {
           <Text>
             created on {formattedDate} at {formattedTime} by <b>{username}</b>
           </Text>
-          <Tooltip content='delete memo ÒwÓ' contentColor='warning'>
+          <Tooltip
+            content='delete memo ÒwÓ'
+            contentColor='warning'
+            color='default'
+            css={{}}
+          >
             <Button onPressStart={handleDelete} size='xs' shadow color='error'>
               <Text>delete</Text>
             </Button>
