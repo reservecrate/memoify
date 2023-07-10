@@ -14,6 +14,7 @@ const Signup = () => {
   const [usernameIsTooShort, setUsernameIsTooShort] = useState(false);
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordIsTooShort, setPasswordIsTooShort] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordsDoNotMatch, setPasswordsDoNotMatch] = useState(false);
   const [createdUser, setCreatedUser] = useState({
@@ -23,10 +24,14 @@ const Signup = () => {
   });
 
   const usernameLabelPlaceholder = usernameIsTooShort
-    ? 'your username is too short!'
+    ? 'your username is too short! ÙwÚ'
     : 'username uwu';
+  const passwordLabelPlaceholder = passwordIsTooShort
+    ? 'your password is too short! ÒwÓ'
+    : 'password owo';
+
   const confirmPasswordLabelPlaceholder = passwordsDoNotMatch
-    ? 'your passwords do not match! '
+    ? 'your passwords do not match! ÒwÓ'
     : 'confirm password owo';
 
   const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
@@ -39,7 +44,10 @@ const Signup = () => {
       setUsername(inputValue);
     } else if (inputElement === 'InputLoginName') setName(inputValue);
     else if (inputElement === 'InputLoginPassword') {
-      inputValue === confirmPassword ? setPasswordsDoNotMatch(false) : null;
+      inputValue.length >= 1 && inputValue.length < 5
+        ? setPasswordIsTooShort(true)
+        : setPasswordIsTooShort(false);
+      // inputValue === confirmPassword ? setPasswordsDoNotMatch(false) : null;
       setPassword(inputValue);
     } else if (inputElement === 'InputLoginPasswordConfirm') {
       inputValue !== password
@@ -74,7 +82,8 @@ const Signup = () => {
         onChange={handleInputChange}
         value={username}
         clearable
-        color={usernameIsTooShort ? 'warning' : 'secondary'}
+        color='secondary'
+        status={usernameIsTooShort ? 'warning' : 'default'}
       />
       <Spacer y={2} />
       <Input
@@ -90,11 +99,12 @@ const Signup = () => {
       <Input.Password
         underlined
         id='InputLoginPassword'
-        labelPlaceholder='password owo'
+        labelPlaceholder={passwordLabelPlaceholder}
         onChange={handleInputChange}
         value={password}
         clearable
         color='secondary'
+        status={passwordIsTooShort ? 'error' : 'default'}
       />
       <Spacer y={2} />
       <Input.Password
