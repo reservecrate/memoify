@@ -11,8 +11,7 @@ import { createMemo } from '../../services/memos';
 import { AppContext } from '../../App';
 
 const CreateMemo = () => {
-  const { memos, setMemos, loggedInUser } =
-    useContext(AppContext);
+  const { memos, setMemos, loggedInUser } = useContext(AppContext);
   const { demoMemos, setDemoMemos } = useContext(AppContext);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -85,7 +84,7 @@ const CreateMemo = () => {
       />
       <Spacer />
       <Button color='gradient' bordered onPressStart={handleCreate} shadow>
-        create memo
+        create memo UwU 
       </Button>
     </Container>
   );

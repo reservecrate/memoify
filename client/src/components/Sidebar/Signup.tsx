@@ -81,7 +81,7 @@ const Signup = () => {
       >
         {createdUser.username
           ? `successfully created: ${createdUser.username}`
-          : 'sign up'}
+          : 'sign up ÓwÓ'}
       </Button>
     </Container>
   );

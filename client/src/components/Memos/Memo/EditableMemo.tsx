@@ -46,10 +46,9 @@ const EditableMemo = ({ title, content, dateCreated, author, id }: IMemo) => {
       <Card.Footer>
         <Row justify='space-between'>
           <Text>
-            created on {formattedDate} at {formattedTime} by{' '}
-            <b>{username}</b>
+            created on {formattedDate} at {formattedTime} by <b>{username}</b>
           </Text>
-          <Tooltip content='delete this memo' contentColor='warning'>
+          <Tooltip content='delete memo ÒwÓ' contentColor='warning'>
             <Button onPressStart={handleDelete} size='xs' shadow color='error'>
               <Text>delete</Text>
             </Button>

@@ -85,7 +85,7 @@ const App = () => {
       <Grid.Container id='App'>
         <Grid xs={10} direction='column'>
           <Row justify='center'>
-            <Text h1>memoify</Text>
+            <Text h1>memoify OwO</Text>
           </Row>
           <Memos />
         </Grid>

@@ -93,7 +93,7 @@ const Login = () => {
             onPressStart={handleLogin}
             shadow
           >
-            log in
+            log in ÚwÚ
           </Button>
         </>
       )}
