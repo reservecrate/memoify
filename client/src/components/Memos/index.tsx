@@ -12,7 +12,7 @@ const Memos = () => {
     : JSON.parse(JSON.stringify(demoMemos)).toReversed();
 
   return (
-    <Grid.Container gap={1.5}>
+    <Grid.Container gap={2}>
       <Grid xs={3}>
         <CreateMemo />
       </Grid>

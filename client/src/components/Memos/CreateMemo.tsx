@@ -105,7 +105,7 @@ const CreateMemo = () => {
         placeholder='content owo'
         onChange={handleInputChange}
         value={content}
-        minRows={5}
+        minRows={6}
         maxRows={10}
         bordered
         color='secondary'

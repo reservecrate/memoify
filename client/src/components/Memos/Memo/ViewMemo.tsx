@@ -18,7 +18,13 @@ const ViewMemo = ({ title, content, dateCreated, author }: IMemo) => {
       </Card.Header>
       <Card.Divider />
       <Card.Body>
-        <Text>{content}</Text>
+        <Text
+          css={{
+            whiteSpace: 'pre-wrap'
+          }}
+        >
+          {content}
+        </Text>
       </Card.Body>
       <Card.Divider />
       <Card.Footer

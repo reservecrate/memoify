@@ -38,6 +38,8 @@ const EditableMemo = ({ title, content, dateCreated, author }: IMemo) => {
           id='TextareaUpdateContent'
           value={content}
           onChange={handleInputChange}
+          minRows={6}
+          maxRows={10}
         />
       </Card.Body>
       <Card.Divider />
