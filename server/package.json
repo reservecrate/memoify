@@ -1,8 +1,9 @@
 {
   "name": "memoify",
   "version": "1.2.0",
-  "description": "A minimalist notes app for your basic daily needs.",
+  "description": "A minimalist, aesthetic notes app for your essential daily needs.",
   "keywords": [
+    "aesthetic",
     "memoify",
     "stack",
     "memo",
