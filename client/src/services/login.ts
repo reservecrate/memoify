@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const baseUrl = 'http://localhost:3004/api/login';
+// const baseUrl = '/api/login';
 
 const login = async (loginPayload: { username: string; password: string }) => {
   const {

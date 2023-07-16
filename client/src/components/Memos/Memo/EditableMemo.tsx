@@ -1,91 +1,80 @@
 import { useContext } from 'react';
 import {
   Card,
-  Text,
-  Tooltip,
+  CardHeader,
+  CardBody,
+  CardFooter,
   Button,
   Input,
   Textarea,
-  Row,
-  Spacer
+  Spacer,
+  Divider
 } from '@nextui-org/react';
 import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
 import dateFormatter from '../../../utils/dateFormatter';
 
-const EditableMemo = ({ title, content, dateCreated, author }: IMemo) => {
-  const { handleInputChange, handleDelete, handleUpdate } =
+const EditableMemo = ({ memo }: { memo: IMemo }) => {
+  const { title, content, dateCreated, author } = memo;
+  const { setEditableTitle, setEditableContent, handleDelete, handleUpdate } =
     useContext(MemoContext);
   const { username } = author;
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
 
   return (
-    <Card variant='bordered' isHoverable>
-      <Card.Header>
+    <Card isHoverable>
+      <CardHeader>
         <Input
           aria-label='InputUpdateTitle'
           id='InputUpdateTitle'
           value={title}
-          onChange={handleInputChange}
-          css={{ width: '100%' }}
-          clearable
+          onValueChange={setEditableTitle}
+          isClearable
+          variant='underlined'
         />
-      </Card.Header>
-      <Card.Divider />
-      <Card.Body>
+      </CardHeader>
+      <Divider />
+      <CardBody>
         <Textarea
           aria-label='TextareaUpdateContent'
           id='TextareaUpdateContent'
           value={content}
-          onChange={handleInputChange}
+          onValueChange={setEditableContent}
           minRows={6}
           maxRows={10}
         />
-      </Card.Body>
-      <Card.Divider />
-      <Card.Footer
-        css={{
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Text
-          css={{
-            textGradient: '45deg, $blue600 -20%, $red600 100%'
+      </CardBody>
+      <Divider />
+      <CardFooter className='flex flex-col'>
+        <p
+          style={{
+            background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+            backgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
           }}
         >
           created on {formattedDate} at {formattedTime} by <b>{username}</b>
-        </Text>
-        <Spacer y={0.5} />
-        <Row justify='space-evenly'>
-          <Tooltip
-            content='save your changes UwU'
-            contentColor='secondary'
-            color='default'
-            css={{}}
+        </p>
+        <Spacer y={2} />
+        <div className='flex justify-evenly w-full'>
+          <Button
+            onPressStart={handleUpdate}
+            color='primary'
+            variant='flat'
+            className='w-1/3'
           >
-            <Button
-              size='sm'
-              color='gradient'
-              shadow
-              onPressStart={handleUpdate}
-            >
-              save
-            </Button>
-          </Tooltip>
-
-          <Tooltip
-            content='delete memo ÒwÓ'
-            contentColor='warning'
-            color='default'
-            css={{}}
+            save
+          </Button>
+          <Button
+            onPressStart={handleDelete}
+            color='danger'
+            variant='flat'
+            className='w-1/3'
           >
-            <Button onPressStart={handleDelete} size='sm' shadow color='error'>
-              <Text>delete</Text>
-            </Button>
-          </Tooltip>
-        </Row>
-      </Card.Footer>
+            delete
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   );
 };

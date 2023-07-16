@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import Memo from './Memo';
 import CreateMemo from './CreateMemo';
-import { Grid } from '@nextui-org/react';
 import IMemo from '../../interfaces/Memo';
 import { AppContext } from '../../App';
 
@@ -12,25 +11,12 @@ const Memos = () => {
     : JSON.parse(JSON.stringify(demoMemos)).toReversed();
 
   return (
-    <Grid.Container gap={2}>
-      <Grid xs={3}>
-        <CreateMemo />
-      </Grid>
-      {reverseMemos.map(memo => {
-        const { title, content, dateCreated, author, id } = memo;
-        return (
-          <Grid xs={3} key={id}>
-            <Memo
-              title={title}
-              content={content}
-              dateCreated={dateCreated}
-              author={author}
-              id={id}
-            />
-          </Grid>
-        );
-      })}
-    </Grid.Container>
+    <div className='grid grid-cols-4 gap-8'>
+      <CreateMemo />
+      {reverseMemos.map(memo => (
+        <Memo memo={memo} key={memo.id} />
+      ))}
+    </div>
   );
 };
 

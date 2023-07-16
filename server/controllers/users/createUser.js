@@ -16,8 +16,12 @@ const createUser = async (req, res) => {
       .json({ error: 'password must be at least 5 characters long' });
   const saltRounds = 14;
   const passwordHash = await bcrypt.hash(password, saltRounds);
-  const createdUser = await new User({ username, name, passwordHash }).save();
-  res.status(201).json(createdUser);
+  const { username: createdUsername, name: createdName } = await new User({
+    username,
+    name,
+    passwordHash
+  }).save();
+  res.status(201).json({ username: createdUsername, name: createdName });
 };
 
 module.exports = createUser;

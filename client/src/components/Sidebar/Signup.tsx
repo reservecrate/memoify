@@ -1,12 +1,5 @@
-import { useState } from 'react';
-import {
-  Container,
-  Spacer,
-  Input,
-  Button,
-  FormElement,
-  Tooltip
-} from '@nextui-org/react';
+import { useState, useEffect } from 'react';
+import { Spacer, Input, Button, Chip } from '@nextui-org/react';
 import signup from '../../services/signup';
 
 const Signup = () => {
@@ -17,48 +10,33 @@ const Signup = () => {
   const [passwordIsTooShort, setPasswordIsTooShort] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordsDoNotMatch, setPasswordsDoNotMatch] = useState(false);
-  const [createdUser, setCreatedUser] = useState({
-    username: '',
-    name: '',
-    passwordHash: ''
-  });
+  const [createdUser, setCreatedUser] = useState('');
 
   const usernameLabelPlaceholder = usernameIsTooShort
-    ? 'your username is too short! ÙwÚ'
-    : 'username uwu';
+    ? 'your username is too short!'
+    : 'username';
   const passwordLabelPlaceholder = passwordIsTooShort
-    ? 'your password is too short! ÒwÓ'
-    : 'password owo';
+    ? 'your password is too short!'
+    : 'password';
 
   const confirmPasswordLabelPlaceholder = passwordsDoNotMatch
-    ? 'your passwords do not match! ÒwÓ'
-    : 'confirm password owo';
+    ? 'your passwords do not match!'
+    : 'confirm password';
 
-  const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
-    const inputElement = e.currentTarget.id;
-    const inputValue = e.currentTarget.value;
-    if (inputElement === 'InputLoginUsername') {
-      inputValue.length >= 1 && inputValue.length < 3
-        ? setUsernameIsTooShort(true)
-        : setUsernameIsTooShort(false);
-      setUsername(inputValue);
-    } else if (inputElement === 'InputLoginName') setName(inputValue);
-    else if (inputElement === 'InputLoginPassword') {
-      inputValue.length >= 1 && inputValue.length < 5
-        ? setPasswordIsTooShort(true)
-        : setPasswordIsTooShort(false);
-      // inputValue === confirmPassword ? setPasswordsDoNotMatch(false) : null;
-      setPassword(inputValue);
-    } else if (inputElement === 'InputLoginPasswordConfirm') {
-      inputValue !== password
-        ? setPasswordsDoNotMatch(true)
-        : setPasswordsDoNotMatch(false);
-      setConfirmPassword(inputValue);
-    } else
-      console.error(
-        'Error. Input not matched (must either be username or password)'
-      );
-  };
+  useEffect(() => {
+    if (username.length >= 1 && username.length < 3)
+      setUsernameIsTooShort(true);
+    else setUsernameIsTooShort(false);
+  }, [username]);
+  useEffect(() => {
+    if (password.length >= 1 && password.length < 5)
+      setPasswordIsTooShort(true);
+    else setPasswordIsTooShort(false);
+  }, [password]);
+  useEffect(() => {
+    if (confirmPassword !== password) setPasswordsDoNotMatch(true);
+    else setPasswordsDoNotMatch(false);
+  }, [confirmPassword]);
 
   const handleSignup = async () => {
     try {
@@ -66,78 +44,83 @@ const Signup = () => {
       setUsername('');
       setName('');
       setPassword('');
+      setConfirmPassword('');
       const createdUser = await signup(signupPayload);
-      setCreatedUser(createdUser);
+      setCreatedUser(createdUser.username);
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <Container>
-      <Input
-        underlined
-        id='InputLoginUsername'
-        labelPlaceholder={usernameLabelPlaceholder}
-        onChange={handleInputChange}
-        value={username}
-        clearable
-        color='secondary'
-        status={usernameIsTooShort ? 'warning' : 'default'}
-      />
-      <Spacer y={2} />
-      <Input
-        underlined
-        id='InputLoginName'
-        labelPlaceholder='name uwu'
-        onChange={handleInputChange}
-        value={name}
-        clearable
-        color='secondary'
-      />
-      <Spacer y={2} />
-      <Input.Password
-        underlined
-        id='InputLoginPassword'
-        labelPlaceholder={passwordLabelPlaceholder}
-        onChange={handleInputChange}
-        value={password}
-        clearable
-        color='secondary'
-        status={passwordIsTooShort ? 'error' : 'default'}
-      />
-      <Spacer y={2} />
-      <Input.Password
-        underlined
-        id='InputLoginPasswordConfirm'
-        labelPlaceholder={confirmPasswordLabelPlaceholder}
-        onChange={handleInputChange}
-        value={confirmPassword}
-        clearable
-        color='secondary'
-        status={passwordsDoNotMatch ? 'error' : 'default'}
-      />
-      <Spacer y={1.5} />
-      <Tooltip
-        content='sign up for a memoify account! ÓwÓ'
-        contentColor=''
-        color='secondary'
-        rounded
-        css={{}}
-      >
-        <Button
-          color='gradient'
-          bordered
-          size='sm'
-          onPressStart={handleSignup}
-          shadow
-        >
-          {createdUser.username
-            ? `successfully created: ${createdUser.username}`
-            : 'sign up ÓwÓ'}
-        </Button>
-      </Tooltip>
-    </Container>
+    <div>
+      {createdUser ? (
+        <Chip color='success' variant='faded'>
+          successfully created: {createdUser}
+        </Chip>
+      ) : (
+        <div>
+          <Input
+            variant='underlined'
+            id='InputLoginUsername'
+            label={usernameLabelPlaceholder}
+            placeholder='e.g. reservecrate'
+            value={username}
+            onValueChange={setUsername}
+            isClearable
+            color={usernameIsTooShort ? 'danger' : 'secondary'}
+            className='w-5/6'
+          />
+          <Spacer y={4} />
+          <Input
+            variant='underlined'
+            id='InputLoginName'
+            label='name'
+            placeholder='e.g. Aldi'
+            value={name}
+            onValueChange={setName}
+            isClearable
+            color='secondary'
+            className='w-5/6'
+          />
+          <Spacer y={4} />
+          <Input
+            type='password'
+            variant='underlined'
+            id='InputLoginPassword'
+            label={passwordLabelPlaceholder}
+            placeholder='e.g. password123'
+            value={password}
+            onValueChange={setPassword}
+            isClearable
+            color={passwordIsTooShort ? 'danger' : 'secondary'}
+            className='w-5/6'
+          />
+          <Spacer y={4} />
+          <Input
+            type='password'
+            variant='underlined'
+            id='InputLoginPasswordConfirm'
+            label={confirmPasswordLabelPlaceholder}
+            placeholder='password123'
+            value={confirmPassword}
+            onValueChange={setConfirmPassword}
+            isClearable
+            color={passwordsDoNotMatch ? 'danger' : 'secondary'}
+            className='w-5/6'
+          />
+          <Spacer y={4} />
+          <Button
+            color='secondary'
+            variant='bordered'
+            onPressStart={handleSignup}
+            className='w-6/12'
+          >
+            sign up
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };
 

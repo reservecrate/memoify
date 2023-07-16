@@ -7,11 +7,11 @@ import {
 } from 'react';
 import Memos from './components/Memos';
 import Sidebar from './components/Sidebar';
-import { Grid, Text, Row } from '@nextui-org/react';
 import IMemo from './interfaces/Memo';
 import { getMemosByAuthor } from './services/memos';
 import { useSessionStorage } from 'usehooks-ts';
 import demoMemosData from './data/demoMemos';
+import { Spacer } from '@nextui-org/react';
 
 type user = {
   username: string;
@@ -81,25 +81,23 @@ const App = () => {
         setDemoMemos
       }}
     >
-      <Grid.Container id='App'>
-        <Grid xs={10} direction='column'>
-          <Row justify='center'>
-            <Text
-              h1
-              color='gradient'
-              css={{
-                textGradient: '45deg, $blue600 -20%, $pink600 50%'
-              }}
-            >
-              memoify
-            </Text>
-          </Row>
+      <div id='App' className='grid gap-12 grid-cols-6'>
+        <div className='col-span-5 flex flex-col items-center'>
+          <h1
+            className='text-6xl font-semibold leading-snug'
+            style={{
+              background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
+            memoify
+          </h1>
+          <Spacer y={6} />
           <Memos />
-        </Grid>
-        <Grid xs={2} direction='column'>
-          <Sidebar />
-        </Grid>
-      </Grid.Container>
+        </div>
+        <Sidebar />
+      </div>
     </AppContext.Provider>
   );
 };

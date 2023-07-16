@@ -2,7 +2,7 @@ import axios from 'axios';
 import IMemo from '../interfaces/Memo';
 
 const baseUrl = 'http://localhost:3004/api/memos';
-const newBaseUrl = 'http://localhost:3004';
+// const baseUrl = '/api/memos';
 
 // const getMemos = async () => {
 //   const { data: memos }: { data: IMemo[] } = await axios.get(baseUrl);
@@ -16,7 +16,7 @@ const getMemo = async (id: string) => {
 
 const getMemosByAuthor = async (username: string) => {
   const { data: memos }: { data: IMemo[] } = await axios.get(
-    `${newBaseUrl}/${username}/memos`
+    `http://localhost:3004/${username}/memos`
   );
   return memos;
 };

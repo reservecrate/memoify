@@ -1,12 +1,5 @@
 import { useContext, useState } from 'react';
-import {
-  Container,
-  Input,
-  Textarea,
-  Button,
-  FormElement,
-  Spacer
-} from '@nextui-org/react';
+import { Input, Textarea, Button, Spacer } from '@nextui-org/react';
 import { createMemo } from '../../services/memos';
 import { AppContext } from '../../App';
 
@@ -19,24 +12,13 @@ const CreateMemo = () => {
   const [contentIsVoid, setContentIsVoid] = useState(false);
 
   const titleLabelPlaceholder = titleIsVoid
-    ? 'the title field must not be empty! ÙwÚ'
-    : 'title uwu';
+    ? 'the title field must not be empty'
+    : 'title';
 
   const contentLabel = contentIsVoid
-    ? 'the content field must not be empty! ÒwÓ'
-    : "what's on your mind? O w O";
+    ? 'the body field must not be empty'
+    : 'body';
 
-  const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
-    const inputElement = e.currentTarget.id;
-    const inputValue = e.currentTarget.value;
-    if (inputElement === 'InputTitle') {
-      !inputValue ? setTitleIsVoid(true) : setTitleIsVoid(false);
-      setTitle(inputValue);
-    } else if (inputElement === 'TextareaContent') {
-      !inputValue ? setContentIsVoid(true) : setContentIsVoid(false);
-      setContent(inputValue);
-    }
-  };
   //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER WHEN THEY HAVE SUCCESSFULLY CREATED A NEW MEMO, LATER
   const handleCreate = async () => {
     if (!title && !content) {
@@ -86,43 +68,41 @@ const CreateMemo = () => {
   };
 
   return (
-    <Container direction='column'>
+    <div className='col-span-1'>
       <Input
         id='InputTitle'
-        labelPlaceholder={titleLabelPlaceholder}
-        onChange={handleInputChange}
+        variant='bordered'
+        label={titleLabelPlaceholder}
+        placeholder='e.g. shopping list'
         value={title}
-        clearable
-        bordered
-        color='secondary'
-        css={{ width: '100%' }}
-        status={titleIsVoid ? 'error' : 'default'}
+        onValueChange={setTitle}
+        isClearable
+        isRequired
+        color={titleIsVoid ? 'danger' : 'secondary'}
       />
-      <Spacer y={0.5} />
+      <Spacer y={3} />
       <Textarea
         id='TextareaContent'
+        variant='bordered'
         label={contentLabel}
-        placeholder='content owo'
-        onChange={handleInputChange}
+        placeholder='e.g. eggs, bananas, onions'
         value={content}
+        onValueChange={setContent}
         minRows={6}
         maxRows={10}
-        bordered
-        color='secondary'
-        css={{ width: '100%' }}
-        status={contentIsVoid ? 'error' : 'default'}
+        color={contentIsVoid ? 'danger' : 'secondary'}
+        isRequired
       />
-      <Spacer />
+      <Spacer y={3} />
       <Button
-        color='gradient'
-        bordered
+        color='primary'
         onPressStart={handleCreate}
-        shadow
-        css={{ width: '100%' }}
+        className='w-full'
+        variant='flat'
       >
-        create memo UwU
+        create memo
       </Button>
-    </Container>
+    </div>
   );
 };
 

@@ -1,13 +1,5 @@
 import { useState, useContext } from 'react';
-import {
-  Container,
-  Input,
-  Tooltip,
-  Button,
-  FormElement,
-  Spacer,
-  Text
-} from '@nextui-org/react';
+import { Input, Button, Spacer, Chip } from '@nextui-org/react';
 import login from '../../services/login';
 import { AppContext } from '../../App';
 
@@ -16,16 +8,6 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
-    const inputElement = e.currentTarget.id;
-    const inputValue = e.currentTarget.value;
-    if (inputElement === 'InputSignupUsername') setUsername(inputValue);
-    else if (inputElement === 'InputSignupPassword') setPassword(inputValue);
-    else
-      console.error(
-        'Error. Input not matched (must either be username or password)'
-      );
-  };
   //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER THAT THEY HAVE SUCCESSFULLY LOGGED IN/LOGGED OUT,LATER
   const handleLogin = async () => {
     try {
@@ -44,83 +26,62 @@ const Login = () => {
   };
 
   return (
-    <Container>
+    <div>
       {loggedInUser.token ? (
         <>
           <Spacer y={1.5} />
-          <Tooltip
-            content='your account username! úwú'
-            color='secondary'
-            rounded
-            contentColor=''
-            css={{}}
+          <Chip color='success' size='lg' variant='dot'>
+            <p>
+              logged in as: <b>{loggedInUser.username}</b>
+            </p>
+          </Chip>
+          <Spacer y={4} />
+          <Button
+            color='danger'
+            onPressStart={handleSignout}
+            className='w-6/12'
           >
-            <Button flat color='primary'>
-              <Text>
-                logged in as: <b>{loggedInUser.username}</b>
-              </Text>
-            </Button>
-          </Tooltip>
-          <Spacer y={1.5} />
-          <Tooltip
-            content=' log out of your memoify account (◕︿◕✿)'
-            color='secondary'
-            rounded
-            contentColor=''
-            css={{}}
-          >
-            <Button
-              color='gradient'
-              shadow
-              size='sm'
-              onPressStart={handleSignout}
-            >
-              log out ÚwÚ
-            </Button>
-          </Tooltip>
+            log out
+          </Button>
         </>
       ) : (
         <>
           <Input
-            underlined
+            variant='underlined'
             id='InputSignupUsername'
-            labelPlaceholder='username uwu'
-            onChange={handleInputChange}
+            label='username'
+            placeholder=' e.g. reservecrate'
             value={username}
-            clearable
+            onValueChange={setUsername}
+            isClearable
             color='secondary'
+            className='w-5/6'
           />
-          <Spacer y={2} />
-          <Input.Password
-            underlined
+          <Spacer y={4} />
+          <Input
+            type='password'
+            variant='underlined'
             id='InputSignupPassword'
-            labelPlaceholder='password owo'
-            onChange={handleInputChange}
+            label='password'
+            placeholder='e.g. password123'
             value={password}
-            clearable
+            onValueChange={setPassword}
+            isClearable
             color='secondary'
+            className='w-5/6'
           />
-          <Spacer y={1.5} />
-          <Tooltip
-            content='log in with your memoify account! ÚwÚ'
-            contentColor=''
+          <Spacer y={4} />
+          <Button
             color='secondary'
-            rounded
-            css={{}}
+            variant='bordered'
+            onPressStart={handleLogin}
+            className='w-6/12'
           >
-            <Button
-              color='gradient'
-              bordered
-              size='sm'
-              onPressStart={handleLogin}
-              shadow
-            >
-              log in ÚwÚ
-            </Button>
-          </Tooltip>
+            log in
+          </Button>
         </>
       )}
-    </Container>
+    </div>
   );
 };
 

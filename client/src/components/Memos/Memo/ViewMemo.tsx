@@ -1,106 +1,70 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import {
   Card,
-  Text,
-  Row,
-  Tooltip,
+  CardHeader,
+  CardBody,
+  CardFooter,
   Button,
   Spacer,
-  Modal
+  Divider,
+  useDisclosure
 } from '@nextui-org/react';
 import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
 import dateFormatter from '../../../utils/dateFormatter';
+import MemoModal from '../../MemoModal';
 
-const ViewMemo = ({ title, content, dateCreated, author }: IMemo) => {
+const ViewMemo = ({ memo }: { memo: IMemo }) => {
+  const { title, content, dateCreated, author } = memo;
   const { handleEdit, handleDelete } = useContext(MemoContext);
-  const { username } = author;
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
-  const [isVisible, setIsVisible] = useState(false);
-  const handleDoubleClick = () => setIsVisible(true);
-  const handleModalClose = () => setIsVisible(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <>
-      <Card
-        variant='bordered'
-        isPressable
-        isHoverable
-        onDoubleClick={handleDoubleClick}
-      >
-        <Card.Header>
-          <Row justify='center'>
-            <Text h4>{title}</Text>
-          </Row>
-        </Card.Header>
-        <Card.Divider />
-        <Card.Body>
-          <Text
-            css={{
-              whiteSpace: 'pre-wrap'
+    <div className='col-span-1'>
+      <Card isPressable isHoverable onPressStart={onOpen}>
+        <CardHeader className='flex justify-center'>
+          <p className='text-lg font-semibold'>{title}</p>
+        </CardHeader>
+        <Divider />
+        <CardBody>
+          <p className='whitespace-pre-wrap'>{content}</p>
+        </CardBody>
+        <Divider />
+        <CardFooter className='flex flex-col items-center'>
+          <p
+            style={{
+              background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+              backgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
             }}
           >
-            {content}
-          </Text>
-        </Card.Body>
-        <Card.Divider />
-        <Card.Footer
-          css={{
-            display: 'flex',
-            flexDirection: 'column'
-          }}
-        >
-          <Text
-            css={{
-              textGradient: '45deg, $blue600 -20%, $red600 100%'
-            }}
-          >
-            created on {formattedDate} at {formattedTime} by <b>{username}</b>
-          </Text>
-          <Spacer y={0.5} />
-          <Row justify='space-evenly'>
-            <Tooltip
-              content='edit memo OwO'
-              contentColor='secondary'
-              color='default'
-              css={{}}
+            created on {formattedDate} at {formattedTime} by{' '}
+            <b>{author.username}</b>
+          </p>
+          <Spacer y={2} />
+          <div className='flex justify-evenly w-full'>
+            <Button
+              onPressStart={handleEdit}
+              color='primary'
+              variant='flat'
+              className='w-1/3'
             >
-              <Button
-                size='sm'
-                color='gradient'
-                shadow
-                onPressStart={handleEdit}
-              >
-                edit
-              </Button>
-            </Tooltip>
-            <Tooltip
-              content='delete memo ÒwÓ'
-              contentColor='warning'
-              color='default'
-              css={{}}
+              edit
+            </Button>
+            <Button
+              onPressStart={handleDelete}
+              color='danger'
+              variant='flat'
+              className='w-1/3'
             >
-              <Button
-                onPressStart={handleDelete}
-                size='sm'
-                shadow
-                color='error'
-              >
-                <Text>delete</Text>
-              </Button>
-            </Tooltip>
-          </Row>
-        </Card.Footer>
+              delete
+            </Button>
+          </div>
+        </CardFooter>
       </Card>
-      <Modal open={isVisible} onClose={{ handleModalClose }} closeButton>
-        <Modal.Header>
-          <Text>{title}</Text>
-        </Modal.Header>
-        <Modal.Body>
-          <Text>{content}</Text>
-        </Modal.Body>
-      </Modal>
-    </>
+      <MemoModal isOpen={isOpen} onClose={onClose} memo={memo} />
+    </div>
   );
 };
 export default ViewMemo;

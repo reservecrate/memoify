@@ -1,41 +1,65 @@
-import { createContext, useState, useContext } from 'react';
+import {
+  createContext,
+  useState,
+  useContext,
+  Dispatch,
+  SetStateAction,
+  useEffect
+} from 'react';
 import IMemo from '../../../interfaces/Memo';
 import { getMemo, deleteMemo, updateMemo } from '../../../services/memos';
 import EditableMemo from './EditableMemo';
 import ViewMemo from './ViewMemo';
-import { FormElement } from '@nextui-org/react';
 import { AppContext } from '../../../App';
 
 interface IMemoContext {
-  handleInputChange: (e: React.ChangeEvent<FormElement>) => void;
+  setEditableTitle: Dispatch<SetStateAction<string>>;
+  setEditableContent: Dispatch<SetStateAction<string>>;
   handleDelete: () => void;
   handleEdit: () => void;
   handleUpdate: () => void;
+  memo: IMemo;
 }
 
 const initialMemoContextData = {
-  handleInputChange: () => null,
+  setEditableTitle: () => null,
+  setEditableContent: () => null,
   handleDelete: () => null,
   handleEdit: () => null,
-  handleUpdate: () => null
+  handleUpdate: () => null,
+  memo: {
+    title: '',
+    content: '',
+    dateCreated: Date.now(),
+    author: {
+      username: '',
+      name: '',
+      id: ''
+    },
+    id: ''
+  }
 };
 
 export const MemoContext = createContext<IMemoContext>(initialMemoContextData);
 
-const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
+const Memo = ({ memo }: { memo: IMemo }) => {
+  const { title, content, id } = memo;
   const { memos, setMemos, loggedInUser, demoMemos, setDemoMemos } =
     useContext(AppContext);
   const [isEditable, setIsEditable] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);
   const [editableContent, setEditableContent] = useState(content);
-
-  const handleInputChange = (e: React.ChangeEvent<FormElement>) => {
-    const inputElement = e.currentTarget.id;
-    const inputValue = e.currentTarget.value;
-    if (inputElement === 'InputUpdateTitle') setEditableTitle(inputValue);
-    else if (inputElement === 'TextareaUpdateContent')
-      setEditableContent(inputValue);
+  const memoCopy = {
+    ...memo,
+    title: editableTitle,
+    content: editableContent
   };
+
+  useEffect(() => {
+    setEditableTitle(title);
+    setEditableContent(content);
+  }, [title, content]);
+
   const handleDelete = async () => {
     if (!loggedInUser.token) {
       const deletedDemoMemoIndex = demoMemos.findIndex(memo => memo.id === id);
@@ -54,7 +78,9 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
       }
     }
   };
+
   const handleEdit = () => setIsEditable(isEditable => !isEditable);
+
   const handleUpdate = async () => {
     if (!loggedInUser.token) {
       setIsEditable(isEditable => !isEditable);
@@ -77,19 +103,15 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
           title: editableTitle,
           content: editableContent
         };
-        const updatedMemo = await updateMemo(
-          id,
-          updatedMemoPayload,
-          loggedInUser.token
-        );
+        await updateMemo(id, updatedMemoPayload, loggedInUser.token);
         //remove this below?
-        const { id: updatedMemoId } = updatedMemo;
-        const updatedMemoIndex = memos.findIndex(
-          memo => memo.id === updatedMemoId
-        );
-        const memosCopy = JSON.parse(JSON.stringify(memos));
-        memosCopy.splice(updatedMemoIndex, 1, updatedMemo);
-        setMemos(memosCopy);
+        // const { id: updatedMemoId } = updatedMemo;
+        // const updatedMemoIndex = memos.findIndex(
+        //   memo => memo.id === updatedMemoId
+        // );
+        // const memosCopy = JSON.parse(JSON.stringify(memos));
+        // memosCopy.splice(updatedMemoIndex, 1, updatedMemo);
+        // setMemos(memosCopy);
       } catch (err) {
         console.log(err);
       }
@@ -98,24 +120,19 @@ const Memo = ({ title, content, dateCreated, author, id }: IMemo) => {
 
   return (
     <MemoContext.Provider
-      value={{ handleInputChange, handleDelete, handleEdit, handleUpdate }}
+      value={{
+        setEditableTitle,
+        setEditableContent,
+        handleDelete,
+        handleEdit,
+        handleUpdate,
+        memo
+      }}
     >
       {isEditable ? (
-        <EditableMemo
-          title={editableTitle}
-          content={editableContent}
-          dateCreated={dateCreated}
-          author={author}
-          id={id}
-        />
+        <EditableMemo memo={memoCopy} />
       ) : (
-        <ViewMemo
-          title={editableTitle}
-          content={editableContent}
-          dateCreated={dateCreated}
-          author={author}
-          id={id}
-        />
+        <ViewMemo memo={memoCopy} />
       )}
     </MemoContext.Provider>
   );
