@@ -1,3 +1,4 @@
+import { MdEdit, MdDelete } from 'react-icons/md';
 import { useContext } from 'react';
 import {
   Card,
@@ -49,6 +50,7 @@ const ViewMemo = ({ memo }: { memo: IMemo }) => {
               color='primary'
               variant='flat'
               className='w-1/3'
+              endContent={<MdEdit />}
             >
               edit
             </Button>
@@ -57,6 +59,7 @@ const ViewMemo = ({ memo }: { memo: IMemo }) => {
               color='danger'
               variant='flat'
               className='w-1/3'
+              endContent={<MdDelete />}
             >
               delete
             </Button>
