@@ -1,6 +1,7 @@
 {
   "name": "memoify",
   "version": "1.2.0",
+  "type": "module",
   "description": "A minimalist, aesthetic notes app for your essential daily needs.",
   "keywords": [
     "aesthetic",
@@ -10,10 +11,10 @@
     "minimalist",
     "notes"
   ],
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node index.js",
-    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "start": "cross-env NODE_ENV=production ts-node-esm index.ts",
+    "dev": "cross-env NODE_ENV=development tsx watch index.ts",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "build:ui": "shx rm -rf dist && cd ../client/ && npm run build && shx cp -r dist ../server",
     "deploy": "fly deploy",
@@ -25,7 +26,6 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
-    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
@@ -36,16 +36,29 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@jest/globals": "^29.6.1",
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.3",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/mongoose": "^5.11.97",
+    "@types/mongoose-unique-validator": "^1.0.7",
+    "@types/morgan": "^1.9.4",
+    "@types/node": "^20.4.2",
+    "@types/supertest": "^2.0.12",
+    "cross-env": "^7.0.3",
     "eslint": "^8.38.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
-    "jest": "^29.5.0",
+    "jest": "^29.6.1",
     "nodemon": "^2.0.22",
-    "supertest": "^6.3.3"
-  },
-  "jest": {
-    "testEnvironment": "node"
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
   }
 }
