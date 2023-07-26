@@ -18,6 +18,7 @@ const ViewModal = ({
   handleEdit: () => void;
   memo: IMemo;
 }) => {
+  //remove this component
   const { handleDelete } = useContext(MemoContext);
   const { title, content, dateCreated, author } = memo;
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
