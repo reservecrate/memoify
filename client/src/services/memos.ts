@@ -4,24 +4,19 @@ import IMemo from '../interfaces/Memo';
 const baseUrl = 'http://localhost:3004/api/memos';
 // const baseUrl = '/api/memos';
 
-// const getMemos = async () => {
-//   const { data: memos }: { data: IMemo[] } = await axios.get(baseUrl);
-//   return memos;
-// };
-
-const getMemo = async (id: string) => {
+export const getMemo = async (id: string) => {
   const { data: memo }: { data: IMemo } = await axios.get(`${baseUrl}/${id}`);
   return memo;
 };
 
-const getMemosByAuthor = async (username: string) => {
+export const getMemosByAuthor = async (username: string) => {
   const { data: memos }: { data: IMemo[] } = await axios.get(
     `http://localhost:3004/${username}/memos`
   );
   return memos;
 };
 
-const createMemo = async (
+export const createMemo = async (
   payload: {
     title: string;
     content: string;
@@ -42,7 +37,7 @@ const createMemo = async (
   return createdMemo;
 };
 
-const updateMemo = async (id: string, payload: IMemo, token: string) => {
+export const updateMemo = async (id: string, payload: IMemo, token: string) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -56,7 +51,7 @@ const updateMemo = async (id: string, payload: IMemo, token: string) => {
   return updatedMemo;
 };
 
-const deleteMemo = async (id: string, token: string) => {
+export const deleteMemo = async (id: string, token: string) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -69,4 +64,3 @@ const deleteMemo = async (id: string, token: string) => {
   return deletedMemo;
 };
 
-export { getMemo, getMemosByAuthor, createMemo, updateMemo, deleteMemo };

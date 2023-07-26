@@ -12,6 +12,6 @@ export const getMemos = async (req: Request, res: Response) => {
 
 export const getMemo = async (req: Request, res: Response) => {
   const memo = (await Memo.findById(req.params.id)) as MemoDoc;
-  const prettifiedMemo = await memo.prettify();
-  res.status(200).json(prettifiedMemo);
+  // const prettifiedMemo = await memo.prettify();
+  res.status(200).json(memo);
 };

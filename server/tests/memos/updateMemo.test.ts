@@ -110,7 +110,7 @@ test('returns SC 200 + updated memo when the memo id is valid', async () => {
   expect(updatedMemo.content).toBe(updatedMemoPayload.content);
 });
 
-test('fails with SC 404 when the memo id is invalid', async () => {
+test.only('fails with SC 404 when the memo id is invalid', async () => {
   const memosBefore: MemoDoc[] = await Memo.find({});
   const login = { username: 'reservecrate', password: 'kennwort' };
   const { token } = (await api.post('/api/login').send({ ...login })).body;

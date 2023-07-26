@@ -98,20 +98,14 @@ const Memo = ({ memo }: { memo: IMemo }) => {
       try {
         setIsEditable(isEditable => !isEditable);
         const memoToUpdate = await getMemo(id);
+        console.log(memoToUpdate)
         const updatedMemoPayload = {
           ...memoToUpdate,
           title: editableTitle,
           content: editableContent
         };
+        console.log(updatedMemoPayload);
         await updateMemo(id, updatedMemoPayload, loggedInUser.token);
-        //remove this below?
-        // const { id: updatedMemoId } = updatedMemo;
-        // const updatedMemoIndex = memos.findIndex(
-        //   memo => memo.id === updatedMemoId
-        // );
-        // const memosCopy = JSON.parse(JSON.stringify(memos));
-        // memosCopy.splice(updatedMemoIndex, 1, updatedMemo);
-        // setMemos(memosCopy);
       } catch (err) {
         console.log(err);
       }
