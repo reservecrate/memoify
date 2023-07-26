@@ -1,16 +1,16 @@
 const demoMemos = [
   {
-    title: 'Go ahead and edit me!',
+    title: 'go ahead and edit me!',
     content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     dateCreated: Date.now(),
     author: { username: 'Memoify', name: 'Memoify', id: '' },
     id: 'demoMemoId' + Date.now() + Math.floor(Math.random() * 9999)
   },
   {
-    title: 'and this is just the beginning...',
+    title: 'proudly open source and free',
     content:
-      '=> way more features are coming soon - look out for the alpha release in December 2023!',
+      '=> way more features are coming soon - look out for any updates in the near future!',
     dateCreated: Date.now(),
     author: { username: 'Memoify', name: 'Memoify', id: '' },
     id: 'demoMemoId' + Date.now() + Math.floor(Math.random() * 9999)
@@ -18,7 +18,7 @@ const demoMemos = [
 
   {
     title: 'welcome to memoify!',
-    content: '=> the web-based notes app built for your daily needs',
+    content: '=> the web-based notes app built for your essential daily needs',
     dateCreated: Date.now(),
     author: { username: 'Memoify', name: 'Memoify', id: '' },
     id: 'demoMemoId' + Date.now() + Math.floor(Math.random() * 9999)
