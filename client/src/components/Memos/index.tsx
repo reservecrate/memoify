@@ -11,7 +11,7 @@ const Memos = () => {
     : JSON.parse(JSON.stringify(demoMemos)).toReversed();
 
   return (
-    <div className='grid grid-cols-4 gap-8'>
+    <div className='grid grid-cols-4 gap-8 w-full'>
       <CreateMemo />
       {reverseMemos.map(memo => (
         <Memo memo={memo} key={memo.id} />

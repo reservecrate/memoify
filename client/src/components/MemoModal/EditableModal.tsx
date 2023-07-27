@@ -1,4 +1,4 @@
-import { useContext, Dispatch, SetStateAction } from 'react';
+import { useContext, Dispatch, SetStateAction, useCallback } from 'react';
 import {
   ModalContent,
   ModalHeader,
@@ -6,12 +6,16 @@ import {
   ModalFooter,
   Button,
   Input,
-  Textarea,
   Spacer
 } from '@nextui-org/react';
 import { MemoContext } from '../Memos/Memo';
 import IMemo from '../../interfaces/Memo';
 import dateFormatter from '../../utils/dateFormatter';
+// import { MDXEditor } from '@mdxeditor/editor';
+// import '@mdxeditor/editor/style.css';
+import './richEditor.css';
+import SimpleMDE from 'react-simplemde-editor';
+import 'easymde/dist/easymde.min.css';
 
 const EditableModal = ({
   handleUpdate,
@@ -27,23 +31,29 @@ const EditableModal = ({
   const { handleDelete } = useContext(MemoContext);
   const { title, content, dateCreated, author } = memo;
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
+  const onChange = useCallback(
+    (value: string) => setEditableModalContent(value),
+    []
+  );
+
   return (
     <ModalContent>
       <ModalHeader>
         <Input
           value={title}
           onValueChange={setEditableModalTitle}
-          variant='underlined'
           ariaLabel='InputEditableModalTitle'
+          variant='underlined'
           isClearable
         />
       </ModalHeader>
       <ModalBody>
-        <Textarea
-          value={content}
-          onValueChange={setEditableModalContent}
-          ariaLabel='TextareaEditableModalContent'
-        />
+        {/* <MDXEditor
+          markdown={content}
+          onChange={markdown => setEditableModalContent(markdown)}
+          contentEditableClassName='modalRichEditor'
+        /> */}
+        <SimpleMDE value={content} onChange={onChange} />
       </ModalBody>
       <ModalFooter className='flex flex-col'>
         <p

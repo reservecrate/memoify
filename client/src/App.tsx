@@ -81,8 +81,9 @@ const App = () => {
         setDemoMemos
       }}
     >
-      <div id='App' className='grid gap-12 grid-cols-6'>
-        <div className='col-span-5 flex flex-col items-center'>
+      {/* {loggedInUser.token ? ( */}
+      <div id='App' className='grid gap-8 grid-cols-8'>
+        <div className='col-span-7 flex flex-col items-center'>
           <h1
             className='text-6xl font-semibold leading-snug'
             style={{
@@ -98,6 +99,22 @@ const App = () => {
         </div>
         <Sidebar />
       </div>
+      {/* ) : (
+        <div id='App' className='flex flex-col items-center'>
+          <h1
+            className='text-6xl font-semibold leading-snug'
+            style={{
+              background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
+            memoify
+          </h1>
+          <Spacer y={6} />
+          <Memos />
+        </div>
+      )} */}
     </AppContext.Provider>
   );
 };

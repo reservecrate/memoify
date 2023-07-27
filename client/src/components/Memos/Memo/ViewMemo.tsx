@@ -8,28 +8,36 @@ import {
   Button,
   Spacer,
   Divider,
-  useDisclosure
+  useDisclosure,
+  Skeleton
 } from '@nextui-org/react';
 import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
 import dateFormatter from '../../../utils/dateFormatter';
 import MemoModal from '../../MemoModal';
+import MDParser from '../../../utils/MDParser';
 
 const ViewMemo = ({ memo }: { memo: IMemo }) => {
   const { title, content, dateCreated, author } = memo;
   const { handleEdit, handleDelete } = useContext(MemoContext);
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const richContent = MDParser(content);
 
   return (
-    <div className='col-span-1'>
-      <Card isPressable isHoverable onPressStart={onOpen}>
+    <>
+      <Card
+        isPressable
+        isHoverable
+        onPressStart={onOpen}
+        className='col-span-1'
+      >
         <CardHeader className='flex justify-center'>
           <p className='text-lg font-semibold'>{title}</p>
         </CardHeader>
         <Divider />
         <CardBody>
-          <p className='whitespace-pre-wrap'>{content}</p>
+          <p className='whitespace-pre-wrap line-clamp-6'>{richContent}</p>
         </CardBody>
         <Divider />
         <CardFooter className='flex flex-col items-center'>
@@ -67,7 +75,7 @@ const ViewMemo = ({ memo }: { memo: IMemo }) => {
         </CardFooter>
       </Card>
       <MemoModal isOpen={isOpen} onClose={onClose} memo={memo} />
-    </div>
+    </>
   );
 };
 export default ViewMemo;

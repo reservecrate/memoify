@@ -1,3 +1,4 @@
+import { MdEdit, MdDelete } from 'react-icons/md';
 import { useContext } from 'react';
 import {
   ModalContent,
@@ -10,6 +11,7 @@ import {
 import { MemoContext } from '../Memos/Memo';
 import dateFormatter from '../../utils/dateFormatter';
 import IMemo from '../../interfaces/Memo';
+import MDParser from '../../utils/MDParser';
 
 const ViewModal = ({
   handleEdit,
@@ -18,17 +20,18 @@ const ViewModal = ({
   handleEdit: () => void;
   memo: IMemo;
 }) => {
-  //remove this component
   const { handleDelete } = useContext(MemoContext);
   const { title, content, dateCreated, author } = memo;
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
+  const richContent = MDParser(content);
+
   return (
     <ModalContent>
       <ModalHeader>
         <p className='text-lg font-semibold'>{title}</p>
       </ModalHeader>
       <ModalBody>
-        <p className='whitespace-pre-wrap'>{content}</p>
+        <p className='whitespace-pre-wrap break-words'>{richContent}</p>
       </ModalBody>
       <ModalFooter className='flex flex-col'>
         <p
@@ -48,6 +51,7 @@ const ViewModal = ({
             color='primary'
             variant='flat'
             className='w-5/12'
+            endContent={<MdEdit />}
           >
             edit
           </Button>
@@ -56,6 +60,7 @@ const ViewModal = ({
             color='danger'
             variant='flat'
             className='w-5/12'
+            endContent={<MdDelete />}
           >
             delete
           </Button>

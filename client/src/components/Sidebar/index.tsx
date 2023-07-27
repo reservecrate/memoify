@@ -4,7 +4,7 @@ import Signup from './Signup';
 
 const Sidebar = () => {
   return (
-    <div className='col-span-1'>
+    <div className='col-span-1 flex flex-col'>
       <Spacer y={8} />
       <Login />
       <Spacer y={12} />

@@ -98,7 +98,7 @@ const Memo = ({ memo }: { memo: IMemo }) => {
       try {
         setIsEditable(isEditable => !isEditable);
         const memoToUpdate = await getMemo(id);
-        console.log(memoToUpdate)
+        console.log(memoToUpdate);
         const updatedMemoPayload = {
           ...memoToUpdate,
           title: editableTitle,

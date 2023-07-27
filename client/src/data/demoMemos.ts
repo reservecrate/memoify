@@ -2,15 +2,15 @@ const demoMemos = [
   {
     title: 'go ahead and edit me!',
     content:
-      'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      '=> lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     dateCreated: Date.now(),
     author: { username: 'Memoify', name: 'Memoify', id: '' },
     id: 'demoMemoId' + Date.now() + Math.floor(Math.random() * 9999)
   },
   {
-    title: 'proudly open source and free',
+    title: 'proudly open-source & free',
     content:
-      '=> way more features are coming soon - look out for any updates in the near future!',
+      '=> with way more features coming soon - look out for any new updates in the near future!',
     dateCreated: Date.now(),
     author: { username: 'Memoify', name: 'Memoify', id: '' },
     id: 'demoMemoId' + Date.now() + Math.floor(Math.random() * 9999)

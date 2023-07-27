@@ -32,7 +32,7 @@ const Login = () => {
           <Spacer y={1.5} />
           <Chip color='success' size='lg' variant='dot'>
             <p>
-              logged in as: <b>{loggedInUser.username}</b>
+              <b>{loggedInUser.username}</b>
             </p>
           </Chip>
           <Spacer y={4} />

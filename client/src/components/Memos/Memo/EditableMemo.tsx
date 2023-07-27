@@ -22,7 +22,7 @@ const EditableMemo = ({ memo }: { memo: IMemo }) => {
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
 
   return (
-    <Card isHoverable>
+    <Card isHoverable className='col-span-1'>
       <CardHeader>
         <Input
           aria-label='InputUpdateTitle'

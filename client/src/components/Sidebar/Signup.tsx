@@ -70,6 +70,7 @@ const Signup = () => {
             isClearable
             color={usernameIsTooShort ? 'danger' : 'secondary'}
             className='w-5/6'
+            isRequired
           />
           <Spacer y={4} />
           <Input
@@ -95,6 +96,7 @@ const Signup = () => {
             isClearable
             color={passwordIsTooShort ? 'danger' : 'secondary'}
             className='w-5/6'
+            isRequired
           />
           <Spacer y={4} />
           <Input
@@ -108,6 +110,7 @@ const Signup = () => {
             isClearable
             color={passwordsDoNotMatch ? 'danger' : 'secondary'}
             className='w-5/6'
+            isRequired
           />
           <Spacer y={4} />
           <Button
