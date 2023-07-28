@@ -4,6 +4,7 @@ import ViewMemoModal from './ViewModal';
 import EditableMemoModal from './EditableModal';
 import IMemo from '../../interfaces/Memo';
 import { AppContext } from '../../App';
+import { MemosContext } from '../Memos';
 
 const MemoModal = ({
   isOpen,
@@ -14,7 +15,8 @@ const MemoModal = ({
   onClose: () => void;
   memo: IMemo;
 }) => {
-  const { loggedInUser, demoMemos, setDemoMemos } = useContext(AppContext);
+  const { loggedInUser } = useContext(AppContext);
+  const { demoMemos, setDemoMemos } = useContext(MemosContext);
   const { title, content, id } = memo;
   const [editableModalTitle, setEditableModalTitle] = useState(title);
   const [editableModalContent, setEditableModalContent] = useState(content);

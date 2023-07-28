@@ -8,21 +8,20 @@ import {
   Button,
   Spacer,
   Divider,
-  useDisclosure,
-  Skeleton
+  useDisclosure
 } from '@nextui-org/react';
 import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
 import dateFormatter from '../../../utils/dateFormatter';
 import MemoModal from '../../MemoModal';
-import MDParser from '../../../utils/MDParser';
+// import MDParser from '../../../utils/MDParser';
 
 const ViewMemo = ({ memo }: { memo: IMemo }) => {
   const { title, content, dateCreated, author } = memo;
   const { handleEdit, handleDelete } = useContext(MemoContext);
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const richContent = MDParser(content);
+  const trimmedContent = content.replace(/\n{2,}/g, '\n');
 
   return (
     <>
@@ -30,17 +29,19 @@ const ViewMemo = ({ memo }: { memo: IMemo }) => {
         isPressable
         isHoverable
         onPressStart={onOpen}
-        className='col-span-1'
+        className='col-span-1 row-span-1'
       >
         <CardHeader className='flex justify-center'>
-          <p className='text-lg font-semibold'>{title}</p>
+          <p className='text-3xl font-bold'>{title}</p>
         </CardHeader>
         <Divider />
-        <CardBody>
-          <p className='whitespace-pre-wrap line-clamp-6'>{richContent}</p>
+        <CardBody className='p-2'>
+          <div className='whitespace-pre-wrap w-full h-full flex flex-col'>
+            {trimmedContent}
+          </div>
         </CardBody>
         <Divider />
-        <CardFooter className='flex flex-col items-center'>
+        <CardFooter className='flex flex-col items-center shrink-0'>
           <p
             style={{
               background: 'linear-gradient(to right, #4E4FEB, #DB005B)',

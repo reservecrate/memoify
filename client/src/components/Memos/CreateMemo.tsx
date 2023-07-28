@@ -2,10 +2,12 @@ import { useContext, useState } from 'react';
 import { Input, Textarea, Button, Spacer } from '@nextui-org/react';
 import { createMemo } from '../../services/memos';
 import { AppContext } from '../../App';
+import { MemosContext } from '.';
 
 const CreateMemo = () => {
-  const { memos, setMemos, loggedInUser } = useContext(AppContext);
-  const { demoMemos, setDemoMemos } = useContext(AppContext);
+  const { loggedInUser } = useContext(AppContext);
+  const { memos, setMemos, demoMemos, setDemoMemos } = useContext(MemosContext);
+
   const [title, setTitle] = useState('');
   const [titleIsVoid, setTitleIsVoid] = useState(false);
   const [content, setContent] = useState('');
@@ -68,7 +70,7 @@ const CreateMemo = () => {
   };
 
   return (
-    <div className='col-span-1'>
+    <div className='col-span-1 row-span-1'>
       <Input
         id='InputTitle'
         variant='bordered'

@@ -22,7 +22,7 @@ const EditableMemo = ({ memo }: { memo: IMemo }) => {
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
 
   return (
-    <Card isHoverable className='col-span-1'>
+    <Card isHoverable className='col-span-1 row-span-1'>
       <CardHeader>
         <Input
           aria-label='InputUpdateTitle'
@@ -34,18 +34,20 @@ const EditableMemo = ({ memo }: { memo: IMemo }) => {
         />
       </CardHeader>
       <Divider />
-      <CardBody>
+      <CardBody className='py-0 pl-1'>
         <Textarea
           aria-label='TextareaUpdateContent'
           id='TextareaUpdateContent'
           value={content}
           onValueChange={setEditableContent}
-          minRows={6}
-          maxRows={10}
+          minRows={5}
+          maxRows={5}
+          className='w-full h-full'
+          variant='underlined'
         />
       </CardBody>
       <Divider />
-      <CardFooter className='flex flex-col'>
+      <CardFooter className='flex flex-col shrink-0'>
         <p
           style={{
             background: 'linear-gradient(to right, #4E4FEB, #DB005B)',

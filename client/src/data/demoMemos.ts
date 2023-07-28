@@ -8,7 +8,7 @@ const demoMemos = [
     id: 'demoMemoId' + Date.now() + Math.floor(Math.random() * 9999)
   },
   {
-    title: 'proudly open-source & free',
+    title: 'free & open-source',
     content:
       '=> with way more features coming soon - look out for any new updates in the near future!',
     dateCreated: Date.now(),

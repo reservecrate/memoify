@@ -56,6 +56,7 @@ const Login = () => {
             isClearable
             color='secondary'
             className='w-5/6'
+            isRequired
           />
           <Spacer y={4} />
           <Input
@@ -69,6 +70,7 @@ const Login = () => {
             isClearable
             color='secondary'
             className='w-5/6'
+            isRequired
           />
           <Spacer y={4} />
           <Button

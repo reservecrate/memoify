@@ -11,6 +11,7 @@ import { getMemo, deleteMemo, updateMemo } from '../../../services/memos';
 import EditableMemo from './EditableMemo';
 import ViewMemo from './ViewMemo';
 import { AppContext } from '../../../App';
+import { MemosContext } from '..';
 
 interface IMemoContext {
   setEditableTitle: Dispatch<SetStateAction<string>>;
@@ -44,8 +45,9 @@ export const MemoContext = createContext<IMemoContext>(initialMemoContextData);
 
 const Memo = ({ memo }: { memo: IMemo }) => {
   const { title, content, id } = memo;
-  const { memos, setMemos, loggedInUser, demoMemos, setDemoMemos } =
-    useContext(AppContext);
+  const { loggedInUser } = useContext(AppContext);
+  const { memos, setMemos, demoMemos, setDemoMemos } = useContext(MemosContext);
+
   const [isEditable, setIsEditable] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);
   const [editableContent, setEditableContent] = useState(content);

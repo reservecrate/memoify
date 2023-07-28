@@ -28,10 +28,12 @@ const ViewModal = ({
   return (
     <ModalContent>
       <ModalHeader>
-        <p className='text-lg font-semibold'>{title}</p>
+        <p className='text-4xl font-bold'>{title}</p>
       </ModalHeader>
-      <ModalBody>
-        <p className='whitespace-pre-wrap break-words'>{richContent}</p>
+      <ModalBody className='py-0 px-2'>
+        <p className='whitespace-pre-wrap w-full h-full flex flex-col'>
+          {richContent}
+        </p>
       </ModalBody>
       <ModalFooter className='flex flex-col'>
         <p
