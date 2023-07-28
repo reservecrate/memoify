@@ -16,14 +16,14 @@ Memoify is a minimalist, lightweight, and fast notes app designed to make it eas
 1. Clone the repository: `git clone https://github.com/your-username/memoify.git`
 2. Navigate to the project directory: `cd memoify`
 3. Install dependencies: `npm install`
-4. Start the development server: `npm start`
+4. Start the development server: `npm run dev`
 
 ## Technologies Used
 
-- Front-end: HTML, CSS, JavaScript
-- Back-end: Node.js, Express.js
-- Database: MongoDB (or any other preferred database)
-- Additional Libraries/Frameworks: [list any additional libraries or frameworks used]
+- Frontend: React TypeScript, NextUI, TailwindCSS
+- Backend: Express TypeScript, hosted on fly.io
+- Database: MongoDB + Mongoose, hosted on MongoDB Atlas
+- Additional Libraries/Frameworks: react-simplemde-editor, react-icons
 
 ## Contributing
 
