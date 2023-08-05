@@ -90,7 +90,7 @@ const Memo = ({ memo }: { memo: IMemo }) => {
       const updatedDemoMemo = {
         ...demoMemoToUpdate,
         title: editableTitle.trim(),
-        content: editableContent.trim().replace(/\n{2,}/g, '\n')
+        content: editableContent.trim()
       };
       const updatedDemoMemoIndex = demoMemos.findIndex(memo => memo.id === id);
       const demoMemosCopy = JSON.parse(JSON.stringify(demoMemos));
@@ -103,7 +103,7 @@ const Memo = ({ memo }: { memo: IMemo }) => {
         const tempUpdatedMemo = {
           ...tempMemoToUpdate,
           title: editableTitle.trim(),
-          content: editableContent.trim().replace(/\n{2,}/g, '\n')
+          content: editableContent.trim()
         };
         const updatedTempMemoIndex = memos.findIndex(memo => memo.id === id);
         const memosCopy = JSON.parse(JSON.stringify(memos));
@@ -114,7 +114,7 @@ const Memo = ({ memo }: { memo: IMemo }) => {
         const updatedMemoPayload = {
           ...memoToUpdate,
           title: editableTitle.trim(),
-          content: editableContent.trim().replace(/\n{2,}/g, '\n')
+          content: editableContent.trim()
         };
         await updateMemo(id, updatedMemoPayload, loggedInUser.token);
       } catch (err) {

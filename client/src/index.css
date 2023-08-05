@@ -28,7 +28,7 @@ h6 {
 }
 
 ul {
-  @apply list-disc space-y-0;
+  @apply list-disc;
 }
 
 ol {
@@ -37,4 +37,8 @@ ol {
 
 li {
   @apply list-inside;
+}
+
+blockquote {
+  @apply py-0 px-2 my-2 border-l-4 border-gray-500 bg-gray-800;
 }

@@ -14,15 +14,14 @@ import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
 import dateFormatter from '../../../utils/dateFormatter';
 import MemoModal from '../../MemoModal';
-import MDParser from '../../../utils/MDParser';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const ViewMemo = ({ memo }: { memo: IMemo }) => {
   const { title, content, dateCreated, author } = memo;
   const { toggleEdit, handleDelete } = useContext(MemoContext);
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const trimmedContent = content.replace(/\n{3,}/g, '\n\n');
-  const richContent = MDParser(content);
 
   return (
     <>
@@ -32,14 +31,16 @@ const ViewMemo = ({ memo }: { memo: IMemo }) => {
         onPressStart={onOpen}
         className='col-span-1 row-span-1'
       >
-        <CardHeader className='flex justify-center'>
-          <p className='text-3xl font-bold'>{title}</p>
+        <CardHeader className='flex justify-center py-0'>
+          <h2 className='text-3xl font-bold line-clamp-2 py-1'>{title}</h2>
         </CardHeader>
         <Divider />
         <CardBody className='p-2'>
-          <div className='whitespace-pre-wrap w-full h-full flex flex-col'>
-            {richContent}
-          </div>
+          <ReactMarkdown
+            children={content}
+            remarkPlugins={[remarkGfm]}
+            className='whitespace-pre-wrap w-full h-full flex flex-col'
+          />
         </CardBody>
         <Divider />
         <CardFooter className='flex flex-col items-center shrink-0'>

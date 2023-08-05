@@ -62,7 +62,7 @@ const App = () => {
           <Sidebar />
         </div>
       ) : (
-        <div id='App' className='flex flex-col items-center px-4'>
+        <div id='App' className='flex flex-col items-center px-4 h-screen'>
           <h1
             className='text-6xl font-semibold leading-snug'
             style={{

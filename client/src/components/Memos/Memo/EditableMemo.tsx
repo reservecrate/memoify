@@ -23,7 +23,7 @@ const EditableMemo = ({ memo }: { memo: IMemo }) => {
 
   return (
     <Card isHoverable className='col-span-1 row-span-1'>
-      <CardHeader>
+      <CardHeader className='py-0 pl-1'>
         <Input
           aria-label='InputUpdateTitle'
           id='InputUpdateTitle'

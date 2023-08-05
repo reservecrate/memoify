@@ -35,6 +35,8 @@ const CreateMemo = () => {
       return;
     }
     if (!loggedInUser.token) {
+      setTitleIsVoid(false);
+      setContentIsVoid(false);
       const tempMemo = {
         title,
         content,
@@ -47,6 +49,8 @@ const CreateMemo = () => {
       setDemoMemos([...demoMemos, tempMemo]);
     } else {
       try {
+        setTitleIsVoid(false);
+        setContentIsVoid(false);
         const memoToCreate = { title, content, dateCreated: Date.now() };
         const tempMemo = {
           title,

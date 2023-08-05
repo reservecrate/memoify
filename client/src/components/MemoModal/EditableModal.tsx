@@ -30,7 +30,7 @@ const EditableModal = ({
 
   return (
     <ModalContent>
-      <ModalHeader>
+      <ModalHeader className='py-0 pl-2'>
         <Input
           value={title}
           onValueChange={setEditableModalTitle}

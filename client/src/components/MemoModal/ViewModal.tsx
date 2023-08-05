@@ -11,7 +11,8 @@ import {
 import { MemoContext } from '../Memos/Memo';
 import dateFormatter from '../../utils/dateFormatter';
 import IMemo from '../../interfaces/Memo';
-import MDParser from '../../utils/MDParser';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const ViewModal = ({
   toggleEdit,
@@ -23,17 +24,18 @@ const ViewModal = ({
   const { handleDelete } = useContext(MemoContext);
   const { title, content, dateCreated, author } = memo;
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
-  const richContent = MDParser(content);
 
   return (
     <ModalContent>
       <ModalHeader>
-        <p className='text-4xl font-bold'>{title}</p>
+        <h2 className='text-4xl font-bold'>{title}</h2>
       </ModalHeader>
       <ModalBody className='py-0 px-2'>
-        <p className='whitespace-pre-wrap w-full h-full flex flex-col'>
-          {richContent}
-        </p>
+        <ReactMarkdown
+          children={content}
+          remarkPlugins={[remarkGfm]}
+          className='whitespace-pre-wrap w-full h-full flex flex-col'
+        />
       </ModalBody>
       <ModalFooter className='flex flex-col'>
         <p

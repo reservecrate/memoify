@@ -34,7 +34,7 @@ const MemoModal = ({
       const updatedDemoMemo = {
         ...demoMemoToUpdate,
         title: editableModalTitle.trim(),
-        content: editableModalContent.trim().replace(/\n{2,}/g, '\n')
+        content: editableModalContent.trim()
       };
       const updatedDemoMemoIndex = demoMemos.findIndex(memo => memo.id === id);
       const demoMemosCopy = JSON.parse(JSON.stringify(demoMemos));
@@ -48,7 +48,7 @@ const MemoModal = ({
         const tempUpdatedMemo = {
           ...tempMemoToUpdate,
           title: editableModalTitle.trim(),
-          content: editableModalContent.trim().replace(/\n{2,}/g, '\n')
+          content: editableModalContent.trim()
         };
         const updatedTempMemoIndex = memos.findIndex(memo => memo.id === id);
         const memosCopy = JSON.parse(JSON.stringify(memos));
@@ -59,7 +59,7 @@ const MemoModal = ({
         const updatedMemoPayload = {
           ...memoToUpdate,
           title: editableModalTitle.trim(),
-          content: editableModalContent.trim().replace(/\n{2,}/g, '\n')
+          content: editableModalContent.trim()
         };
         await updateMemo(id, updatedMemoPayload, loggedInUser.token);
       } catch (err) {
