@@ -5,6 +5,7 @@ import EditableMemoModal from './EditableModal';
 import IMemo from '../../interfaces/Memo';
 import { AppContext } from '../../App';
 import { MemosContext } from '../Memos';
+import { getMemo, deleteMemo, updateMemo } from '../../services/memos';
 
 const MemoModal = ({
   isOpen,
@@ -16,24 +17,24 @@ const MemoModal = ({
   memo: IMemo;
 }) => {
   const { loggedInUser } = useContext(AppContext);
-  const { demoMemos, setDemoMemos } = useContext(MemosContext);
+  const { memos, setMemos, demoMemos, setDemoMemos } = useContext(MemosContext);
   const { title, content, id } = memo;
   const [editableModalTitle, setEditableModalTitle] = useState(title);
   const [editableModalContent, setEditableModalContent] = useState(content);
   const [modalIsEditable, setModalIsEditable] = useState(false);
 
-  const handleEdit = () =>
+  const toggleEdit = () =>
     setModalIsEditable(modalIsEditable => !modalIsEditable);
 
   const handleUpdate = async () => {
     if (!loggedInUser.token) {
       onClose();
-      setModalIsEditable(modalIsEditable => !modalIsEditable);
+      toggleEdit();
       const demoMemoToUpdate = demoMemos.find(memo => memo.id === id);
       const updatedDemoMemo = {
         ...demoMemoToUpdate,
-        title: editableModalTitle,
-        content: editableModalContent
+        title: editableModalTitle.trim(),
+        content: editableModalContent.trim().replace(/\n{2,}/g, '\n')
       };
       const updatedDemoMemoIndex = demoMemos.findIndex(memo => memo.id === id);
       const demoMemosCopy = JSON.parse(JSON.stringify(demoMemos));
@@ -41,7 +42,26 @@ const MemoModal = ({
       setDemoMemos(demoMemosCopy);
     } else {
       try {
-        console.log();
+        onClose();
+        toggleEdit();
+        const tempMemoToUpdate = memos.find(memo => memo.id === id);
+        const tempUpdatedMemo = {
+          ...tempMemoToUpdate,
+          title: editableModalTitle.trim(),
+          content: editableModalContent.trim().replace(/\n{2,}/g, '\n')
+        };
+        const updatedTempMemoIndex = memos.findIndex(memo => memo.id === id);
+        const memosCopy = JSON.parse(JSON.stringify(memos));
+        memosCopy.splice(updatedTempMemoIndex, 1, tempUpdatedMemo);
+        setMemos(memosCopy);
+
+        const memoToUpdate = await getMemo(id);
+        const updatedMemoPayload = {
+          ...memoToUpdate,
+          title: editableModalTitle.trim(),
+          content: editableModalContent.trim().replace(/\n{2,}/g, '\n')
+        };
+        await updateMemo(id, updatedMemoPayload, loggedInUser.token);
       } catch (err) {
         console.log(err);
       }
@@ -63,7 +83,7 @@ const MemoModal = ({
           setEditableModalContent={setEditableModalContent}
         />
       ) : (
-        <ViewMemoModal handleEdit={handleEdit} memo={memoCopy} />
+        <ViewMemoModal toggleEdit={toggleEdit} memo={memoCopy} />
       )}
     </Modal>
   );

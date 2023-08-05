@@ -47,7 +47,8 @@ const CreateMemo = () => {
       setDemoMemos([...demoMemos, tempMemo]);
     } else {
       try {
-        const memoToCreate = {
+        const memoToCreate = { title, content, dateCreated: Date.now() };
+        const tempMemo = {
           title,
           content,
           dateCreated: Date.now(),
@@ -60,7 +61,7 @@ const CreateMemo = () => {
         };
         setTitle('');
         setContent('');
-        setMemos([...memos, memoToCreate]);
+        setMemos([...memos, tempMemo]);
         const createdMemo = await createMemo(memoToCreate, loggedInUser.token);
         setMemos([...memos, createdMemo]);
       } catch (err) {

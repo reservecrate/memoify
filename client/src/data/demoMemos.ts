@@ -2,7 +2,7 @@ const demoMemos = [
   {
     title: 'go ahead and edit me!',
     content:
-      '=> lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      '=> lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
     dateCreated: Date.now(),
     author: { username: 'Memoify', name: 'Memoify', id: '' },
     id: 'demoMemoId' + Date.now() + Math.floor(Math.random() * 9999)

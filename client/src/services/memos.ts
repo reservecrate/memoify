@@ -63,4 +63,3 @@ export const deleteMemo = async (id: string, token: string) => {
   );
   return deletedMemo;
 };
-

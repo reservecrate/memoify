@@ -28,7 +28,7 @@ h6 {
 }
 
 ul {
-  @apply list-disc;
+  @apply list-disc space-y-0;
 }
 
 ol {

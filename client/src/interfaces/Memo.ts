@@ -9,3 +9,9 @@ export default interface IMemo {
   };
   id: string;
 }
+
+export interface MemoDoc {
+  title: string;
+  content: string;
+  dateCreated: number;
+}

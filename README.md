@@ -20,8 +20,8 @@ Memoify is a minimalist, lightweight, and fast notes app designed to make it eas
 
 ## Technologies Used
 
-- Frontend: React TypeScript, NextUI, TailwindCSS
-- Backend: Express TypeScript, hosted on fly.io
+- Frontend: Vite, React TypeScript, NextUI, TailwindCSS
+- Backend: Node Typescript, Express, hosted on fly.io
 - Database: MongoDB + Mongoose, hosted on MongoDB Atlas
 - Additional Libraries/Frameworks: react-simplemde-editor, react-icons
 

@@ -14,10 +14,10 @@ import IMemo from '../../interfaces/Memo';
 import MDParser from '../../utils/MDParser';
 
 const ViewModal = ({
-  handleEdit,
+  toggleEdit,
   memo
 }: {
-  handleEdit: () => void;
+  toggleEdit: () => void;
   memo: IMemo;
 }) => {
   const { handleDelete } = useContext(MemoContext);
@@ -49,7 +49,7 @@ const ViewModal = ({
         <Spacer y={2} />
         <div className='flex justify-evenly w-full'>
           <Button
-            onPressStart={handleEdit}
+            onPressStart={toggleEdit}
             color='primary'
             variant='flat'
             className='w-5/12'

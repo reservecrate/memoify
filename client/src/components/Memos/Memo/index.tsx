@@ -17,7 +17,7 @@ interface IMemoContext {
   setEditableTitle: Dispatch<SetStateAction<string>>;
   setEditableContent: Dispatch<SetStateAction<string>>;
   handleDelete: () => void;
-  handleEdit: () => void;
+  toggleEdit: () => void;
   handleUpdate: () => void;
   memo: IMemo;
 }
@@ -26,7 +26,7 @@ const initialMemoContextData = {
   setEditableTitle: () => null,
   setEditableContent: () => null,
   handleDelete: () => null,
-  handleEdit: () => null,
+  toggleEdit: () => null,
   handleUpdate: () => null,
   memo: {
     title: '',
@@ -81,16 +81,16 @@ const Memo = ({ memo }: { memo: IMemo }) => {
     }
   };
 
-  const handleEdit = () => setIsEditable(isEditable => !isEditable);
+  const toggleEdit = () => setIsEditable(isEditable => !isEditable);
 
   const handleUpdate = async () => {
     if (!loggedInUser.token) {
-      setIsEditable(isEditable => !isEditable);
+      toggleEdit();
       const demoMemoToUpdate = demoMemos.find(memo => memo.id === id);
       const updatedDemoMemo = {
         ...demoMemoToUpdate,
-        title: editableTitle,
-        content: editableContent
+        title: editableTitle.trim(),
+        content: editableContent.trim().replace(/\n{2,}/g, '\n')
       };
       const updatedDemoMemoIndex = demoMemos.findIndex(memo => memo.id === id);
       const demoMemosCopy = JSON.parse(JSON.stringify(demoMemos));
@@ -98,15 +98,24 @@ const Memo = ({ memo }: { memo: IMemo }) => {
       setDemoMemos(demoMemosCopy);
     } else {
       try {
-        setIsEditable(isEditable => !isEditable);
+        toggleEdit();
+        const tempMemoToUpdate = memos.find(memo => memo.id === id);
+        const tempUpdatedMemo = {
+          ...tempMemoToUpdate,
+          title: editableTitle.trim(),
+          content: editableContent.trim().replace(/\n{2,}/g, '\n')
+        };
+        const updatedTempMemoIndex = memos.findIndex(memo => memo.id === id);
+        const memosCopy = JSON.parse(JSON.stringify(memos));
+        memosCopy.splice(updatedTempMemoIndex, 1, tempUpdatedMemo);
+        setMemos(memosCopy);
+
         const memoToUpdate = await getMemo(id);
-        console.log(memoToUpdate);
         const updatedMemoPayload = {
           ...memoToUpdate,
-          title: editableTitle,
-          content: editableContent
+          title: editableTitle.trim(),
+          content: editableContent.trim().replace(/\n{2,}/g, '\n')
         };
-        console.log(updatedMemoPayload);
         await updateMemo(id, updatedMemoPayload, loggedInUser.token);
       } catch (err) {
         console.log(err);
@@ -120,7 +129,7 @@ const Memo = ({ memo }: { memo: IMemo }) => {
         setEditableTitle,
         setEditableContent,
         handleDelete,
-        handleEdit,
+        toggleEdit,
         handleUpdate,
         memo
       }}

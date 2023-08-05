@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:3004/api/users';
-// const baseUrl = '/api/users';
+// const baseUrl = 'http://localhost:3004/api/users';
+const baseUrl = '/api/users';
 
 const signup = async (signupPayload: {
   username: string;

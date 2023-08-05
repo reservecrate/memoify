@@ -14,14 +14,15 @@ import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
 import dateFormatter from '../../../utils/dateFormatter';
 import MemoModal from '../../MemoModal';
-// import MDParser from '../../../utils/MDParser';
+import MDParser from '../../../utils/MDParser';
 
 const ViewMemo = ({ memo }: { memo: IMemo }) => {
   const { title, content, dateCreated, author } = memo;
-  const { handleEdit, handleDelete } = useContext(MemoContext);
+  const { toggleEdit, handleDelete } = useContext(MemoContext);
   const { formattedDate, formattedTime } = dateFormatter(dateCreated);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const trimmedContent = content.replace(/\n{2,}/g, '\n');
+  // const trimmedContent = content.replace(/\n{3,}/g, '\n\n');
+  const richContent = MDParser(content);
 
   return (
     <>
@@ -37,7 +38,7 @@ const ViewMemo = ({ memo }: { memo: IMemo }) => {
         <Divider />
         <CardBody className='p-2'>
           <div className='whitespace-pre-wrap w-full h-full flex flex-col'>
-            {trimmedContent}
+            {richContent}
           </div>
         </CardBody>
         <Divider />
@@ -55,7 +56,7 @@ const ViewMemo = ({ memo }: { memo: IMemo }) => {
           <Spacer y={2} />
           <div className='flex justify-evenly w-full'>
             <Button
-              onPressStart={handleEdit}
+              onPressStart={toggleEdit}
               color='primary'
               variant='flat'
               className='w-1/3'
