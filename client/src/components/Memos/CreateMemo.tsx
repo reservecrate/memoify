@@ -96,7 +96,7 @@ const CreateMemo = () => {
         value={content}
         onValueChange={setContent}
         minRows={6}
-        maxRows={10}
+        maxRows={8}
         color={contentIsVoid ? 'danger' : 'secondary'}
         isRequired
       />

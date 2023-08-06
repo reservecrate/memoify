@@ -2,11 +2,15 @@ import { useState, useContext } from 'react';
 import { Input, Button, Spacer } from '@nextui-org/react';
 import login from '../../services/login';
 import { AppContext } from '../../App';
+// import { PiEyeFill, PiEyeClosedFill } from 'react-icons/pi';
 
 const Login = () => {
   const { setLoggedInUser } = useContext(AppContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+
+  // const toggleVisibility = () => setIsVisible(!isVisible);
 
   //ADD TEMPORARY MESSAGE COMPONENT TO NOTIFY THE USER THAT THEY HAVE SUCCESSFULLY LOGGED IN/LOGGED OUT,LATER
   const handleLogin = async () => {
@@ -26,7 +30,7 @@ const Login = () => {
     <div>
       <Input
         variant='underlined'
-        id='InputSignupUsername'
+        id='InputLoginUsername'
         label='username'
         placeholder=' e.g. reservecrate'
         value={username}
@@ -38,9 +42,8 @@ const Login = () => {
       />
       <Spacer y={4} />
       <Input
-        type='password'
         variant='underlined'
-        id='InputSignupPassword'
+        id='InputLoginPassword'
         label='password'
         placeholder='e.g. password123'
         value={password}
@@ -49,6 +52,17 @@ const Login = () => {
         color='secondary'
         className='w-5/6'
         isRequired
+        // endContent={
+        //   <button onClick={toggleVisibility}>
+        //     {isVisible ? (
+        //       <PiEyeFill className='pointer-events-none' />
+        //     ) : (
+        //       <PiEyeClosedFill className='pointer-events-none' />
+        //     )}
+        //   </button>
+        // }
+        // type={isVisible ? 'text' : 'password'}
+        type='password'
       />
       <Spacer y={4} />
       <Button

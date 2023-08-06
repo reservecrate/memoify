@@ -4,7 +4,6 @@ import Sidebar from './components/Sidebar';
 import Logout from './components/Logout';
 import { useSessionStorage } from 'usehooks-ts';
 import { Spacer } from '@nextui-org/react';
-import { MdBook } from 'react-icons/md';
 
 type user = {
   username: string;

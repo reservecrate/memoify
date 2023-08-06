@@ -28,11 +28,11 @@ h6 {
 }
 
 ul {
-  @apply list-disc;
+  @apply list-disc flex flex-col list-outside;
 }
 
 ol {
-  @apply list-decimal;
+  @apply list-decimal flex flex-col list-outside;
 }
 
 li {
@@ -40,5 +40,5 @@ li {
 }
 
 blockquote {
-  @apply py-0 px-2 my-2 border-l-4 border-gray-500 bg-gray-800;
+  @apply py-0 px-2 my-2 border-l-4 border-gray-500 bg-gray-800 italic font-semibold;
 }

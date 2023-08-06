@@ -6,7 +6,6 @@ import {
   CardBody,
   CardFooter,
   Button,
-  Spacer,
   Divider,
   useDisclosure
 } from '@nextui-org/react';
@@ -43,19 +42,19 @@ const ViewMemo = ({ memo }: { memo: IMemo }) => {
           />
         </CardBody>
         <Divider />
-        <CardFooter className='flex flex-col items-center shrink-0'>
+        <CardFooter className='flex flex-col items-center shrink-0 pt-2'>
           <p
             style={{
               background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
               backgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}
+            className='h-1/2'
           >
             created on {formattedDate} at {formattedTime} by{' '}
             <b>{author.username}</b>
           </p>
-          <Spacer y={2} />
-          <div className='flex justify-evenly w-full'>
+          <div className='flex flex-row justify-evenly items-center w-full h-1/2'>
             <Button
               onPressStart={toggleEdit}
               color='primary'
