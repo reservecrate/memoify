@@ -30,7 +30,7 @@ const ViewModal = ({
   return (
     <ModalContent>
       <ModalHeader>
-        <h2 className='text-4xl font-bold'>{title}</h2>
+        <h2 className='text-4xl font-extrabold'>{title}</h2>
       </ModalHeader>
       <ModalBody className='py-0 px-2'>
         <ReactMarkdown

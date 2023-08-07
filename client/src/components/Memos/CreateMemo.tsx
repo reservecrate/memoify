@@ -43,7 +43,7 @@ const CreateMemo = () => {
         title,
         content,
         dateCreated: Date.now(),
-        author: { username: 'Incognito', name: '', id: '' },
+        author: { username: 'incognito', name: '', id: '' },
         id: 'tempDemoMemoId' + Date.now() + Math.floor(Math.random() * 9999)
       };
       setTitle('');

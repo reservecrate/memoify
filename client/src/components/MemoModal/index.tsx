@@ -74,7 +74,7 @@ const MemoModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size='4xl' backdrop='blur'>
+    <Modal isOpen={isOpen} onClose={onClose} size='5xl' backdrop='blur'>
       {modalIsEditable ? (
         <EditableMemoModal
           handleUpdate={handleUpdate}

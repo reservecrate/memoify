@@ -54,7 +54,7 @@ const ViewMemo = ({ memo, gradient }: { memo: IMemo; gradient: string }) => {
           />
         </CardBody>
         <Divider />
-        <CardFooter className='flex flex-col items-center shrink-0 pt-1'>
+        <CardFooter className='flex flex-col items-center shrink-0 pt-0'>
           <p
             style={{
               background: gradient,
