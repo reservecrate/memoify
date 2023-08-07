@@ -45,7 +45,7 @@ export const MemoContext = createContext<IMemoContext>(initialMemoContextData);
 
 const Memo = ({ memo }: { memo: IMemo }) => {
   const { title, content, id } = memo;
-  const { loggedInUser } = useContext(AppContext);
+  const { loggedInUser, gradient } = useContext(AppContext);
   const { memos, setMemos, demoMemos, setDemoMemos } = useContext(MemosContext);
 
   const [isEditable, setIsEditable] = useState(false);
@@ -135,9 +135,9 @@ const Memo = ({ memo }: { memo: IMemo }) => {
       }}
     >
       {isEditable ? (
-        <EditableMemo memo={memoCopy} />
+        <EditableMemo memo={memoCopy} gradient={gradient} />
       ) : (
-        <ViewMemo memo={memoCopy} />
+        <ViewMemo memo={memoCopy} gradient={gradient} />
       )}
     </MemoContext.Provider>
   );

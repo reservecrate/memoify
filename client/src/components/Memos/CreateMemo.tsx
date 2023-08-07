@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
-import { Input, Textarea, Button, Spacer } from '@nextui-org/react';
+import { Input, Textarea, Button, Spacer, Tooltip } from '@nextui-org/react';
 import { createMemo } from '../../services/memos';
 import { AppContext } from '../../App';
 import { MemosContext } from '.';
+import { MdAddCircle } from 'react-icons/md';
 
 const CreateMemo = () => {
   const { loggedInUser } = useContext(AppContext);
@@ -12,6 +13,7 @@ const CreateMemo = () => {
   const [titleIsVoid, setTitleIsVoid] = useState(false);
   const [content, setContent] = useState('');
   const [contentIsVoid, setContentIsVoid] = useState(false);
+  const[createVariant,setCreateVariant]=useState('flat')
 
   const titleLabelPlaceholder = titleIsVoid
     ? 'the title field must not be empty'
@@ -101,14 +103,25 @@ const CreateMemo = () => {
         isRequired
       />
       <Spacer y={3} />
-      <Button
+      <Tooltip
+        content='create a new memo'
+        showArrow
         color='primary'
-        onPressStart={handleCreate}
-        className='w-full'
-        variant='flat'
+        delay={0}
+        closeDelay={0}
       >
-        create memo
-      </Button>
+        <Button
+          color='primary'
+          onPressStart={handleCreate}
+          className='w-full'
+          variant={createVariant}
+          endContent={<MdAddCircle />}
+          onMouseEnter={()=>setCreateVariant('solid')}
+          onMouseLeave={()=>setCreateVariant('flat')}
+        >
+          create memo
+        </Button>
+      </Tooltip>
     </div>
   );
 };

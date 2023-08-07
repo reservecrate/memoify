@@ -1,14 +1,16 @@
 import { useState, useContext } from 'react';
-import { Input, Button, Spacer } from '@nextui-org/react';
+import { Input, Button, Spacer, Tooltip } from '@nextui-org/react';
 import login from '../../services/login';
 import { AppContext } from '../../App';
 // import { PiEyeFill, PiEyeClosedFill } from 'react-icons/pi';
+import { MdLogin } from 'react-icons/md';
 
 const Login = () => {
   const { setLoggedInUser } = useContext(AppContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const [loginVariant, setLoginVariant] = useState('bordered');
 
   // const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -65,14 +67,25 @@ const Login = () => {
         type='password'
       />
       <Spacer y={4} />
-      <Button
+      <Tooltip
+        content='sign in with your account'
         color='secondary'
-        variant='bordered'
-        onPressStart={handleLogin}
-        className='w-6/12'
+        showArrow
+        delay={0}
+        closeDelay={0}
       >
-        log in
-      </Button>
+        <Button
+          color='secondary'
+          variant={loginVariant}
+          onPressStart={handleLogin}
+          className='w-6/12'
+          endContent={<MdLogin />}
+          onMouseEnter={() => setLoginVariant('flat')}
+          onMouseLeave={() => setLoginVariant('bordered')}
+        >
+          log in
+        </Button>
+      </Tooltip>
     </div>
   );
 };

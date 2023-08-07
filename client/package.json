@@ -12,20 +12,15 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mdxeditor/editor": "^0.10.1",
     "@nextui-org/react": "^0.0.0-dev-v2-20230713005129",
-    "@types/showdown": "^2.0.1",
     "axios": "^1.4.0",
-    "easymde": "^2.18.0",
     "framer-motion": "^10.12.18",
     "html-react-parser": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
     "react-markdown": "^8.0.7",
-    "react-simplemde-editor": "^5.2.0",
     "remark-gfm": "^3.0.1",
-    "showdown": "^2.1.0",
     "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {

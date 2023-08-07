@@ -16,10 +16,12 @@ import remarkGfm from 'remark-gfm';
 
 const ViewModal = ({
   toggleEdit,
-  memo
+  memo,
+  gradient
 }: {
   toggleEdit: () => void;
   memo: IMemo;
+  gradient: string;
 }) => {
   const { handleDelete } = useContext(MemoContext);
   const { title, content, dateCreated, author } = memo;
@@ -40,13 +42,13 @@ const ViewModal = ({
       <ModalFooter className='flex flex-col'>
         <p
           style={{
-            background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+            background: gradient,
             backgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}
         >
           created on {formattedDate} at {formattedTime} by{' '}
-          <b>{author.username}</b>
+          <strong className='font-extrabold'>{author.username}</strong>
         </p>
         <Spacer y={2} />
         <div className='flex justify-evenly w-full'>

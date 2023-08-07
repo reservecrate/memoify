@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spacer, Input, Button, Chip } from '@nextui-org/react';
+import { Spacer, Input, Button, Chip, Tooltip } from '@nextui-org/react';
 import signup from '../../services/signup';
 
 const Signup = () => {
@@ -11,6 +11,7 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordsDoNotMatch, setPasswordsDoNotMatch] = useState(false);
   const [createdUser, setCreatedUser] = useState('');
+  const [signupVariant, setSignupVariant] = useState('bordered');
 
   const usernameLabelPlaceholder = usernameIsTooShort
     ? 'your username is too short!'
@@ -113,14 +114,24 @@ const Signup = () => {
             isRequired
           />
           <Spacer y={4} />
-          <Button
+          <Tooltip
+            content='sign up for an account'
             color='secondary'
-            variant='bordered'
-            onPressStart={handleSignup}
-            className='w-6/12'
+            showArrow
+            delay={0}
+            closeDelay={0}
           >
-            sign up
-          </Button>
+            <Button
+              color='secondary'
+              variant={signupVariant}
+              onPressStart={handleSignup}
+              className='w-6/12'
+              onMouseEnter={() => setSignupVariant('flat')}
+              onMouseLeave={() => setSignupVariant('bordered')}
+            >
+              sign up
+            </Button>
+          </Tooltip>
         </div>
       )}
     </div>

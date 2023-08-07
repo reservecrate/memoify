@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react';
 import { createContext, Dispatch, SetStateAction } from 'react';
 import Memos from './components/Memos';
 import Sidebar from './components/Sidebar';
 import Logout from './components/Logout';
 import { useSessionStorage } from 'usehooks-ts';
 import { Spacer } from '@nextui-org/react';
+import getRandomGradient from './utils/getRandomColour';
 
 type user = {
   username: string;
@@ -15,6 +17,7 @@ type user = {
 interface IAppContext {
   loggedInUser: user;
   setLoggedInUser: Dispatch<SetStateAction<user>>;
+  gradient: string;
 }
 
 const initialAppContextData: IAppContext = {
@@ -24,7 +27,8 @@ const initialAppContextData: IAppContext = {
     id: '',
     token: ''
   },
-  setLoggedInUser: () => null
+  setLoggedInUser: () => null,
+  gradient: ''
 };
 
 export const AppContext = createContext<IAppContext>(initialAppContextData);
@@ -34,21 +38,38 @@ const App = () => {
     'loggedInUser',
     initialAppContextData.loggedInUser
   );
+  const [gradient, setGradient] = useState(
+    'linear-gradient(to right, #4E4FEB, #DB005B)'
+  );
+  // start
+  // const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect(() => {
+  //   const randomGradient = getRandomGradient();
+
+  //   setGradient(randomGradient);
+  //   setIsLoading(false);
+  // }, []);
+
+  // if (isLoading) return null;
+  // end
 
   return (
     <AppContext.Provider
       value={{
         loggedInUser,
-        setLoggedInUser
+        setLoggedInUser,
+        gradient
       }}
     >
       {!loggedInUser.token ? (
         <div id='App' className='grid gap-8 grid-cols-8'>
           <div className='col-span-7 flex flex-col items-center h-screen'>
             <h1
-              className='text-6xl font-semibold leading-snug'
+              className='text-6xl font-bold leading-snug'
               style={{
-                background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+                // background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+                background: gradient,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
               }}
@@ -63,9 +84,9 @@ const App = () => {
       ) : (
         <div id='App' className='flex flex-col items-center px-4 h-screen'>
           <h1
-            className='text-6xl font-semibold leading-snug'
+            className='text-6xl font-bold leading-snug'
             style={{
-              background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+              background: gradient,
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}

@@ -16,7 +16,7 @@ const MemoModal = ({
   onClose: () => void;
   memo: IMemo;
 }) => {
-  const { loggedInUser } = useContext(AppContext);
+  const { loggedInUser, gradient } = useContext(AppContext);
   const { memos, setMemos, demoMemos, setDemoMemos } = useContext(MemosContext);
   const { title, content, id } = memo;
   const [editableModalTitle, setEditableModalTitle] = useState(title);
@@ -81,9 +81,14 @@ const MemoModal = ({
           memo={memoCopy}
           setEditableModalTitle={setEditableModalTitle}
           setEditableModalContent={setEditableModalContent}
+          gradient={gradient}
         />
       ) : (
-        <ViewMemoModal toggleEdit={toggleEdit} memo={memoCopy} />
+        <ViewMemoModal
+          toggleEdit={toggleEdit}
+          memo={memoCopy}
+          gradient={gradient}
+        />
       )}
     </Modal>
   );

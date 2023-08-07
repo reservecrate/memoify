@@ -14,7 +14,13 @@ import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
 import dateFormatter from '../../../utils/dateFormatter';
 
-const EditableMemo = ({ memo }: { memo: IMemo }) => {
+const EditableMemo = ({
+  memo,
+  gradient
+}: {
+  memo: IMemo;
+  gradient: string;
+}) => {
   const { title, content, dateCreated, author } = memo;
   const { setEditableTitle, setEditableContent, handleDelete, handleUpdate } =
     useContext(MemoContext);
@@ -50,12 +56,13 @@ const EditableMemo = ({ memo }: { memo: IMemo }) => {
       <CardFooter className='flex flex-col shrink-0'>
         <p
           style={{
-            background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+            background: gradient,
             backgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}
         >
-          created on {formattedDate} at {formattedTime} by <b>{username}</b>
+          created on {formattedDate} at {formattedTime} by{' '}
+          <strong className='font-extrabold'>{username}</strong>
         </p>
         <Spacer y={2} />
         <div className='flex justify-evenly w-full'>

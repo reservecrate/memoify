@@ -17,12 +17,14 @@ const EditableModal = ({
   handleUpdate,
   memo,
   setEditableModalTitle,
-  setEditableModalContent
+  setEditableModalContent,
+  gradient
 }: {
   handleUpdate: () => void;
   memo: IMemo;
   setEditableModalTitle: Dispatch<SetStateAction<string>>;
   setEditableModalContent: Dispatch<SetStateAction<string>>;
+  gradient: string;
 }) => {
   const { handleDelete } = useContext(MemoContext);
   const { title, content, dateCreated, author } = memo;
@@ -50,13 +52,13 @@ const EditableModal = ({
       <ModalFooter className='flex flex-col'>
         <p
           style={{
-            background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+            background: gradient,
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}
         >
           created on {formattedDate} at {formattedTime} by{' '}
-          <b>{author.username}</b>
+          <strong className='font-extrabold'>{author.username}</strong>
         </p>
         <Spacer y={2} />
         <div className='flex justify-evenly w-full'>
