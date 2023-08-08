@@ -1,9 +1,10 @@
 import { useContext, useState } from 'react';
-import { Input, Textarea, Button, Spacer, Tooltip } from '@nextui-org/react';
+import { Input, Textarea, Button, Tooltip } from '@nextui-org/react';
 import { createMemo } from '../../services/memos';
 import { AppContext } from '../../App';
 import { MemosContext } from '.';
 import { MdAddCircle } from 'react-icons/md';
+import { RiZoomInFill } from 'react-icons/ri';
 
 const CreateMemo = () => {
   const { loggedInUser } = useContext(AppContext);
@@ -13,13 +14,14 @@ const CreateMemo = () => {
   const [titleIsVoid, setTitleIsVoid] = useState(false);
   const [content, setContent] = useState('');
   const [contentIsVoid, setContentIsVoid] = useState(false);
-  const[createVariant,setCreateVariant]=useState('flat')
+  const [createVariant, setCreateVariant] = useState('flat');
+  const [zoomVariant, setZoomVariant] = useState('flat');
 
   const titleLabelPlaceholder = titleIsVoid
     ? 'the title field must not be empty'
     : 'title';
 
-  const contentLabel = contentIsVoid
+  const bodyLabel = contentIsVoid
     ? 'the body field must not be empty'
     : 'body';
 
@@ -77,32 +79,51 @@ const CreateMemo = () => {
   };
 
   return (
-    <div className='col-span-1 row-span-1'>
-      <Input
-        id='InputTitle'
-        variant='bordered'
-        label={titleLabelPlaceholder}
-        placeholder='e.g. shopping list'
-        value={title}
-        onValueChange={setTitle}
-        isClearable
-        isRequired
-        color={titleIsVoid ? 'danger' : 'secondary'}
-      />
-      <Spacer y={3} />
+    <div className='col-span-1 row-span-1 flex flex-col justify-evenly'>
+      <div className='flex flex-row items-center justify-evenly'>
+        <Input
+          id='InputTitle'
+          variant='bordered'
+          label={titleLabelPlaceholder}
+          placeholder='e.g. shopping list'
+          value={title}
+          onValueChange={setTitle}
+          isClearable
+          isRequired
+          color={titleIsVoid ? 'danger' : 'secondary'}
+          className='w-4/5'
+        />
+        <Tooltip
+          content='open modal'
+          color='secondary'
+          showArrow
+          delay={0}
+          closeDelay={0}
+        >
+          <Button
+            className='w-2/12 h-full'
+            isIconOnly
+            variant={zoomVariant}
+            color='secondary'
+            onMouseEnter={() => setZoomVariant('solid')}
+            onMouseLeave={() => setZoomVariant('flat')}
+          >
+            <RiZoomInFill />
+          </Button>
+        </Tooltip>
+      </div>
       <Textarea
         id='TextareaContent'
         variant='bordered'
-        label={contentLabel}
-        placeholder='e.g. eggs, bananas, onions'
+        label={bodyLabel}
+        placeholder='e.g. eggs, bananas, onions, waffles'
         value={content}
         onValueChange={setContent}
         minRows={6}
-        maxRows={8}
+        maxRows={6}
         color={contentIsVoid ? 'danger' : 'secondary'}
         isRequired
       />
-      <Spacer y={3} />
       <Tooltip
         content='create a new memo'
         showArrow
@@ -116,8 +137,8 @@ const CreateMemo = () => {
           className='w-full'
           variant={createVariant}
           endContent={<MdAddCircle />}
-          onMouseEnter={()=>setCreateVariant('solid')}
-          onMouseLeave={()=>setCreateVariant('flat')}
+          onMouseEnter={() => setCreateVariant('solid')}
+          onMouseLeave={() => setCreateVariant('flat')}
         >
           create memo
         </Button>

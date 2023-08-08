@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Spacer, Input, Button, Chip, Tooltip } from '@nextui-org/react';
 import signup from '../../services/signup';
+import { MdAccountCircle } from 'react-icons/md';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -128,6 +129,7 @@ const Signup = () => {
               className='w-6/12'
               onMouseEnter={() => setSignupVariant('flat')}
               onMouseLeave={() => setSignupVariant('bordered')}
+              endContent={<MdAccountCircle />}
             >
               sign up
             </Button>

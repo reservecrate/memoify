@@ -7,7 +7,8 @@ import {
   Button,
   Divider,
   useDisclosure,
-  Tooltip
+  Tooltip,
+  Spacer
 } from '@nextui-org/react';
 import IMemo from '../../../interfaces/Memo';
 import { MemoContext } from '.';
@@ -66,6 +67,7 @@ const ViewMemo = ({ memo, gradient }: { memo: IMemo; gradient: string }) => {
             created on {formattedDate} at {formattedTime} by{' '}
             <strong className='font-extrabold'>{author.username}</strong>
           </p>
+          <Spacer y={1} />
           <div className='flex flex-row justify-evenly items-center w-full h-1/2'>
             <Tooltip
               content='edit memo'

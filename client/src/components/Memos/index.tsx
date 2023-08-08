@@ -13,6 +13,7 @@ import { AppContext } from '../../App';
 import { getMemosByAuthor } from '../../services/memos';
 import demoMemosData from '../../data/demoMemos';
 import ShadowMemo from './ShadowMemo';
+import { useSessionStorage } from 'usehooks-ts';
 
 interface IMemosContext {
   memos: IMemo[];
@@ -35,7 +36,10 @@ export const MemosContext = createContext<IMemosContext>(
 const Memos = () => {
   const { loggedInUser } = useContext(AppContext);
   const [memos, setMemos] = useState<IMemo[]>([]);
-  const [demoMemos, setDemoMemos] = useState<IMemo[]>(demoMemosData);
+  const [demoMemos, setDemoMemos] = useSessionStorage<IMemo[]>(
+    'demoMemos',
+    demoMemosData
+  );
   const [isLoaded, setIsLoaded] = useState(false);
 
   const reverseMemos: IMemo[] = loggedInUser.token
