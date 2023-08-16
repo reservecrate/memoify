@@ -13,7 +13,7 @@ const Logout = () => {
   return (
     <div className='flex flex-row justify-evenly items-center w-1/6 h-full'>
       <Tooltip
-        content='your account username'
+        content='your username'
         showArrow
         color='secondary'
         delay={0}

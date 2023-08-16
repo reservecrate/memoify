@@ -5,7 +5,9 @@ import Sidebar from './components/Sidebar';
 import Logout from './components/Logout';
 import { useSessionStorage } from 'usehooks-ts';
 import { Spacer } from '@nextui-org/react';
-import getRandomGradient from './utils/getRandomColour';
+// import getRandomGradient from './utils/getRandomColour';
+import { TfiGithub } from 'react-icons/tfi';
+import { Button, Link } from '@nextui-org/react';
 
 type user = {
   username: string;
@@ -53,6 +55,8 @@ const App = () => {
 
   // if (isLoading) return null;
   // end
+  const [resetVariant, setResetVariant] = useState('bordered');
+  const [githubVariant, setGithubVariant] = useState('bordered');
 
   return (
     <AppContext.Provider
@@ -63,23 +67,51 @@ const App = () => {
       }}
     >
       {!loggedInUser.token ? (
-        <div id='App' className='grid gap-8 grid-cols-8'>
-          <div className='col-span-7 flex flex-col items-center h-screen'>
-            <h1
-              className='text-6xl font-bold leading-snug'
-              style={{
-                // background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
-                background: gradient,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}
-            >
-              memoify
-            </h1>
-            <Spacer y={6} />
-            <Memos />
+        <div id='App' className='flex flex-col'>
+          <div className='flex flex-row justify-center items-center w-full'>
+            <div className='w-10/12 flex flex-row justify-center'>
+              <h1
+                className='text-6xl font-bold leading-snug'
+                style={{
+                  // background: 'linear-gradient(to right, #4E4FEB, #DB005B)',
+                  background: gradient,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
+                memoify
+              </h1>
+            </div>
+            <div className='flex flex-row justify-evenly w-2/12 items-center'>
+              <Button
+                variant={resetVariant}
+                color='danger'
+                size='lg'
+                onMouseEnter={() => setResetVariant('flat')}
+                onMouseLeave={() => setResetVariant('bordered')}
+              >
+                reset demo
+              </Button>
+              <Button
+                isIconOnly
+                variant={githubVariant}
+                color='secondary'
+                size='lg'
+                as={Link}
+                href='https://github.com/reservecrate/memoify'
+                isExternal
+                onMouseEnter={() => setGithubVariant('flat')}
+                onMouseLeave={() => setGithubVariant('bordered')}
+              >
+                <TfiGithub />
+              </Button>
+            </div>
           </div>
-          <Sidebar />
+          <Spacer y={3} />
+          <div className='grid grid-cols-8 gap-6'>
+            <Memos />
+            <Sidebar />
+          </div>
         </div>
       ) : (
         <div id='App' className='flex flex-col items-center px-4 h-screen'>
@@ -93,7 +125,7 @@ const App = () => {
           >
             memoify
           </h1>
-          <Spacer y={3} />
+          <Spacer y={2} />
           <div className='w-full flex flex-row justify-center'>
             <Logout />
           </div>

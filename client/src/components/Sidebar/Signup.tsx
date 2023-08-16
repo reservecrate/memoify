@@ -55,7 +55,7 @@ const Signup = () => {
   };
 
   return (
-    <div>
+    <div className='flex flex-col'>
       {createdUser ? (
         <Chip color='success' variant='faded'>
           successfully created: {createdUser}

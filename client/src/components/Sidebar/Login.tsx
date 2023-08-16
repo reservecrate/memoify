@@ -29,7 +29,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className='flex flex-col'>
       <Input
         variant='underlined'
         id='InputLoginUsername'

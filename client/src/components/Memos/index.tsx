@@ -12,7 +12,8 @@ import IMemo from '../../interfaces/Memo';
 import { AppContext } from '../../App';
 import { getMemosByAuthor } from '../../services/memos';
 import demoMemosData from '../../data/demoMemos';
-import ShadowMemo from './ShadowMemo';
+import ShadowCreateMemo from '../Shadows/ShadowCreateMemo';
+import ShadowMemo from '../Shadows/ShadowMemo';
 import { useSessionStorage } from 'usehooks-ts';
 
 interface IMemosContext {
@@ -67,7 +68,7 @@ const Memos = () => {
 
   return (
     <MemosContext.Provider value={{ memos, setMemos, demoMemos, setDemoMemos }}>
-      <div className='grid grid-cols-4 grid-rows-3 gap-8 w-full h-full'>
+      <div className='col-span-7 grid grid-cols-4 grid-rows-3 gap-6 h-screen w-full'>
         {isLoaded ? (
           <>
             <CreateMemo />
@@ -77,7 +78,7 @@ const Memos = () => {
           </>
         ) : (
           <>
-            <CreateMemo />
+            <ShadowCreateMemo />
             <ShadowMemo />
             <ShadowMemo />
             <ShadowMemo />
